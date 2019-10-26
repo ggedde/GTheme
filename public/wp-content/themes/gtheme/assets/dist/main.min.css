@@ -1,3 +1,7 @@
+body {
+  overflow: overlay;
+}
+
 .row {
   max-width: 1200px;
   margin: auto;
@@ -11,4 +15,4 @@ header .global-header-logo img {
   height: 100%;
 }
 
-/*# sourceMappingURL=main.min.css.map */
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL2Nzcy9pbmMvZ2xvYmFsLnNjc3MiLCJtYWluLm1pbi5jc3MiLCIuLi9jc3MvaW5jL2hlYWRlci5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0MsaUJBQUE7QUNDRDs7QURDQTtFQUNDLGlCQUFBO0VBQ0EsWUFBQTtBQ0VEOztBQ1BBO0VBQ0MsWUFBQTtBRFVEO0FDUEU7RUFDQyxXQUFBO0VBQ0EsWUFBQTtBRFNIIiwiZmlsZSI6Im1haW4ubWluLmNzcyJ9 */
