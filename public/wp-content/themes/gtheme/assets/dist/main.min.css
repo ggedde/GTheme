@@ -1,0 +1,14 @@
+.row {
+  max-width: 1200px;
+  margin: auto;
+}
+
+header {
+  height: 80px;
+}
+header .global-header-logo img {
+  width: auto;
+  height: 100%;
+}
+
+/*# sourceMappingURL=main.min.css.map */
