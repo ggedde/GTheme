@@ -1,0 +1,145 @@
+body {
+	font-family: $font-primary;
+	font-size: 18px;
+	font-weight: 400;
+	color: $dark;
+	line-height: 1.2;
+	letter-spacing: 1px;
+}
+
+h1,
+.h1 {
+	// font-family: $font-primary;
+	color: $dark;
+	font-size: rem(34);
+	font-weight: 900;
+	text-transform: uppercase;
+	@media only screen and (min-width: $small) {
+		font-size: rem(58);
+	}
+}
+
+h2,
+.h2 {
+	font-family: $font-secondary;
+	color: $dark;
+	font-size: rem(28);
+	font-weight: 300;
+	@media only screen and (min-width: $small) {
+		font-size: rem(35);
+	}
+}
+
+h3,
+.h3 {
+	font-family: $font-secondary;
+	color: $dark;
+	font-size: rem(26);
+	font-weight: 300;
+	@media only screen and (min-width: $small) {
+		font-size: rem(30);
+	}
+}
+
+h4,
+.h4 {
+	font-family: $font-secondary;
+	color: $dark;
+	font-size: rem(20);
+	font-weight: 300;
+	line-height: 1.5;
+	@media only screen and (min-width: $small) {
+		font-size: rem(22);
+	}
+}
+
+h5,
+.h5 {
+	font-family: $font-secondary;
+	color: $dark;
+	font-size: rem(15);
+	font-weight: 300;
+	line-height: 1.5;
+	@media only screen and (min-width: $small) {
+		font-size: rem(16);
+	}
+}
+
+h6,
+.h6 {
+	font-family: $font-secondary;
+	color: $dark;
+	font-size: rem(12);
+	font-weight: 300;
+	@media only screen and (min-width: $small) {
+		font-size: rem(14);
+	}
+}
+
+p.intro,
+.intro p {
+	font-weight: 400;
+	@media only screen and (min-width: $small) {
+		font-size: rem(20);
+	}
+}
+
+a {
+	outline: none;
+	transition: color 0.3s ease-in-out;
+	color: $blue-light;
+	.site-2 & {
+		color: $red;
+	}
+	&[href^='tel'] {
+		color: inherit;
+	}
+	&:hover,
+	&:focus {
+		color: $dark;
+		.site-2 & {
+			color: darken($red, 5%);
+		}
+	}
+	h1 &,
+	h2 &,
+	h3 &,
+	h4 & {
+		color: inherit;
+		.site-2 & {
+			color: inherit;
+		}
+	}
+}
+
+.faded {
+	opacity: .5;
+}
+
+.small {
+	font-size: rem(13);
+	font-weight: 100;
+}
+
+.medium {
+	font-size: rem(13);
+	font-weight: 500;
+}
+
+.large {
+	font-size: rem(20);
+	font-weight: 400;
+}
+
+table th,
+table td {
+	font-size: 0.9rem;
+	@media only screen and (min-width: $medium) {
+		font-size: 1.2rem;
+	}
+}
+
+table th.slim {
+	min-width: 0 !important;
+	width: 1% !important;
+}

@@ -1,5 +1,3 @@
-
-
 /*************************************
 Include Functions and Mixins
 **************************************/
@@ -9,20 +7,35 @@ Include Functions and Mixins
 Include Variables
 **************************************/
 
-@import "../../../../../../node_modules/bootstrap/scss/functions";
-@import "../../../../../../node_modules/bootstrap/scss/variables";
 @import 'inc/variables';
 
 /*************************************
-Include Custom
+Include Libraries
 **************************************/
 
+@import 'lib/normalize';
 @import 'lib/wordpress';
-@import 'lib/colorbox';
-@import 'inc/variables';
 @import 'inc/globals';
 @import 'inc/font';
 @import 'inc/typography';
-@import 'inc/blocks';
-@import 'inc/templates';
-@import 'inc/forms';
+
+body {
+	margin: 20px !important;
+	line-height: 1.4;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+	margin-bottom: 0.5rem;
+	line-height: 1.2;
+}

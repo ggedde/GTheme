@@ -3,32 +3,37 @@
     "version": "1.0.0",
     "description": "WordPress Website and Theme",
     "config": {
-        "assets_dir": "public/wp-content/themes/gtheme/assets"
+        "assets_dir": "public/wp-content/themes/gtheme/assets",
+        "mdb_js_dir": "node_modules/mdbootstrap-pro/js"
     },
     "scripts": {
-        "watch": "npm run watch-js | npm run watch-css",
-        "watch-css": "sass $npm_package_config_assets_dir/css/main.scss:$npm_package_config_assets_dir/dist/main.min.css $npm_package_config_assets_dir/css/bootstrap.scss:$npm_package_config_assets_dir/dist/bootstrap.min.css --watch",
-        "watch-prefix": "node_modules/.bin/postcss $npm_package_config_assets_dir/dist/main.min.css --use=autoprefixer --output=$npm_package_config_assets_dir/dist/main.min.css --watch",
-        "watch-js": "node_modules/.bin/nodemon -e js --ignore '*.min.js' --watch $npm_package_config_assets_dir/js -x 'npm run build-js'",
-        "build": "npm run build-css | npm run build-js | npm run prefix",
-        "build-css": "sass $npm_package_config_assets_dir/css/main.scss $npm_package_config_assets_dir/dist/main.min.css",
-        "build-js": "node_modules/.bin/terser node_modules/mdbootstrap/js/popper.min.js node_modules/mdbootstrap/js/bootstrap.min.js node_modules/mdbootstrap/js/mdb.min.js $npm_package_config_assets_dir/js/inc/*.js $npm_package_config_assets_dir/js/main.js -o $npm_package_config_assets_dir/dist/main.min.js --source-map filename=$npm_package_config_assets_dir/dist/main.min.js.map",
-        "prefix": "node_modules/.bin/postcss $npm_package_config_assets_dir/dist/main.min.css --use=autoprefixer --output=$npm_package_config_assets_dir/dist/main.min.css",
+        "watch": "npm run watch-css | npm run watch-js",
+        "watch-css": "node_modules/.bin/sass --watch $npm_package_config_assets_dir/css/main.scss:$npm_package_config_assets_dir/dist/main.min.css",
+        "watch-js": "node_modules/.bin/nodemon -e js --watch $npm_package_config_assets_dir/js -x 'npm run build-js'",
+        "prefix-css": "npm run build-css && node_modules/.bin/postcss $npm_package_config_assets_dir/dist/main.min.css --use=autoprefixer --output=$npm_package_config_assets_dir/dist/main.min.css",
+        "build": "npm run build-css | npm run build-vendor-css | npm run build-editor-css | npm run build-js | npm run prefix-css",
+        "build-css": "node_modules/.bin/sass $npm_package_config_assets_dir/css/main.scss $npm_package_config_assets_dir/dist/main.min.css",
+        "build-vendor-css": "node_modules/.bin/sass $npm_package_config_assets_dir/css/vendor.scss $npm_package_config_assets_dir/dist/vendor.min.css",
+        "build-editor-css": "node_modules/.bin/sass $npm_package_config_assets_dir/css/editor-styles.scss $npm_package_config_assets_dir/dist/editor-style.css",
+        "build-js": "node_modules/.bin/uglifyjs $npm_package_config_assets_dir/js/inc/*.js $npm_package_config_assets_dir/js/main.js -o $npm_package_config_assets_dir/dist/main.min.js --source-map filename=$npm_package_config_assets_dir/dist/main.min.js.map",
+        "build-vendor-js": "node_modules/.bin/uglifyjs --comments all $npm_package_config_mdb_js_dir/popper.min.js $npm_package_config_mdb_js_dir/bootstrap.min.js $npm_package_config_mdb_js_dir/mdb.min.js -o $npm_package_config_assets_dir/dist/vendor.min.js",
+        "build-jquery-js": "node_modules/.bin/uglifyjs --comments all $npm_package_config_mdb_js_dir/jquery.min.js -o $npm_package_config_assets_dir/dist/jquery.min.js",
         "sync": "node_modules/.bin/browser-sync start --config local-config.js",
         "dev": "npm run watch | npm run sync"
     },
     "devDependencies": {
-        "autoprefixer": "^9.6.1",
+        "autoprefixer": "^9.7.6",
         "browser-sync": "^2.26.7",
-        "nodemon": "^1.19.3",
-        "postcss-cli": "^6.1.3",
-        "sass": "^1.23.0",
-        "terser": "^4.3.9",
-        "uglify-js": "~3.6.0"
+        "nodemon": "^2.0.2",
+        "postcss-cli": "^7.1.0",
+        "sass": "^1.25.0",
+        "uglify-js": "^3.6.9"
     },
     "author": "GG",
     "license": "ISC",
     "dependencies": {
-        "mdbootstrap": "^4.8.11"
+        "bootstrap": "^4.4.1",
+        "mdbootstrap": "^4.12.0",
+        "mdbootstrap-pro": "git+https://oauth2:XXXXXXXXXXXXXXX@git.mdbootstrap.com/mdb/jquery/jq-pro.git"
     }
 }

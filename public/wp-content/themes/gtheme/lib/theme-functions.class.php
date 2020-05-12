@@ -40,7 +40,7 @@ class FUNC
         add_filter('template_include', array(__CLASS__, 'template_include'), 99);
         add_action('wp_loaded', array(__CLASS__, 'wp_loaded'), 11);
 
-        if (!defined('ENVIRONMENT') || ENVIRONMENT !== 'local') {
+        if (empty($_ENV['ENVIRONMENT']) || $_ENV['ENVIRONMENT'] !== 'local') {
             define('ACF_LITE', true); // true hides acf from the admin panel. false shows it.
         }
 
@@ -94,7 +94,11 @@ class FUNC
 			$settings['retna'] = true;
 			$settings['lazyload_threshold'] = 1000;
 			return $settings;
-		});
+        });
+        
+        add_action( 'wp_enqueue_scripts', function() {
+            wp_dequeue_style( 'wp-block-library' );
+        }, 100 );
 
 	}
 	
@@ -378,7 +382,7 @@ class FUNC
             $params = getopt('l:i:');
 
             if (!isset($params['l'])) {
-                $params['l'] = MAXMIND_LICENSE_KEY;
+                $params['l'] = !empty($_ENV['MAXMIND_LICENSE_KEY']) ? $_ENV['MAXMIND_LICENSE_KEY'] : '';
             }
 
             if (!isset($params['i'])) {
@@ -581,7 +585,7 @@ class FUNC
      */
     public static function inject_post($post = array(), $placement = 'end', $query = false)
     {
-        global $wp_query;
+        global $wp_query, $_gds_globals;
 
         if (is_array($post)) {
             $item = new stdClass();
@@ -825,7 +829,7 @@ class FUNC
         $daysinmonth = intval(date('t', $unixmonth));
         for ($day = 1; $day <= $daysinmonth; ++$day) {
 
-            if (isset($newrow) && $newrow) {
+            if (!empty($newrow)) {
                 $calendar_output .= "\n\t</tr>\n\t<tr>\n\t\t";
             }
 
@@ -1217,9 +1221,9 @@ class FUNC
      * @param $content
      * @param $word_limit
      * @param $elipsis
-     * @param $highlight_word
+     * @param $read_more_link
      */
-    public static function custom_excerpt($content = '', $word_limit = 55, $elipsis = '...', $highlight_word = '')
+    public static function custom_excerpt($content = '', $word_limit = 55, $elipsis = '...', $read_more_link = false)
     {
         $content = strip_tags($content);
         $words = explode(' ', $content, $word_limit + 1);
