@@ -10,7 +10,7 @@
 
 ####################################################
 /**
- * Standard Functions for Gravitate Theme
+ * Standard Functions for G Theme
  *
  * Copyright (c) 2013-2016
  * Version: 2.0
@@ -90,7 +90,7 @@ class FUNC
 			}
 		});
 
-		add_filter('grav_blocks_responsive_image_settings', function ($settings) {
+		add_filter('gblocks_responsive_image_settings', function ($settings) {
 			$settings['retna'] = true;
 			$settings['lazyload_threshold'] = 1000;
 			return $settings;
@@ -189,9 +189,9 @@ class FUNC
     public static function update_registered_post_types()
     {
         $cpts = implode('', get_post_types()) . implode('', get_taxonomies());
-        if (get_option('grav_registered_post_types') != $cpts) {
+        if (get_option('gblock_registered_post_types') != $cpts) {
             flush_rewrite_rules();
-            update_option('grav_registered_post_types', $cpts);
+            update_option('gblock_registered_post_types', $cpts);
         }
     }
 
@@ -388,7 +388,6 @@ class FUNC
             if (!isset($params['i'])) {
                 $params['i'] = trim(strpos($real_ip, '10.0.10.') !== false ? '173.12.186.189' : $real_ip);
             }
-            // Gravitates IP = 173.12.186.189
 
             $query = 'https://geoip.maxmind.com/f?' . http_build_query($params);
 
@@ -1283,7 +1282,7 @@ class FUNC
         if ($start_page <= 0) {
             $start_page = 1;
         }
-        echo $before . '<nav class="page-navigation"><ol class="grav_page_navi clearfix">' . "";
+        echo $before . '<nav class="page-navigation"><ol class="page_navi clearfix">' . "";
         if ($start_page >= 2 && $pages_to_show < $max_page) {
             $first_page_text = "First";
             echo '<li class="bpn-first-page-link"><a href="' . get_pagenum_link() . '" title="' . $first_page_text . '">' . $first_page_text . '</a></li>';

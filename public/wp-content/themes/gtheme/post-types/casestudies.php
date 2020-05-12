@@ -1,6 +1,6 @@
 <?php
-add_action( 'init', 'grav_custom_post_type_casestudies' );
-function grav_custom_post_type_casestudies()
+add_action( 'init', 'gblock_custom_post_type_casestudies' );
+function gblock_custom_post_type_casestudies()
 {
 	$single_label = 'Case Study';
 	$plural_label = 'Case Studies';

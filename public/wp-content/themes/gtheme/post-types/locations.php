@@ -1,6 +1,6 @@
 <?php
-add_action( 'init', 'grav_custom_post_type_locations' );
-function grav_custom_post_type_locations()
+add_action( 'init', 'gblock_custom_post_type_locations' );
+function gblock_custom_post_type_locations()
 {
 	$single_label = 'Location';
 	$plural_label = $single_label.'s';

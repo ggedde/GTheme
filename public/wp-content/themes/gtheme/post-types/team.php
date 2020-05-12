@@ -1,6 +1,6 @@
 <?php
-add_action( 'init', 'grav_custom_post_type_team' );
-function grav_custom_post_type_team()
+add_action( 'init', 'gblock_custom_post_type_team' );
+function gblock_custom_post_type_team()
 {
 	$single_label = 'Team Member';
 	$plural_label = $single_label.'s';

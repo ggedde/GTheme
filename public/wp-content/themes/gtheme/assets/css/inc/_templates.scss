@@ -283,7 +283,6 @@ ul.menu {
 	.nav-link {
 		opacity: 0.4;
 		font-size: 1rem;
-		font-family: $myraid;
 		font-weight: 600;
 		color: $gray-dark;
 		@media only screen and (min-width: $medium) {
@@ -380,76 +379,3 @@ ul.menu {
 		top: 3.5rem;
 	}
 }
-
-.single-requests {
-	.request-header {
-		@include media-min($medium) {
-			.logo-container {
-				flex: 0 0 260px;
-			}
-			.meta-container {
-				flex: 0 0 calc(100% - 260px);
-			}
-		}
-
-		.logo-container-inner {
-			max-width: 260px;
-			height: 200px;
-			margin: auto;
-			text-align: center;
-			display: grid;
-			justify-items: center;
-  			align-items: center;
-			img {
-				width: auto;
-				height: auto;
-				max-width: 100%;
-				max-height: 100%;
-				margin: auto;
-				display: block;
-				object-fit: cover;
-			}
-		}
-	}
-	.request-info {
-		p:last-child {
-			padding-bottom: 2rem;
-			margin-bottom: 1rem;
-			border-bottom: 1px solid $yellow;
-		}
-		&:last-child p {
-			border: 0;
-		}
-	}
-	.meta-title {
-		padding-bottom: .5rem;
-		margin-bottom: .8rem;
-		border-bottom: 2px solid $yellow;
-	}
-	.meta-pledged {
-		color: $green;
-		text-transform: uppercase;
-		margin-top: 2rem;
-		@include media-min($medium) {
-			text-align: right;
-			margin-top: 0;
-			position: absolute;
-			top: -2rem;
-			right: 1rem;
-		}
-	}
-	.pledge-stats {
-		@include media-max($medium) {
-			* {
-				font-size: 1.4rem;
-			}
-		}
-	}
-	.single-request-pldeged-header {
-		border-bottom: 1px solid $blue;
-		max-width: 250px;
-		margin-left: auto;
-		padding-bottom: .8rem;
-		margin-bottom: .9rem;
-	}
-}	

@@ -133,11 +133,11 @@ img {
   max-width: 100%;
 }
 
-.float-right {
+.right {
   float: right;
 }
 
-.float-left {
+.left {
   float: left;
 }
 
@@ -290,7 +290,7 @@ body a.btn,
 .gform_footer input.gform_button {
   letter-spacing: 2px !important;
   font-size: 1.2rem;
-  font-family: "GothicBold", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 100;
   letter-spacing: 1px;
   border-radius: 0;
@@ -548,7 +548,6 @@ body a.btn + .btn,
   }
 }
 .modal-dialog h3, .modal-dialog h4, .modal-dialog h5, .modal-dialog h6 {
-  font-family: "myriad-pro", sans-serif !important;
   font-weight: 600;
 }
 .modal-dialog.modal-md {
@@ -905,14 +904,6 @@ body a.btn + .btn,
   color: #3CA6B4;
 }
 
-.counter {
-  opacity: 0;
-  transition: opacity 0.3s ease-out;
-}
-.counter.show {
-  opacity: 1;
-}
-
 .single-banner-container {
   padding: 20%;
 }
@@ -972,39 +963,27 @@ body a.btn + .btn,
 .page-navigation {
   margin: auto;
 }
-.page-navigation .grav_page_navi {
+.page-navigation .page_navi {
   margin-left: 0;
   padding-left: 0;
   margin-top: 2rem;
   list-style: none;
 }
-.page-navigation .grav_page_navi li {
+.page-navigation .page_navi li {
   display: inline-block;
 }
-.page-navigation .grav_page_navi li.current,
-.page-navigation .grav_page_navi li a {
+.page-navigation .page_navi li.current,
+.page-navigation .page_navi li a {
   padding: 0.5rem;
   font-weight: 600;
   font-size: 1.5rem;
 }
-.page-navigation .grav_page_navi li.current, .page-navigation .grav_page_navi li.next-link a, .page-navigation .grav_page_navi li.prev-link a, .page-navigation .grav_page_navi li:hover a {
+.page-navigation .page_navi li.current, .page-navigation .page_navi li.next-link a, .page-navigation .page_navi li.prev-link a, .page-navigation .page_navi li:hover a {
   color: #F0AC2B;
 }
 
-@font-face {
-  font-family: "Auxindb";
-  src: url("../../assets/fonts/Auxindb.ttf") format("truetype");
-  font-weight: 500;
-  font-style: normal;
-}
-@font-face {
-  font-family: "GothicBold";
-  src: url("../../assets/fonts/Gothic-Bold.ttf") format("truetype");
-  font-weight: 600;
-  font-style: normal;
-}
 body {
-  font-family: "myriad-pro", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 18px;
   font-weight: 400;
   color: #333333;
@@ -1014,6 +993,7 @@ body {
 
 h1,
 .h1 {
+  font-family: "Roboto", sans-serif;
   color: #333333;
   font-size: 2.125rem;
   font-weight: 900;
@@ -1028,7 +1008,7 @@ h1,
 
 h2,
 .h2 {
-  font-family: "GothicBold", sans-serif;
+  font-family: "Roboto", sans-serif;
   color: #333333;
   font-size: 1.75rem;
   font-weight: 300;
@@ -1042,7 +1022,7 @@ h2,
 
 h3,
 .h3 {
-  font-family: "GothicBold", sans-serif;
+  font-family: "Roboto", sans-serif;
   color: #333333;
   font-size: 1.625rem;
   font-weight: 300;
@@ -1056,7 +1036,7 @@ h3,
 
 h4,
 .h4 {
-  font-family: "GothicBold", sans-serif;
+  font-family: "Roboto", sans-serif;
   color: #333333;
   font-size: 1.25rem;
   font-weight: 300;
@@ -1071,7 +1051,7 @@ h4,
 
 h5,
 .h5 {
-  font-family: "GothicBold", sans-serif;
+  font-family: "Roboto", sans-serif;
   color: #333333;
   font-size: 0.9375rem;
   font-weight: 300;
@@ -1086,7 +1066,7 @@ h5,
 
 h6,
 .h6 {
-  font-family: "GothicBold", sans-serif;
+  font-family: "Roboto", sans-serif;
   color: #333333;
   font-size: 0.75rem;
   font-weight: 300;

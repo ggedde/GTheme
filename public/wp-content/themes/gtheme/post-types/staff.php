@@ -1,6 +1,6 @@
 <?php
-add_action( 'init', 'grav_custom_post_type_staff' );
-function grav_custom_post_type_staff()
+add_action( 'init', 'gblock_custom_post_type_staff' );
+function gblock_custom_post_type_staff()
 {
 	$single_label = 'Staff Member';
 	$plural_label = $single_label.'s';

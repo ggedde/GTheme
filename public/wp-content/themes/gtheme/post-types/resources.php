@@ -1,6 +1,6 @@
 <?php
-add_action( 'init', 'grav_custom_post_type_resources' );
-function grav_custom_post_type_resources()
+add_action( 'init', 'gblock_custom_post_type_resources' );
+function gblock_custom_post_type_resources()
 {
 	$single_label = 'Resource';
 	$plural_label = $single_label.'s';

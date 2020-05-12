@@ -9,7 +9,8 @@ if (!defined('ABSPATH')) {
 ###############################################################################
 
 // Includes
-include_once dirname(__FILE__) . '/lib/theme-functions.class.php'; // Grav Functions
+include_once dirname(__FILE__) . '/lib/gfunc.class.php'; // G Functions
+include_once dirname(__FILE__) . '/lib/gblocks/gblocks.php'; // Gblocks Functions
 FUNC::themeInit();
 
 add_action( 'wp_enqueue_scripts', function () {

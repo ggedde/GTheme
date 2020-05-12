@@ -1,6 +1,6 @@
 <?php
-add_action( 'init', 'grav_custom_post_type_news' );
-function grav_custom_post_type_news()
+add_action( 'init', 'gblock_custom_post_type_news' );
+function gblock_custom_post_type_news()
 {
 	$single_label = 'News Article';
 	$plural_label = $single_label.'s';

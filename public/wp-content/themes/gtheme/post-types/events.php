@@ -1,6 +1,6 @@
 <?php
-add_action( 'init', 'grav_custom_post_type_events' );
-function grav_custom_post_type_events()
+add_action( 'init', 'gblock_custom_post_type_events' );
+function gblock_custom_post_type_events()
 {
 	$single_label = 'Event';
 	$plural_label = $single_label.'s';

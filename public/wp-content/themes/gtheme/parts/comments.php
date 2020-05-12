@@ -34,7 +34,7 @@
 
 	
 	<ol class="commentlist">
-		<?php wp_list_comments('type=comment&callback=grav_comments'); ?>
+		<?php wp_list_comments('type=comment&callback=gblock_comments'); ?>
 	</ol>
 	
 	<nav id="comment-nav" class="comment-nav">

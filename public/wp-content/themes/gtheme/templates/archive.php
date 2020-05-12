@@ -30,7 +30,7 @@ if(!empty($image))
 {
 	?>
 	<div class="single-banner-container">
-	    <div class="single-banner" <?= class_exists('GRAV_BLOCKS') ? GRAV_BLOCKS::image_sources($image) : '';?>>
+	    <div class="single-banner" <?= GBLOCKS::image_sources($image);?>>
 	    </div>
 	</div>
 	<?php
@@ -43,7 +43,7 @@ if(!empty($image))
 	<div class="block-inner">
 		<div class="row">
 			<div class="columns small-12">
-				<h1 class="page-title" style="text-align:center;"><?= class_exists('FUNC') ? FUNC::get_current_page_title() : '';?></h1>
+				<h1 class="page-title" style="text-align:center;"><?= FUNC::get_current_page_title();?></h1>
 			</div>
 		</div>
 	</div>
@@ -53,12 +53,9 @@ if(!empty($image))
 <?php
 if(is_home() && $blog_page_id)
 {
-	if(class_exists('GRAV_BLOCKS'))
-	{
-		GRAV_BLOCKS::display(array(
-			'object' => $blog_page_id
-		));
-	}
+	GBLOCKS::display(array(
+		'object' => $blog_page_id
+	));
 }
 ?>
 
@@ -81,7 +78,7 @@ if(is_home() && $blog_page_id)
 				<?php if(!empty($image)){ ?>
 					<div class="item-image-container columns small-12 medium-5 large-4">
 						<a href="<?php the_permalink();?>" title="<?php the_title();?>" aria-label="<?php the_title();?>">
-							<div class="item-image" <?= (class_exists('GRAV_BLOCKS')) ? GRAV_BLOCKS::image_sources($image) : '';?>></div>
+							<div class="item-image" <?= GBLOCKS::image_sources($image);?>></div>
 						</a>
 					</div>
 				<?php } ?>

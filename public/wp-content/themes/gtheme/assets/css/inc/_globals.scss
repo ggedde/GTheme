@@ -12,10 +12,10 @@ img {
 	max-width: 100%;
 }
 
-.float-right {
+.right {
 	float: right;
 }
-.float-left {
+.left {
 	float: left;
 }
 
@@ -327,7 +327,6 @@ body a.btn,
 		}
 	}
 	h3, h4, h5, h6 {
-		font-family: $myraid !important;
 		font-weight: 600;
 	}
 	&.modal-md {
@@ -689,14 +688,6 @@ body a.btn,
 	}
 }
 
-.counter {
-	opacity: 0;
-	transition: opacity .3s ease-out;
-	&.show {
-		opacity: 1;
-	}
-}
-
 .single-banner-container {
 	padding: 20%;
 }
@@ -752,7 +743,7 @@ body a.btn,
 
 .page-navigation {
 	margin: auto;
-	.grav_page_navi {
+	.page_navi {
 		margin-left: 0;
 		padding-left: 0;
 		margin-top: 2rem;

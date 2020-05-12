@@ -3,15 +3,18 @@ get_header();
 
 if (have_posts()) { while (have_posts()) { the_post();
 
-	if(!class_exists('GRAV_BLOCKS') || (!GRAV_BLOCKS::has_block('banner') && !GRAV_BLOCKS::has_block('custom-presentation-video')))
+	if(!GBLOCKS::has_block('banner'))
 	{
 		get_template_part('parts/single-banner');
 	}
 
-	if(class_exists('GRAV_BLOCKS'))
-	{
-		GRAV_BLOCKS::display();
-	}
+	?>
+	<div class="row">
+		<div class="col">
+			<?php the_content(); ?>
+		</div>
+	</div>
+	<?php
 }}
 
 get_footer();
