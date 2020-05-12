@@ -134,7 +134,6 @@
 .settings_page_gblocks_blocks .wrap.gblocks tr:not([class^="gblocks-plugin-settings-blocks_enabled_"]) label,
 .toplevel_page_gblocks .wrap.gblocks tr:not([class^="gblocks-plugin-settings-blocks_enabled_"]) label {
 	display: inline-block;
-	float: left;
 	clear: both
 }
 
