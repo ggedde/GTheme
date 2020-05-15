@@ -40,3 +40,7 @@ add_editor_style(get_template_directory_uri() . '/assets/css/min/editor-style.cs
 ###############################################################################
 #######################   CUSTOM THEME FUNCTIONALITY  #########################
 ###############################################################################
+
+
+add_theme_support( 'editor-color-palette', array() );
+

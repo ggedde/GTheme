@@ -1,6 +1,6 @@
 <?php
 
-if($column_num = get_sub_field('num_columns')){
+if($column_num = !empty($block_attributes['is_wp_block']) ? get_field('num_columns') : get_sub_field('num_columns')){
 	$cols_span = (12/$column_num);
 	$cols_span = apply_filters('gblock_content_columns', $cols_span);
 	$medium_col = $column_num < 3 ? $cols_span : 12;
@@ -28,7 +28,7 @@ if($column_num = get_sub_field('num_columns')){
 		$offset_xlarge = 2;
 	}
 
-	$sidebar = ($column_num == 2) ? get_sub_field('format') : '';
+	$sidebar = ($column_num == 2) ? !empty($block_attributes['is_wp_block']) ? get_field('format') : get_sub_field('format') : '';
 
 ?>
 	<div class="block-inner num-col-<?php echo $column_num; ?> <?php echo $sidebar; ?>">
@@ -47,7 +47,7 @@ if($column_num = get_sub_field('num_columns')){
 				}
 				?>
 				<div class="<?php echo GBLOCKS::css()->col(12, $medium_col, $large_col, $xlarge_col)->col_offset($offset_small, $offset_medium, ($i == 1 ? $offset_large : null), ($i == 1 ? $offset_xlarge : null))->add('col-content')->get(); ?>">
-					<?php the_sub_field('column_'.$i); ?>
+					<?= !empty($block_attributes['is_wp_block']) ? get_field('column_'.$i) : get_sub_field('column_'.$i); ?>
 				</div>
 		<?php } ?>
 		</div>

@@ -74,7 +74,7 @@ return array (
 	'max' => '',
 	'sub_fields' => $block_fields,
 	'gblocks_settings' => array(
-		'icon' => 'gblockicon-title',
+		'icon' => 'dashicons-editor-textcolor',
 		'description' => '<div class="row">
 				<div class="columns medium-6">
 					<img src="'.plugins_url().'/gblocks/gblocks/title/title.svg">

@@ -1,8 +1,8 @@
 <?php
 
-$heading = get_sub_field('title');
-$sub_heading = get_sub_field('sub-title');
-$center = get_sub_field('center');
+$heading = !empty($block_attributes['is_wp_block']) ? get_field('title') : get_sub_field('title');
+$sub_heading = !empty($block_attributes['is_wp_block']) ? get_field('sub-title') : get_sub_field('sub-title');
+$center = !empty($block_attributes['is_wp_block']) ? get_field('center') : get_sub_field('center');
 
 if($heading || $sub_heading)
 {

@@ -342,9 +342,9 @@ return array (
 	'max' => '',
 	'sub_fields' => $block_fields,
 	'gblocks_settings' => array(
-		'repeater' => true,
+		'repeater' => false,
 		'repeater_label' => 'Banners',
-		'icon' => 'gblockicon-cta',
+		'icon' => 'dashicons-welcome-view-site',
 		'description' => '<div class="row">
 				<div class="columns medium-6">
 					<img src="'.plugins_url().'/gblocks/gblocks/calltoactionv2/cta.svg">

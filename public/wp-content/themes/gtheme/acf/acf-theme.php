@@ -661,9 +661,9 @@ acf_add_local_field_group(array (
     'location' => array (
         array (
             array (
-                'param' => 'options_page', // post_type | post | page | page_template | post_category | taxonomy | options_page
+                'param' => 'block', // post_type | post | page | page_template | post_category | taxonomy | options_page
                 'operator' => '==',
-                'value' => 'acf-options-theme',        // if options_page then use: acf-options  | if page_template then use:  template-example.php
+                'value' => 'theme',        // if options_page then use: acf-options  | if page_template then use:  template-example.php
                 'order_no' => 0,
                 'group_no' => 1,
             ),

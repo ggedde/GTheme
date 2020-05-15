@@ -15,7 +15,7 @@ add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), array('GBLOCKS', '
 class GBLOCKS {
 
 
-	private static $version = '2.0.0';
+	private static $version = '3.0.0';
 	private static $page = 'admin.php?page=gblocks';
 	private static $settings = array();
 	private static $option_key = 'gblocks_settings';
@@ -133,6 +133,11 @@ class GBLOCKS {
 	<?php
 	}
 
+	public static function renderBlock($block) {
+
+	    self::display_block($block['name']);
+	}
+
 	/**
 	 * This is the initial setup that connects the Settings and loads the Fields from ACF
 	 *
@@ -239,7 +244,7 @@ class GBLOCKS {
 							'class' => '',
 							'id' => '',
 						),
-						'placement' => 'left',
+						'placement' => 'top',
 						'endpoint' => 0,          // end tabs to start a new group
 					);
 
@@ -320,6 +325,44 @@ class GBLOCKS {
 			}
 
 			$placement = (GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'after_title')) ? 'acf_after_title' : 'normal';
+
+			foreach ($layouts as $layoutKey => $layout) {
+
+				acf_register_block(array(
+					'name'				=> $layoutKey,
+					'title'				=> __('(Custom) '.$layout['label']),
+					'description'		=> __('A custom block.'),
+					'render_callback'	=> array(__CLASS__, 'renderBlock'),
+					'category'			=> 'g-blocks',
+					'mode'				=> 'edit',
+					'icon'				=> !empty($layout['gblocks_settings']['icon']) ? str_replace('dashicons-', '', $layout['gblocks_settings']['icon']) : 'admin-comments',
+					'keywords'			=> array( $layoutKey ),
+					'supports' 			=> array('align' => false, 'mode' => false)
+				));
+				
+				acf_add_local_field_group(array(
+					'key' => 'gblock_'.$layoutKey.'_block',
+					'title' => $layout['label'],
+					'fields' => $layout['sub_fields'],
+					'location' => array (
+						array (
+							array (
+								'param' => 'block',
+								'operator' => '==',
+								'value' => 'acf/'.$layoutKey,
+							),
+						),
+					),
+					'menu_order' => 0,
+					'position' => 1,
+					'style' => 'no_box',
+					'label_placement' => 'top',
+					'instruction_placement' => 'label',
+					'hide_on_screen' => self::hide_on_screen(),
+					'active' => 1,
+					'description' => '',
+				));
+			}
 
 			$sections = array (
 				'key' => 'group_gblocks',
@@ -753,9 +796,24 @@ class GBLOCKS {
 	 */
 	public static function init()
 	{
-		self::setup();
-		self::add_hooks();
-		self::prepare_blocks();
+		if(function_exists('acf_add_local_field_group')) {
+
+			add_filter( 'block_categories', function ( $categories) {
+				return array_merge(
+					$categories,
+					array(
+						array(
+							'slug' => 'g-blocks',
+							'title' => __( 'G Blocks', 'g-blocks' ),
+						),
+					)
+				);
+			});
+
+			self::setup();
+			self::add_hooks();
+			self::prepare_blocks();
+		}
 	}
 
 	/**
@@ -906,7 +964,7 @@ class GBLOCKS {
 	public static function admin_menu()
 	{
 		$icon = file_get_contents(plugin_dir_path( __FILE__ ) . 'gblocks/content/content_2.svg');
-		add_menu_page( 'G-Blocks', 'G-Blocks', 'manage_options', 'gblocks', array( __CLASS__, 'admin' ), 'dashicons-screenoptions', 9999);
+		add_submenu_page( 'options-general.php', 'G-Blocks', 'G-Blocks', 'manage_options', 'gblocks', array( __CLASS__, 'admin' ));
 	}
 
 	public static function plugin_settings_link($links)
@@ -1340,12 +1398,19 @@ class GBLOCKS {
 
 	private static function display_block($block_name='', $block_variables=array(), $handler_file='')
 	{
+		if (strpos($block_name, 'acf/') !== false) {
+			$block_is_wp_block = true;
+			$block_name = str_replace('acf/', '', $block_name);
+		}
+
 		if(!$handler_file)
 		{
 			$handler_file = self::get_path('handler.php');
 		}
 
 		$block_attributes = self::get_block_attributes($block_name, $block_variables);
+
+		$block_attributes['is_wp_block'] = !empty($block_is_wp_block) ? true : false;
 
 		$block_attributes['class'][] = 'block-container';
 		$block_attributes['class'][] = 'block-'.$block_name;
@@ -1944,76 +2009,79 @@ class GBLOCKS {
 	 */
 	public static function admin()
 	{
-		// Get Settings
-		self::get_settings(true);
+		if (class_exists('GBLOCKS_PLUGIN_SETTINGS')) {
 
-		// Save Settings if POST
-		$response = GBLOCKS_PLUGIN_SETTINGS::save_settings();
-		if($response['error'])
-		{
-			$error = 'Error saving Settings. Please try again.';
-		}
-		else if($response['success'])
-		{
-			$success = 'Settings saved successfully.';
+			// Get Settings
+			self::get_settings(true);
+
+			// Save Settings if POST
+			$response = GBLOCKS_PLUGIN_SETTINGS::save_settings();
+			if($response['error'])
+			{
+				$error = 'Error saving Settings. Please try again.';
+			}
+			else if($response['success'])
+			{
+				$success = 'Settings saved successfully.';
+			}
 		}
 
 		?>
 		<?php add_thickbox(); ?>
 		<div class="wrap gblocks">
 			<header>
-				<h1>G Blocks</h1>
+				<h1>G Blocks <small class="gblocks-version-label">Version <?php echo self::$version;?></small></h1>
 			</header>
 			<main>
-			<h4 class="blocks-version">Version <?php echo self::$version;?></h4>
 
+				<?php if(!function_exists('acf_add_local_field_group'))
+				{
+					self::acf_notice(false);
+				}
+				else
+				{
+					if(!empty($error)){?><div class="error"><p><?php echo $error; ?></p></div><?php }
+					if(!empty($success)){?><div class="updated"><p><?php echo $success; ?></p></div><?php } 
+					
+					?>
+					
+					<br>
+					<div class="gblocks-redirects-page-links">
+						<a href="<?php echo self::$page;?>&section=general" class="<?php echo self::get_current_tab($_GET['section'], 'general'); ?>">General</a>
+						<a href="<?php echo self::$page;?>&section=advanced" class="<?php echo self::get_current_tab($_GET['section'], 'advanced'); ?>">Advanced</a>
+						<a href="<?php echo self::$page;?>&section=developers" class="<?php echo self::get_current_tab($_GET['section'], 'developers'); ?>">Developers</a>
+						<a href="<?php echo self::$page;?>&section=usage" class="<?php echo self::get_current_tab($_GET['section'], 'usage'); ?>">Block Usage</a>
+					</div>
 
-			<?php if(!function_exists('acf_add_local_field_group'))
-			{
-				self::acf_notice(false);
-			}
-			?>
+					<br>
+					<br>
 
-			<?php if(!empty($error)){?><div class="error"><p><?php echo $error; ?></p></div><?php } ?>
-			<?php if(!empty($success)){?><div class="updated"><p><?php echo $success; ?></p></div><?php } ?>
+					<?php
+
+					$section = (!empty($_GET['section']) ? $_GET['section'] : 'settings');
+
+					switch($section)
+					{
+						case 'advanced':
+							self::form('advanced');
+						break;
+
+						case 'developers':
+							self::developers();
+						break;
+
+						case 'usage':
+							self::blocks_usage();
+						break;
+
+						default:
+						case 'settings':
+							self::form();
+						break;
+					}
+				}
+				?>
 			</main>
-
-
-		<br>
-		<div class="gblocks-redirects-page-links">
-			<a href="<?php echo self::$page;?>&section=general" class="<?php echo self::get_current_tab($_GET['section'], 'general'); ?>">General</a>
-			<a href="<?php echo self::$page;?>&section=advanced" class="<?php echo self::get_current_tab($_GET['section'], 'advanced'); ?>">Advanced</a>
-			<a href="<?php echo self::$page;?>&section=developers" class="<?php echo self::get_current_tab($_GET['section'], 'developers'); ?>">Developers</a>
-			<a href="<?php echo self::$page;?>&section=usage" class="<?php echo self::get_current_tab($_GET['section'], 'usage'); ?>">Block Usage</a>
-		</div>
-
-		<br>
-		<br>
-
-		<?php
-
-		$section = (!empty($_GET['section']) ? $_GET['section'] : 'settings');
-
-		switch($section)
-		{
-			case 'advanced':
-				self::form('advanced');
-			break;
-
-			case 'developers':
-				self::developers();
-			break;
-
-			case 'usage':
-				self::blocks_usage();
-			break;
-
-			default:
-			case 'settings':
-				self::form();
-			break;
-		}
-		?>
 		</div>
 		<?php
 	}
