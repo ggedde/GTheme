@@ -406,5 +406,76 @@
 	text-transform: lowercase;
 }
 
+.wp-block {
+	max-width: 100% !important;
+}
 
-/*# sourceMappingURL=master.min.css.map */
+@media (min-width: 782px) {
+	.edit-post-sidebar {
+		width: 400px;
+	}
+}
+
+.block-editor-block-list__layout {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+.block-editor-block-list__layout .block-editor-block-list__block:before {
+    z-index: 0;
+    content: "";
+    position: absolute;
+    border: 2px dotted transparent;
+    border-left: none;
+    box-shadow: none;
+    pointer-events: none;
+    transition: border-color .1s linear,border-style .1s linear,box-shadow .1s linear;
+    outline: 1px solid transparent;
+    right: 0;
+    left: 3px;
+    top: 0;
+    bottom: 0;
+}
+
+.components-popover.block-editor-block-list__block-popover .components-popover__content .block-editor-block-contextual-toolbar, .components-popover.block-editor-block-list__block-popover .components-popover__content .block-editor-block-list__breadcrumb {
+    margin-bottom: 0;
+    margin-left: 58px;
+}
+
+@media (min-width: 600px) {
+	.block-editor-block-contextual-toolbar:not([data-align=wide]):not([data-align=full]) .block-editor-block-mover:not(.is-horizontal) {
+		top: 0;
+		left: -30px;
+	}
+	.block-editor-block-toolbar {
+		box-shadow: none !important;
+	}
+	.components-button.block-editor-block-mover__control-drag-handle.block-editor-block-mover__control {
+		position: absolute;
+		top: -1px;
+		left: -28px;
+		border: 1px solid rgba(66,88,99,.4) !important;
+		border-radius: 0;
+		height: 38px !important;
+		background-color: white;
+	}
+	.block-editor-block-contextual-toolbar:not([data-align=wide]):not([data-align=full]) .block-editor-block-mover:not(.is-horizontal) {
+		border-radius: 0;
+	}
+	.block-editor-block-contextual-toolbar:not([data-align=wide]):not([data-align=full]) .block-editor-block-mover:not(.is-horizontal) .block-editor-block-mover__control {
+		height: 18px;
+	}
+	.block-editor-block-contextual-toolbar:not([data-align=wide]):not([data-align=full]) .block-editor-block-mover:not(.is-horizontal) .block-editor-block-mover__control svg {
+		height: 19px;
+	}
+}
+
+.block-editor-block-list__layout .block-editor-block-list__block.is-selected:before {
+    border-color: rgba(66,88,99,.4);
+    box-shadow: inset 0 0 2px 0 #fff;
+}
+
+.editor-styles-wrapper .block-editor-block-list__block {
+    margin-top: 0;
+    margin-bottom: 0;
+}

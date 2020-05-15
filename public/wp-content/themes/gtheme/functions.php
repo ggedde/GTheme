@@ -31,7 +31,20 @@ if ( empty($GLOBALS['pagenow']) || $GLOBALS['pagenow'] !== 'wp-login.php' ) {
     FUNC::enqueue_file('main_js', get_template_directory_uri() . '/assets/dist/main.min.js');
 }
 
-add_editor_style(get_template_directory_uri() . '/assets/css/min/editor-style.css');
+// add_editor_style(get_template_directory_uri() . '/assets/dist/editor-style.css');
+
+add_action( 'enqueue_block_editor_assets', function() {
+    wp_enqueue_style(
+        'my-block-vendor-editor-css',
+        get_template_directory_uri() . '/assets/dist/vendor.min.css',
+        [ 'wp-edit-blocks' ]
+    );
+    wp_enqueue_style(
+        'my-block-editor-css',
+        get_template_directory_uri() . '/assets/dist/editor-style.css',
+        [ 'wp-edit-blocks' ]
+    );
+} );
     
 
 // Add Custom Post Types

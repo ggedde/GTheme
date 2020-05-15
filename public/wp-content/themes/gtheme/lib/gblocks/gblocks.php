@@ -334,7 +334,6 @@ class GBLOCKS {
 					'description'		=> __('A custom block.'),
 					'render_callback'	=> array(__CLASS__, 'renderBlock'),
 					'category'			=> 'g-blocks',
-					'mode'				=> 'edit',
 					'icon'				=> !empty($layout['gblocks_settings']['icon']) ? str_replace('dashicons-', '', $layout['gblocks_settings']['icon']) : 'admin-comments',
 					'keywords'			=> array( $layoutKey ),
 					'supports' 			=> array('align' => false, 'mode' => false)
@@ -1119,42 +1118,42 @@ class GBLOCKS {
 
 		if(!isset($block_unique_id))
 		{
-			$block_unique_id = get_sub_field('unique_id');
+			$block_unique_id = !empty($block_variables['is_wp_block']) ? get_field('unique_id') : get_sub_field('unique_id');
 		}
 
 		if(!isset($block_custom_class))
 		{
-			$block_custom_class = get_sub_field('block_option_custom_class');
+			$block_custom_class = !empty($block_variables['is_wp_block']) ? get_field('block_option_custom_class') : get_sub_field('block_option_custom_class');
 		}
 
 		if(!isset($block_padding))
 		{
-			$block_padding = get_sub_field('block_option_padding');
+			$block_padding = !empty($block_variables['is_wp_block']) ? get_field('block_option_padding') : get_sub_field('block_option_padding');
 		}
 
 		if(!isset($block_hide))
 		{
-			$block_hide = get_sub_field('block_option_hide');
+			$block_hide = !empty($block_variables['is_wp_block']) ? get_field('block_option_hide') : get_sub_field('block_option_hide');
 		}
 
 		if(!isset($block_background))
 		{
-			$block_background = ($block_bg = get_sub_field('block_background')) ? $block_bg : 'block-bg-none';
+			$block_background = ($block_bg = !empty($block_variables['is_wp_block']) ? get_field('block_background') : get_sub_field('block_background')) ? $block_bg : 'block-bg-none';
 		}
 
 		if(!isset($block_background_image))
 		{
-			$block_background_image = get_sub_field('block_background_image');
+			$block_background_image = !empty($block_variables['is_wp_block']) ? get_field('block_background_image') : get_sub_field('block_background_image');
 		}
 
 		if(!isset($block_background_overlay))
 		{
-			$block_background_overlay = get_sub_field('block_background_overlay');
+			$block_background_overlay = !empty($block_variables['is_wp_block']) ? get_field('block_background_overlay') : get_sub_field('block_background_overlay');
 		}
 
 		if(!isset($block_background_blur))
 		{
-			$block_background_blur = get_sub_field('block_background_blur');
+			$block_background_blur = !empty($block_variables['is_wp_block']) ? get_field('block_background_blur') : get_sub_field('block_background_blur');
 		}
 
 		$block_index = self::$block_index;
@@ -1407,6 +1406,8 @@ class GBLOCKS {
 		{
 			$handler_file = self::get_path('handler.php');
 		}
+		
+		$block_variables['is_wp_block'] = !empty($block_is_wp_block) ? true : false;
 
 		$block_attributes = self::get_block_attributes($block_name, $block_variables);
 

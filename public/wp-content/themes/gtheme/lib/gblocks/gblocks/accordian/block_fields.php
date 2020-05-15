@@ -49,7 +49,7 @@ $block_fields = array(
         'collapsed' => '',
         'min' => '',
         'max' => '',
-        'layout' => 'row',         // table | block | row
+        'layout' => 'block',         // table | block | row
         'button_label' => 'Add Item',
         'sub_fields' => array (
             array (

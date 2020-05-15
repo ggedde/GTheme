@@ -13,11 +13,13 @@ Include Variables
 Include Libraries
 **************************************/
 
-@import 'lib/normalize';
-@import 'lib/wordpress';
+@import 'inc/variables';
 @import 'inc/globals';
 @import 'inc/font';
 @import 'inc/typography';
+@import 'inc/blocks';
+@import 'inc/forms';
+
 
 body {
 	margin: 20px !important;
