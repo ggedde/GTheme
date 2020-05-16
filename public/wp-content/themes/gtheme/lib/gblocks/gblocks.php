@@ -330,8 +330,8 @@ class GBLOCKS {
 
 				acf_register_block(array(
 					'name'				=> $layoutKey,
-					'title'				=> __('(Custom) '.$layout['label']),
-					'description'		=> __('A custom block.'),
+					'title'				=> __('* '.$layout['label']),
+					'description'		=> __('A custom block by G Blocks'),
 					'render_callback'	=> array(__CLASS__, 'renderBlock'),
 					'category'			=> 'g-blocks',
 					'icon'				=> !empty($layout['gblocks_settings']['icon']) ? str_replace('dashicons-', '', $layout['gblocks_settings']['icon']) : 'admin-comments',
@@ -799,13 +799,13 @@ class GBLOCKS {
 
 			add_filter( 'block_categories', function ( $categories) {
 				return array_merge(
-					$categories,
 					array(
 						array(
 							'slug' => 'g-blocks',
-							'title' => __( 'G Blocks', 'g-blocks' ),
+							'title' => __( 'Custom Blocks', 'g-blocks' ),
 						),
-					)
+					),
+					$categories
 				);
 			});
 

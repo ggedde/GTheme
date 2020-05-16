@@ -11,6 +11,9 @@ Include Libraries
 html, body {
   overflow-x: hidden;
 }
+html #tinymce, body #tinymce {
+  overflow-x: visible;
+}
 
 @media only screen and (min-width: 768px) {
   body {
@@ -872,12 +875,16 @@ body a.btn + .btn,
 }
 
 body {
-  font-family: "Roboto", sans-serif;
-  font-size: 18px;
-  font-weight: 400;
+  font-family: "Roboto", sans-serif !important;
+  font-size: 16px;
+  font-weight: 300;
   color: #333333;
   line-height: 1.2;
   letter-spacing: 1px;
+}
+
+.editor-styles-wrapper {
+  font-family: "Roboto", sans-serif !important;
 }
 
 h1,
@@ -967,13 +974,13 @@ h6,
   }
 }
 
-p.intro,
-.intro p {
+p.large,
+.large p {
   font-weight: 400;
 }
 @media only screen and (min-width: 576px) {
-  p.intro,
-.intro p {
+  p.large,
+.large p {
     font-size: 1.25rem;
   }
 }
@@ -1019,22 +1026,6 @@ h1 a, h2 a, h3 a, h4 a {
 .large {
   font-size: 1.25rem;
   font-weight: 400;
-}
-
-table th,
-table td {
-  font-size: 0.9rem;
-}
-@media only screen and (min-width: 768px) {
-  table th,
-table td {
-    font-size: 1.2rem;
-  }
-}
-
-table th.slim {
-  min-width: 0 !important;
-  width: 1% !important;
 }
 
 .block-container .block-inner {
@@ -1466,27 +1457,6 @@ input[type=password]:invalid {
 
 .lowercase-placeholder::-moz-placeholder {
   text-transform: lowercase !important;
-}
-
-body {
-  margin: 20px !important;
-  line-height: 1.4;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
-  margin-bottom: 0.5rem;
-  line-height: 1.2;
 }
 
 /*# sourceMappingURL=editor-style.css.map */

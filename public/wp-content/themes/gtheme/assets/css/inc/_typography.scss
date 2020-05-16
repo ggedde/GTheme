@@ -1,10 +1,14 @@
 body {
-	font-family: $font-primary;
-	font-size: 18px;
-	font-weight: 400;
+	font-family: $font-primary !important;
+	font-size: 16px;
+	font-weight: 300;
 	color: $dark;
 	line-height: 1.2;
 	letter-spacing: 1px;
+}
+
+.editor-styles-wrapper {
+    font-family: $font-primary !important;
 }
 
 h1,
@@ -76,8 +80,8 @@ h6,
 	}
 }
 
-p.intro,
-.intro p {
+p.large,
+.large p {
 	font-weight: 400;
 	@media only screen and (min-width: $small) {
 		font-size: rem(20);
@@ -129,17 +133,4 @@ a {
 .large {
 	font-size: rem(20);
 	font-weight: 400;
-}
-
-table th,
-table td {
-	font-size: 0.9rem;
-	@media only screen and (min-width: $medium) {
-		font-size: 1.2rem;
-	}
-}
-
-table th.slim {
-	min-width: 0 !important;
-	width: 1% !important;
 }

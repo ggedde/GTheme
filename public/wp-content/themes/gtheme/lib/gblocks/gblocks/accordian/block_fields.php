@@ -89,7 +89,7 @@ $block_fields = array(
                 ),
                 'default_value' => '',
                 'tabs' => 'visual',         // all | visual | text
-                'toolbar' => 'basic',     // full | basic
+                'toolbar' => 'full',     // full | basic
                 'media_upload' => 0,
             ),
         ),
@@ -106,7 +106,7 @@ return array (
 	'gblocks_settings' => array(
 		'repeater' => false,
 		'repeater_label' => '',
-		'icon' => '',
+		'icon' => 'dashicons-menu',
 		'description' => ''
 	),
 );

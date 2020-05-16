@@ -27,8 +27,8 @@ class FUNC
         add_filter('get_search_form', array(__CLASS__, 'get_wp_search_form')); // adding the search form
         add_filter('the_content', array(__CLASS__, 'filter_ptags_on_images'));
         add_filter('the_excerpt', array(__CLASS__, 'filter_ptags_on_images'));
-        add_filter('tiny_mce_before_init', array(__CLASS__, 'mce_formats'));
-        add_filter('teeny_mce_before_init', array(__CLASS__, 'mce_formats'));
+        // add_filter('tiny_mce_before_init', array(__CLASS__, 'mce_formats'));
+        // add_filter('teeny_mce_before_init', array(__CLASS__, 'mce_formats'));
         add_filter('upload_mimes', array(__CLASS__, 'allow_svg_upload'));
         add_filter('wpseo_metabox_prio', function () {
             return 'low';

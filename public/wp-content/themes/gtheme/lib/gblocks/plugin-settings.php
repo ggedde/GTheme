@@ -496,7 +496,7 @@ class GBLOCKS_PLUGIN_SETTINGS
 				<span class="gblocks-option-wrapper">
 					<label>
 						<input type="checkbox" name="<?php echo $settings_attribute;?>[]" value="<?php echo $option_value; ?>" <?php echo $checked; ?>>
-						<span <?php if($block_icon){ echo 'class="'.esc_attr($block_icon).'"'; } ?>><?php echo ucfirst($options_label); ?></span>
+						<span <?php if($block_icon){ echo 'class="dashicons-before '.esc_attr($block_icon).'"'; } ?>><?php echo ucfirst($options_label); ?></span>
 					</label>
 					<?php if($block_description){ ?>
 						<a class="gblocks-inline thickbox" href="#TB_inline?width=600&height=550&inlineId=<?php echo $option_value; ?>" title="<?php echo ucfirst($options_label); ?>">?</a>

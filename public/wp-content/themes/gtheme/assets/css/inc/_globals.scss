@@ -1,6 +1,11 @@
 html, body {
 	overflow-x: hidden;
+	#tinymce {
+		overflow-x: visible;
+	}
 }
+
+
 
 body {
 	@media only screen and (min-width: $medium) {

@@ -1,4 +1,4 @@
-<div class="gblocks-blocks-developers">
+<div class="gblocks-developers">
     <h2>Placing the blocks in your theme</h2>
     <h4>There are 2 ways to include GBlocks in your theme:</h4>
         <ul>
