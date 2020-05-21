@@ -1,11 +1,11 @@
 <?php
 
-if($embed = get_sub_field('custom_embed'))
+if($embed = GBLOCKS::getField($block.'_custom_embed'))
 {
 	?>
 	<div class="block-inner">
-		<div class="<?php echo GBLOCKS::css()->row()->get();?>">
-			<div class="<?php echo GBLOCKS::css()->col(12)->get();?>">
+		<div class="row">
+			<div class="col">
 				<?php echo $embed; ?>
 			</div>
 		</div>

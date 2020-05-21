@@ -1,23 +1,21 @@
 <?php
 
-$buttons = isset($buttons) ? $buttons : get_sub_field('buttons');
-$title = isset($title) ? $title : get_sub_field('title');
-$description = isset($description) ? $description : get_sub_field('description');
-$form = isset($form) ? $form : get_sub_field('form');
-$alignment = isset($alignment) ? $alignment : get_sub_field('alignment');
+$buttons = isset($buttons) ? $buttons :GBLOCKS::getField($block.'_buttons');
+$title = isset($title) ? $title :GBLOCKS::getField($block.'_title');
+$description = isset($description) ? $description :GBLOCKS::getField($block.'_description');
+$form = isset($form) ? $form :GBLOCKS::getField($block.'_form');
+$alignment = isset($alignment) ? $alignment :GBLOCKS::getField($block.'_alignment');
 
 if($title || $description || $buttons || $form){ ?>
 
 	<div class="block-inner">
-		<div class="<?php echo GBLOCKS::css()->row()->get();?> align-center">
-			<div class="<?php
-					echo GBLOCKS::css()->add('block-calltoaction-content')->col(12, 8)->col_center(false, true)->text_align($alignment)->get();
-				?>">
+		<div class="row <?= $alignment;?>">
+			<div class="col block-calltoaction-content">
 				<?php if($title){ ?>
-					<h2 class="block-title"><?php echo esc_html($title); ?></h2>
+					<h2 class="block-title"><?= esc_html($title); ?></h2>
 				<?php } ?>
 				<?php if($description){ ?>
-					<div class="block-description"><?php echo $description; ?></div>
+					<div class="block-description"><?= $description; ?></div>
 				<?php } ?>
 				<?php
 
@@ -45,7 +43,7 @@ if($title || $description || $buttons || $form){ ?>
 							if($button['button_type'] && $button['button_type'] != 'none'){
 							?>
 
-							<a class="button <?php echo (!empty($button['button_style']) ? $button['button_style'].' ' : '');?>block-link-<?php echo esc_attr($button['button_type']);?>" href="<?php echo esc_url($link);?>"><?php echo esc_html($button['button_text']);?></a>
+							<a class="<?= (!empty($button['button_style']) ? $button['button_style'].' ' : '');?>block-link-<?= esc_attr($button['button_type']);?>" href="<?= esc_url($link);?>"><?= esc_html($button['button_text']);?></a>
 
 							<?php
 							}

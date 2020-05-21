@@ -17,7 +17,7 @@ $block_fields = array(
 	array (
 	    'key' => 'field_'.$block.'_media_type',
 	    'label' => 'Media Type',
-	    'name' => 'media_type',
+	    'name' => $block.'_media_type',
 	    'type' => 'radio',
 	    'instructions' => '',
 	    'required' => 0,
@@ -28,19 +28,19 @@ $block_fields = array(
 	        'id' => '',
 	    ),
 	    'choices' => array (
-	        '' => 'Image', // Leave this blank to allow for older versions to work.
+	        'image' => 'Image', // Leave this blank to allow for older versions to work.
 			'video' => 'MP4 Video',
 			'embed' => 'Embed'
 	    ),
 	    'other_choice' => 0,
 	    'save_other_choice' => 0,
-	    'default_value' => '',
+	    'default_value' => 'image',
 	    'layout' => 'horizontal',
 	),
 	array (
 		'key' => 'field_'.$block.'_video_type',
 		'label' => 'MP4 Video Type',
-		'name' => 'video_type',
+		'name' => $block.'_video_type',
 		'type' => 'radio',
 		'instructions' => 'It is best to use the URL as uploading videos can take up a lot of your hosting disk space and bandwidth.',
 		'required' => 0,
@@ -70,7 +70,7 @@ $block_fields = array(
 	array (
 		'key' => 'field_'.$block.'_video_url',
 		'label' => 'Video URL',
-		'name' => 'video_url',
+		'name' => $block.'_video_url',
 		'type' => 'text',
 		'instructions' => 'Video must be a MP4 Format. <br><br>Use the Background Image below for a Placeholder',
 		'conditional_logic' => array (
@@ -95,7 +95,7 @@ $block_fields = array(
 	array (
 		'key' => 'field_'.$block.'_video_file',
 		'label' => 'Video File',
-		'name' => 'video_file',
+		'name' => $block.'_video_file',
 		'type' => 'file',
 		'instructions' => 'Uploads may not work if the file is too large.',
 		'required' => 0,
@@ -127,7 +127,7 @@ $block_fields = array(
 	array (
 	    'key' => 'field_'.$block.'_video_attributes',
 	    'label' => 'Video Attributes',
-	    'name' => 'video_attributes',
+	    'name' => $block.'_video_attributes',
 	    'type' => 'checkbox',
 	    'instructions' => '',
 	    'required' => 0,
@@ -160,7 +160,7 @@ $block_fields = array(
 	array (
 	    'key' => 'field_'.$block.'_embed',
 	    'label' => 'Embed',
-	    'name' => 'embed',
+	    'name' => $block.'_embed',
 	    'type' => 'textarea',
 	    'instructions' => '',
 	    'required' => 0,
@@ -187,9 +187,9 @@ $block_fields = array(
 	    'disabled' => 0,
 	),
 	array (
-		'key' => 'field_'.$block.'_4',
+		'key' => 'field_'.$block.'_image',
 		'label' => 'Image',
-		'name' => 'image',
+		'name' => $block.'_image',
 		'prefix' => '',
 		'type' => 'image',
 		'instructions' => '',
@@ -199,7 +199,7 @@ $block_fields = array(
 		        array (
 		            'field' => 'field_'.$block.'_media_type',
 		            'operator' => '==',
-		            'value' => '',
+		            'value' => 'image',
 		        ),
 		    ),
 		),
@@ -211,7 +211,7 @@ $block_fields = array(
 	array (
 		'key' => 'field_'.$block.'_image_style',
 		'label' => 'Image Style',
-		'name' => 'image_style',
+		'name' => $block.'_image_style',
 		'type' => 'select',
 		'instructions' => '',
 		'required' => 0,
@@ -220,7 +220,7 @@ $block_fields = array(
 				array (
 					'field' => 'field_'.$block.'_media_type',
 					'operator' => '==',
-					'value' => '',
+					'value' => 'image',
 				),
 			),
 		),
@@ -233,7 +233,6 @@ $block_fields = array(
 			'padded' => 'Padded',
 			'cover' => 'Cover',
 			'bottom' => 'Bottom Aligned',
-			'buttons' => 'With Buttons',
 		),
 		'default_value' => array (
 		),
@@ -246,9 +245,9 @@ $block_fields = array(
 		'readonly' => 0,
 	),
 	array (
-		'key' => 'field_'.$block.'_1',
+		'key' => 'field_'.$block.'_media_placement',
 		'label' => 'Media Placement',
-		'name' => 'image_placement',
+		'name' => $block.'_media_placement',
 		'prefix' => '',
 		'type' => 'radio',
 		'instructions' => '',
@@ -265,9 +264,9 @@ $block_fields = array(
 		'layout' => 'horizontal',
 	),
 	array (
-		'key' => 'field_'.$block.'_2',
+		'key' => 'field_'.$block.'_media_size',
 		'label' => 'Media Size',
-		'name' => 'image_size',
+		'name' => $block.'_media_size',
 		'prefix' => '',
 		'type' => 'radio',
 		'instructions' => '',
@@ -277,14 +276,21 @@ $block_fields = array(
 		'choices' => GBLOCKS::column_width_options(),
 		'other_choice' => 0,
 		'save_other_choice' => 0,
-		'default_value' => '5',
+		'default_value' => '4',
 		'layout' => 'horizontal',
 		'block_options' => 1
 	),
+	GBLOCKS::get_link_fields($block.'_link', 'Media Link', '', false, null, array (
+		array (
+			'field' => 'field_'.$block.'_media_type',
+			'operator' => '==',
+			'value' => 'image',
+		),
+	)),
 	array (
 		'key' => 'field_'.$block.'_media_buttons',
 		'label' => 'Buttons',
-		'name' => 'media_buttons',
+		'name' => $block.'_media_buttons',
 		'type' => 'repeater',
 		'instructions' => '(optional)',
 		'required' => 0,
@@ -313,14 +319,13 @@ $block_fields = array(
 		'layout' => 'block',
 		'button_label' => 'Add Button',
 		'sub_fields' => array(
-			GBLOCKS::get_link_fields( 'button')
+			GBLOCKS::get_link_fields('button')
 		),
 	),
-	GBLOCKS::get_link_fields( 'link', '', false ),
 	array (
-		'key' => 'field_'.$block.'_3',
+		'key' => 'field_'.$block.'_content',
 		'label' => 'Content',
-		'name' => 'content',
+		'name' => $block.'_content',
 		'prefix' => '',
 		'type' => 'wysiwyg',
 		'instructions' => '',
@@ -342,23 +347,7 @@ return array (
 	'min' => '',
 	'max' => '',
 	'gblocks_settings' => array(
-		'icon' => 'gblockicon-content-media',
-		'description' => '<div class="row">
-				<div class="columns medium-6">
-					<img src="'.plugins_url().'/gblocks/gblocks/media-content/media-content.svg">
-					<img src="'.plugins_url().'/gblocks/gblocks/media-content/media-content-alt.svg">
-				</div>
-				<div class="columns medium-6">
-					<p>When you want to have an image and then more of a description to that image, this is the block you want. The image has the ability to link to a page, URL, file or video. While the WYSIWYG allows for heading and paragraph text.</p>
-					<p><strong>Available Fields:</strong></p>
-					<ul>
-						<li>Background</li>
-						<li>Image</li>
-						<li>Image Placement <em>( left or right side )</em></li>
-						<li>Image Size <em>( small, medium, half width or large )</em></li>
-						<li>Link Type <em>( none, page, URL, file, video )</em></li>
-					</ul>
-				</div>
-			</div>'
+		'icon' => 'dashicons-align-left',
+		'description' => ''
 	),
 );

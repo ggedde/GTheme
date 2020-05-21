@@ -15,7 +15,7 @@ $num_columns_xlarge = isset($num_columns_xlarge) ? $num_columns_xlarge : (get_su
 $grid_class = '';
 if($block_format !== 'slider')
 {
-	$grid_class = ' '.GBLOCKS::css()->grid($num_columns_small, $num_columns_medium, $num_columns_large, $num_columns_xlarge)->get();
+	$grid_class = ' ';
 }
 
 if($gallery_items = get_sub_field('gallery_items')){ ?>
@@ -25,17 +25,15 @@ if($gallery_items = get_sub_field('gallery_items')){ ?>
 			<div class="block-title"><?php echo $block_title;?></div>
 		<?php } ?>
 		
-		<div class="<?php echo GBLOCKS::css()->add('block-media-items-container')->get();?>"
+		<div class="block-media-items-container"
 			data-columns-small="<?php echo $num_columns_small;?>"
 			data-columns-medium="<?php echo $num_columns_medium;?>"
 			data-columns-large="<?php echo $num_columns_large;?>"
 			data-columns-xlarge="<?php echo $num_columns_xlarge;?>">
 
-			<div class="<?php echo GBLOCKS::css()->row()->get();?> <?php if($f6){ echo GBLOCKS::css()->add('media-items')->get().$grid_class; } ?>">
-				<?php if(!$f6){ ?>
-				<div class="<?php echo GBLOCKS::css()->col()->get();?>">
-					<ul class="<?php echo GBLOCKS::css()->add('media-items')->get().$grid_class;?>">
-					<?php } ?>
+			<div class="row">
+				<div class="col">
+					<ul class="media-items <?= $grid_class;?>">
 						<?php
 						if($gallery_items)
 						{
@@ -84,10 +82,8 @@ if($gallery_items = get_sub_field('gallery_items')){ ?>
 							<?php }
 						}
 						?>
-				<?php if(!$f6){ ?>
 					</ul>
 				</div>
-				<?php } ?>
 			</div>
 		</div>
 	</div>

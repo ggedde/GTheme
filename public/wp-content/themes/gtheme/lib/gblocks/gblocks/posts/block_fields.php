@@ -20,7 +20,7 @@ $block_fields = array(
 	array (
 		'key' => 'field_'.$block.'_title',
 		'label' => 'Title',
-		'name' => 'title',
+		'name' => $block.'_title',
 		'type' => 'text',
 		'column_width' => '',
 		'default_value' => '',
@@ -33,7 +33,7 @@ $block_fields = array(
     array (
         'key' => 'field_'.$block.'_filter',
         'label' => 'Filter by',
-        'name' => 'filter',
+        'name' => $block.'_filter',
         'type' => 'select',
         'instructions' => '',
         'required' => 0,
@@ -64,7 +64,7 @@ $block_fields = array(
     array (
         'key' => 'field_'.$block.'_by_post_type',
         'label' => 'Choose Post Type',
-        'name' => 'post_type',
+        'name' => $block.'_post_type',
         'type' => 'select',
         'instructions' => '',
         'required' => 0,
@@ -96,7 +96,7 @@ $block_fields = array(
 	array (
         'key' => 'field_'.$block.'_by_taxonomy',
         'label' => 'Choose Taxonomy',
-        'name' => 'taxonomy',
+        'name' => $block.'_taxonomy',
         'type' => 'select',
         'instructions' => '',
         'required' => 0,
@@ -128,7 +128,7 @@ $block_fields = array(
 	array (
         'key' => 'field_'.$block.'_by_author',
         'label' => 'Choose Author',
-        'name' => 'author',
+        'name' => $block.'_author',
         'type' => 'select',
         'instructions' => '',
         'required' => 0,
@@ -160,7 +160,7 @@ $block_fields = array(
 	array (
 	    'key' => 'field_'.$block.'_custom',
 	    'label' => 'Choose Custom',
-	    'name' => 'custom',
+	    'name' => $block.'_custom',
 	    'type' => 'relationship',
 	    'instructions' => '',
 	    'required' => 0,
@@ -196,7 +196,7 @@ $block_fields = array(
 	    'key' => 'field_'.$block.'_limit',
 	    'label' => 'Limit',
 	    'name' => 'limit',
-	    'type' => 'number',
+	    'type' => $block.'_number',
 	    'instructions' => '0 = Unlimited',
 	    'required' => 0,
 		'conditional_logic' => array (
@@ -223,7 +223,7 @@ $block_fields = array(
 	    'readonly' => 0,
 	    'disabled' => 0,
 	),
-	GBLOCKS::get_link_fields(array('name' => 'view_more_link'))
+	GBLOCKS::get_link_fields($block.'_view_more_link', 'View More Link')
 );
 
 return array (
@@ -232,5 +232,9 @@ return array (
 	'display' => 'row',
 	'min' => '',
 	'max' => '',
-	'sub_fields' => $block_fields,
+    'sub_fields' => $block_fields,
+    'gblocks_settings' => array(
+		'icon' => 'dashicons-admin-post',
+		'description' => ''
+	),
 );

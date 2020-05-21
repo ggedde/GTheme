@@ -1,9 +1,31 @@
-.block-container {
-	.block-inner {
-		padding: 2rem $outer-gutter-sm;
-		@media only screen and (min-width: $small) {
-			padding: 3rem $outer-gutter;
-		}
+.block-container .block-inner,
+.wp-block[data-type="core/paragraph"],
+.wp-block-freeform {
+	padding: 2rem 0;
+	@media only screen and (min-width: $small) {
+		padding: 3rem 0;
+	}
+	&.editor-post-title__block {
+		padding: 0 !important;
+		margin: 0 !important;
+	}
+}
+
+.wp-block[data-type="core/paragraph"],
+.wp-block[data-type="core/heading"],
+.wp-block-freeform {
+	padding-left: 1rem;
+	padding-right: 1rem;
+	max-width: $max-row-width !important;
+	margin: auto;
+}
+
+.wp-block[data-type="core/paragraph"] + .wp-block[data-type="core/paragraph"],
+.wp-block[data-type="core/paragraph"] + .wp-block[data-type="acf/content"] .block-container.block-bg-none {
+	padding-top: 0;
+	margin-top: -1.2rem;
+	@media only screen and (min-width: $small) {
+		margin-top: -2.2rem;
 	}
 }
 
@@ -26,7 +48,7 @@
 .block-bg-gray-light + .block-bg-gray-light,
 .block-bg-gray-dark + .block-bg-gray-dark,
 .block-bg-yellow + .block-bg-yellow,
-.block-bg-none + .block-bg-none {
+.block-bg-none:not(.block-media) + .block-bg-none:not(.block-media) {
 	.block-inner {
 		padding-top: 0;
 	}
@@ -35,16 +57,9 @@
 .block-container.block-title {
 	.block-inner {
 		position: relative;
-		max-width: 1000px;
-		width: 90%;
 		margin: auto;
-		padding: .8rem 0;
-		@media only screen and (min-width: $medium) {
-			padding: 1.5rem 0;
-		}
 		.item-title {
 			color: $blue-dark;
-			text-align: center;
 			margin-bottom: 0;
 			&.has-sub-title {
 				margin-bottom: 2.5rem;
@@ -75,6 +90,12 @@
 	}
 }
 
+.block-media {
+	.block-inner {
+		padding: 0;
+	}
+}
+
 
 
 .block-accordian {
@@ -89,7 +110,7 @@
 			position: absolute;
 			top: 18px;
 			left: 15px;
-			border: 2px solid $gray-med-dark;
+			border: 2px solid rgba(150,150,150,0.6);
 			border-top: 0;
 			border-left: 0;
 			transform: rotate(-45deg);
@@ -98,8 +119,8 @@
 		}
 		.item-title {
 			padding: .5rem 1rem .5rem 3rem;
-			border: 1px solid $gray-med;
-			background-color: $gray-light;
+			border: 1px solid rgba(150,150,150,0.6);
+			background-color: rgba(150,150,150,0.3);
 			display: block;
 			width: 100%;
 			cursor: pointer;

@@ -1,72 +1,47 @@
 <?php
-	$foundation_version = GBLOCKS::get_foundation_version();
-	$f6flex = (strpos($foundation_version, 'f6flex') === false) ? false: true;
 
-	$media_type = get_sub_field('media_type');
-	$image_style = get_sub_field('image_style');
-	if(!$media_type)
-	{
-		$media_type = 'image';
-	}
-
-	$buttons = null;
-
-	if($media_type == 'image')
-	{
-		$buttons = isset($buttons) ? $buttons : get_sub_field('media_buttons');
-	}
-
-	$video_url = get_sub_field('video_'.get_sub_field('video_type'));
-
-	$embed = get_sub_field('embed');
-	$video_attributes = get_sub_field('video_attributes');
-
-	$placement = ($right = get_sub_field('image_placement')) ? $right : 'left';
-	$col_width = get_sub_field('image_size');
-	$content = get_sub_field('content');
-	$col_array = GBLOCKS::column_width_options();
-
-	$col_total = 12;
-	$col_total = apply_filters('gblock_mediacontent_columns', $col_total, $col_width, $placement);
-	$col_content_width = $col_total-$col_width;
-	$col_class = 'col-option-'.$placement.'-'.sanitize_title($col_array[$col_width]);
-
-	$bottom_classes = GBLOCKS::css()->col(12, $col_content_width)->add($col_class)->get();
-	$top_classes = GBLOCKS::css()->col(12, $col_width)->add($col_class.', col-image, col-media')->get();
-	if($placement == 'right'){
-		$top_classes = ($f6flex) ? GBLOCKS::css()->col(12, $col_width)->add('medium-order-2, '.$col_class.', col-image')->get() : GBLOCKS::css()->col(12, $col_width)->col_push(0, $col_content_width)->add($col_class.', col-image')->get();
-		$bottom_classes = ($f6flex) ? GBLOCKS::css()->col(12, $col_content_width)->add('medium-order-1, '.$col_class)->get() : GBLOCKS::css()->col(12, $col_content_width)->col_pull(0, $col_width)->add($col_class)->get();
-	}
+$media_type = isset($media_type) ? $media_type : GBLOCKS::getField($block.'_media_type');
+$image_style = isset($image_style) ? $image_style : GBLOCKS::getField($block.'_image_style');
+$image = isset($image) ? $image : GBLOCKS::getField($block.'_image');
+$media_buttons = isset($media_buttons) ? $media_buttons : GBLOCKS::getField($block.'_media_buttons');
+$video_url = isset($video_url) ? $video_url : GBLOCKS::getField($block.'_video_url');
+$embed = isset($embed) ? $embed : GBLOCKS::getField($block.'_embed');
+$video_attributes = isset($video_attributes) ? $video_attributes : GBLOCKS::getField($block.'_video_attributes');
+$placement = isset($placement) ? $placement : GBLOCKS::getField($block.'_media_placement');
+$media_size = isset($media_size) ? $media_size : GBLOCKS::getField($block.'_media_size');
+$content = isset($content) ? $content : GBLOCKS::getField($block.'_content');
+$link = isset($link) ? $link : GBLOCKS::get_link_url(str_replace('-','_',$block).'_link');
+$link_type = isset($link_type) ? $link_type : GBLOCKS::getField(str_replace('-','_',$block).'_link_type');
 
 ?>
 
-<div class="block-inner media-<?php echo $placement;?> <?php echo $placement.'-'.sanitize_title($col_array[$col_width]); ?>">
-	<div class="<?php echo GBLOCKS::css()->row()->add('media-type-'.$media_type.'-container,justify-content-center')->get();?>">
-		<div class="<?php echo $top_classes; ?> col-media<?php echo (!empty($image_style) ? ' image-style-'.$image_style : '');?>">
-			<?php if($link = GBLOCKS::get_link_url('link')){ ?>
-				<a class="block-link-<?php echo esc_attr(get_sub_field('link_type'));?>" href="<?php echo esc_url($link); ?>">
+<div class="block-inner media-placement-<?= $placement;?> media-type-<?= $media_type;?> media-size-<?= $media_size;?>">
+	<div class="row">
+		<div class="col-12 col-md-<?= $media_size;?> d-flex align-items-center <?= $placement === 'right' ? 'order-md-1' : '';?> col-media<?= (!empty($image_style) ? ' image-style-'.$image_style : '');?>">
+			<?php if($link){ ?>
+				<a class="block-link-<?= esc_attr($link_type);?>" href="<?= esc_url($link); ?>">
 			<?php } ?>
 
-			<div class="media-type-<?php echo $media_type;?>">
+			<div class="media-container">
 				<?php if($media_type === 'video' && $video_url){ ?>
-					<video src="<?php echo $video_url;?>" <?php echo implode(' ', $video_attributes);?>></video>
+					<video src="<?= $video_url;?>" <?= implode(' ', $video_attributes);?>></video>
 				<?php } ?>
 
 				<?php if($media_type === 'embed'){ ?>
-					<?php echo $embed;?>
+					<?= $embed;?>
 				<?php } ?>
 
 				<?php if($media_type === 'image'){ ?>
-					<?php echo GBLOCKS::image(get_sub_field('image'), array(), 'img', 'large');?>
+					<?= GBLOCKS::image($image, array(), 'img', 'large');?>
 				<?php } ?>
 
 				<?php
-				if($buttons)
+				if($media_buttons)
 				{
 					?>
-					<div class="block-buttons">
+					<div class="block-media-buttons block-buttons">
 						<?php
-						foreach($buttons as $button)
+						foreach($media_buttons as $button)
 						{
 							if(!empty($button['button_'.$button['button_type']]))
 							{
@@ -85,7 +60,7 @@
 							if($button['button_type'] && $button['button_type'] != 'none'){
 							?>
 
-							<a class="button <?php echo (!empty($button['button_style']) ? $button['button_style'].' ' : '');?>block-link-<?php echo esc_attr($button['button_type']);?>" href="<?php echo esc_url($link);?>"><?php echo esc_html($button['button_text']);?></a>
+							<a class="<?= (!empty($button['button_style']) ? $button['button_style'].' ' : '');?>block-link-<?= esc_attr($button['button_type']);?>" href="<?= esc_url($link);?>"><?= esc_html($button['button_text']);?></a>
 
 							<?php
 							}
@@ -103,8 +78,8 @@
 				</a>
 			<?php } ?>
 		</div>
-		<div class="<?php echo $bottom_classes; ?> col-content">
-			<?php echo $content; ?>
+		<div class="col col-content d-flex align-items-center">
+			<?= $content; ?>
 		</div>
 	</div>
 </div>

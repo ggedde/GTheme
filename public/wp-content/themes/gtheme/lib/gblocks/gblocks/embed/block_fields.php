@@ -17,7 +17,7 @@ $block_fields = array(
     array (
 		'key' => 'field_'.$block.'_custom_embed',
 		'label' => 'Embed Code',
-		'name' => 'custom_embed',
+		'name' => $block.'_custom_embed',
 		'type' => 'textarea',
 		'instructions' => '',
 		'required' => 0,
@@ -47,7 +47,7 @@ return array (
 	'gblocks_settings' => array(
 		'repeater' => false,
 		'repeater_label' => '',
-		'icon' => 'gblockicon-content',
+		'icon' => 'dashicons-editor-code',
 		'description' => ''
 	),
 );

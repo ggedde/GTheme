@@ -130,7 +130,7 @@ ul.menu {
 
 
 .global-banner {
-	background-color: $yellow-light;
+	background-color: $blue-light;
 	> .row {
 		.col {
 			padding: 1.4rem 0;
@@ -146,7 +146,6 @@ ul.menu {
 				width: 700%;
 				height: 150%;
 				transform: skewX(93deg);
-				background-color: $green-light;
 				@media only screen and (min-width: $medium) {
 					transform: skewX(-28deg);
 					left: -200%;
@@ -237,7 +236,6 @@ ul.menu {
 	text-align: center;
 	padding: 1rem 0;
 	h1 {
-		@include gradient-x($yellow-light, $green-light);
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
 		-webkit-background-clip: text;

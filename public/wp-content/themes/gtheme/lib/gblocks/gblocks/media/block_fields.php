@@ -15,9 +15,9 @@
 
 $block_fields = array(
 	array (
-		'key' => 'field_'.$block.'_1',
+		'key' => 'field_'.$block.'_image',
 		'label' => 'Full Width Image',
-		'name' => 'full_width_image',
+		'name' => $block.'_image',
 		'type' => 'image',
 		'column_width' => '',
 		'save_format' => 'object',
@@ -25,15 +25,15 @@ $block_fields = array(
 		'library' => 'all',
 	),
 	array (
-		'key' => 'field_'.$block.'_2',
+		'key' => 'field_'.$block.'_padding',
 		'label' => 'Add Padding',
-		'name' => 'padding',
+		'name' => $block.'_padding',
 		'type' => 'true_false',
 		'column_width' => '',
 		'message' => '',
 		'default_value' => 0,
 	),
-	GBLOCKS::get_link_fields( 'link', '', false),
+	GBLOCKS::get_link_fields( $block.'_link', 'Link', null, false),
 );
 
 return array (
@@ -44,22 +44,7 @@ return array (
 	'max' => '',
 	'sub_fields' => $block_fields,
 	'gblocks_settings' => array(
-		'icon' => 'gblockicon-media',
-		'description' => '<div class="row">
-				<div class="columns medium-6">
-					<img src="'.plugins_url().'/gblocks/gblocks/media/media.svg">
-					<img src="'.plugins_url().'/gblocks/gblocks/media/media-alt.svg">
-				</div>
-				<div class="columns medium-6">
-					<p>This block that allows for a full width image, or an image that is contained within the content width. This image also has the ability to link to a page, URL, file download or even play a video in a modal.</p>
-					<p><strong>Available Fields:</strong></p>
-					<ul>
-						<li>Background<em> ( for a two layered image effect )</em></li>
-						<li>Image</li>
-						<li>Add Padding <em>( constrains image to width of content instead of full screen )</em></li>
-						<li>Link <em>( Page, URL, File, Video )</em></li>
-					</ul>
-				</div>
-			</div>'
+		'icon' => 'dashicons-format-image',
+		'description' => ''
 	),
 );

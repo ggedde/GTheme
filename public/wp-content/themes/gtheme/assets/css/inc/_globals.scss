@@ -5,77 +5,27 @@ html, body {
 	}
 }
 
-
-
 body {
 	@media only screen and (min-width: $medium) {
-		margin-top: 68px;
+		margin-top: 100px;
 	}
 }
 
 img {
 	max-width: 100%;
-}
-
-.right {
-	float: right;
-}
-.left {
-	float: left;
-}
-
-.no-wrap {
-	white-space: nowrap;
+	display: block;
 }
 
 .row {
     width: 100%;
-    max-width: 1200px;
+    max-width: $max-row-width;
     margin-left: auto;
     margin-right: auto;
 }
 
-.carousel.carousel-fade .carousel-item {
-    display: block;
-    opacity: 0;
-    transition: opacity ease-out .7s;
-}
-
-.carousel.carousel-fade .carousel-item.active {
-    opacity: 1 !important;
-}
-
 .bg {
-	&-blue-dark,
-	&-blue {
-		background-color: $blue-dark;
-		* {
-			color: $white !important;
-		}
-	}
-	&-blue-light {
-		background-color: $blue-light;
-		* {
-			color: $white !important;
-		}
-	}
-	&-green {
-		background-color: $green;
-		* {
-			color: $white !important;
-		}
-	}
-	&-yellow {
-		background-color: $yellow;
-		* {
-			color: $white !important;
-		}
-	}
 	&-gray-dark {
 		background-color: $gray-dark;
-		* {
-			color: $white !important;
-		}
 	}
 	&-gray-light {
 		background-color: $gray-light !important;
@@ -84,21 +34,32 @@ img {
 		background-color: $gray-med !important;
 	}
 }
-
-.text-yellow {
-	color: $yellow;
-}
-.text-blue {
-	color: $blue;
-}
-.text-green {
-	color: $green;
+.text-light,
+.block-bg-image {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	.h1,
+	.h2,
+	.h3,
+	.h4,
+	.h5,
+	.h6,
+	p,
+	a:not(.btn),
+	.block-title,
+	.block-sub-title {
+		color: $white;
+	}
 }
 
 hr {
-	max-width: 480px;
+	max-width: 90%;
 	border-top-width: 2px;
-	border-color: $gray-med;
+	border-color: rgba($gray-med, .4);
 	.bg-blue-dark,
 	.bg-blue &,
 	.bg-blue-light &,
@@ -129,280 +90,6 @@ p {
 *:active,
 *:focus {
 	outline: none;
-}
-
-.btn,
-.gform_footer input.gform_button {
-	background-color: $blue-dark !important;
-	&-blue-light,
-	&.btn-secondary {
-		background-color: $blue-light !important;
-		color: $white;
-		.bg-blue-dark & {
-			border-color: $white !important;
-			color: $white !important;
-		}
-	}
-	&-danger,
-	&-error,
-	&-red {
-		background-color: $red !important;
-		color: $white;
-	}
-	&-info {
-		background-color: $info !important;
-		color: $white;
-	}
-	&-white-border {
-		border: 2px solid $white;
-	}
-	&-blue-light-border {
-		border: 2px solid $blue-light;
-	}
-	&-blue-light-border-bg-transparent {
-		border: 1px solid $blue-light;
-	}
-	&-white-border-bg-transparent {
-		background-color: transparent;
-	}
-}
-
-.btn,
-a.btn,
-body a.btn,
-.gform_footer input.gform_button {
-	letter-spacing: 2px !important;
-	font-size: 1.2rem;
-	font-family: $font-secondary;
-	font-weight: 100;
-	letter-spacing: 1px;
-	border-radius: 0;
-	box-shadow: none;
-	color: $white;
-	font-weight: bold;
-	margin-left: 0;
-	margin-right: 0;
-	outline: none;
-	padding: 0.8rem 1.8rem 0.7rem 1.8rem;
-	text-decoration: none;
-	&:hover,
-	&:active,
-	&:not(:disabled):not(.disabled):active,
-	&:focus {
-		box-shadow: none;
-		color: $white;
-		outline: none;
-		background-color: darken($blue-dark, 10%) !important;
-		&.btn-blue-light,
-		&.btn-secondary {
-			background-color: darken($blue-light, 10%) !important;
-		}
-		&.btn-white-border-bg-transparent {
-			background-color: darken($blue-light, 10%) !important;
-		}
-		&.btn-blue-light-border-bg-transparent {
-			border: 1px solid darken($blue-light, 10%);
-			background-color: darken($blue-light, 10%) !important;
-		}
-		&.btn-danger,
-		&.btn-error,
-		&.btn-red {
-			background-color: darken($red, 10%) !important;
-		}
-	}
-	&.btn-sm {
-		padding: 0.3rem 0.5rem 0.2rem .5rem;
-	}
-	&.btn-md {
-		font-size: 1rem;
-	}
-	&.btn-lg {
-		padding: .5rem 1rem;
-		font-size: 1.5rem;
-		letter-spacing: 2px !important;
-		@media only screen and (min-width: $small) {
-			padding: .7rem 2rem;
-			font-size: 2.2rem;
-			letter-spacing: 3px !important;
-		}
-	}
-	+ .btn {
-		margin-left: 2rem;
-	}
-}
-
-.term-list a {
-	color: $gray-dark !important;
-	text-transform: uppercase;
-	font-size: .9rem;
-	font-weight: normal;
-	&:hover {
-		text-decoration: underline;
-	}
-}
-
-
-.swiper-container {
-	.swiper-slide {
-		background-position: center;
-		background-repeat: no-repeat;
-		background-size: cover;
-	}
-}
-
-.swiper-button-next,
-.swiper-button-prev {
-	opacity: .7;
-	outline: 0;
-	transition: opacity .2s ease-in-out;
-	background: none !important;
-	&::after {
-		color: $blue-light;
-		font-family: "Font Awesome 5 Free";
-		font-size: 25px;
-		font-weight: 900;
-	}
-	&:hover,
-	&:focus {
-		opacity: 1;
-	}
-	&.swiper-button-disabled {
-		opacity: 0;
-	}
-}
-
-.swiper-button-prev {
-	&::after {
-		content: '\f053';
-	}
-}
-
-.swiper-button-next {
-	&::after {
-		content: '\f054';
-	}
-}
-
-.swiper-pagination {
-	bottom: -65px;
-	left: 0;
-	right: 0;
-	text-align: center;
-	.reports-slider-col & {
-		bottom: -10px;
-	}
-	.reports-slider-col.mobile & {
-		bottom: -50px;
-	}
-}
-
-.swiper-pagination-bullet {
-	background-color: transparent;
-	border-radius: 0;
-	font-size: 20px;
-	height: inherit;
-	min-width: 25px;
-	opacity: 1;
-	transition: all .3s ease-in-out;
-	width: inherit;
-	color: $blue-dark;
-	.bg-gray-dark &,
-	.bg-blue & {
-		color: $white;
-	}
-	&:only-child {
-		display: none;
-	}
-	&:hover,
-	&:focus,
-	&:active {
-		color: $blue-light;
-		outline: 0;
-	}
-	&.swiper-pagination-bullet-active {
-		color: $blue-light;
-		font-weight: bold;
-	}
-}
-
-.modal-dialog {
-	body.admin-bar & {
-		@media only screen and (max-width: $small) {
-			margin-top: 3.5rem !important;
-		}
-	}
-	h3, h4, h5, h6 {
-		font-weight: 600;
-	}
-	&.modal-md {
-		width: 96%;
-		max-width: 700px;
-	}
-	&.modal-lg {
-		width: 96%;
-		max-width: 1000px;
-	}
-	label {
-		font-weight: 600;
-		line-height: 1.2;
-	}
-	.close {
-		color: $gray-dark;
-		font-size: 40px;
-		font-weight: 300;
-		opacity: 1;
-		position: absolute;
-		right: 20px;
-		top: -6px;
-	}
-	.modal-content {
-		padding: .5rem 1rem;
-		.title {
-			font-weight: bold;
-			margin-bottom: 1rem;
-		}
-		form {
-			margin: 0 auto;
-			width: 100%;
-		}
-		.form-field {
-			margin: .7rem 0;
-			input[type=email],
-			input[type=text] {
-				border: 0;
-			}
-		}
-		.form-group {
-			p {
-				font-size: rem(16);
-				line-height: 1.2;
-				color: $gray-dark;
-			}
-			textarea {
-				min-height: 85px !important;
-				line-height: 1.2;
-				font-size: .9rem !important;
-				padding-top: .5rem !important;
-				padding-bottom: .5rem !important;
-			}
-		}
-		button {
-			margin-top: 0;
-		}
-	}
-	.modal-footer {
-		padding-top: 1.6rem;
-	}
-	.modal-body {
-		padding: 2rem;
-	}
-}
-
-.offset-sidebar {
-	@media only screen and (min-width: $small) {
-		flex: 0 0 calc(100% - #{$sidebar-width});
-		width: calc(100% - #{$sidebar-width});
-	}
 }
 
 .pagination {
@@ -450,300 +137,8 @@ body a.btn,
 	}
 }
 
-.icon {
-	display: inline-block;
-	&.arrow-left {
-		svg {
-			max-width: 30px;
-			fill: $blue-dark;
-		}
-	}
-	&.icon-blue-light {
-		color: $blue-light;
-	}
-}
-
-.post-meta {
-	.post-date {
-		text-transform: uppercase;
-	}
-}
-
-.testimonial {
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-	@media only screen and (min-width: $small) {
-		align-items: flex-start;
-		flex-direction: row;
-	}
-	.left {
-		flex: 0 0 100%;
-		padding: 1rem 1rem 2rem 1rem;
-		max-width: 350px;
-		width: 100%;
-		@media only screen and (min-width: $small) {
-			flex: 0 0 37%;
-			padding: 0 1rem 0 0;
-			width: 37%;
-		}
-	}
-	.right {
-		flex: 0 0 100%;
-		width: 100%;
-		@media only screen and (min-width: $small) {
-			flex: 0 0 63%;
-			padding-left: 1rem;
-			width: 63%;
-		}
-	}
-	.quote-container {
-		padding: 1.4rem 2rem;
-		position: relative;
-		@media only screen and (min-width: $medium) {
-			margin-top: 2.5rem;
-			padding: 1.4rem 2.8rem;
-		}
-	}
-	img {
-		max-width: 100%;
-	}
-	.icon-double-quotes {
-		color: $blue-light;
-		display: inline-block;
-		font-size: 20px;
-		height: 30px;
-		position: absolute;
-		width: 30px;
-		@media only screen and (min-width: $medium) {
-			font-size: 34px;
-		}
-		&.left {
-			left: -8px;
-			top: -4px;
-			@media only screen and (min-width: $small) {
-				left: 0;
-				top: 15px;
-			}
-		}
-		&.right {
-			bottom: 10px;
-			right: 1px;
-			@media only screen and (min-width: $small) {
-				right: 20px;
-			}
-		}
-	}
-	blockquote {
-		color: $blue-dark;
-		font-size: 1.125rem;
-		font-weight: bold;
-		line-height: 1.1;
-		margin: 0 auto;
-		max-width: 640px;
-		text-align: center;
-		@media only screen and (min-width: $medium) {
-			font-size: 1.5rem;
-			line-height: 1.25;
-			text-align: left;
-		}
-	}
-	.name {
-		font-size: 1.375rem;
-		margin-bottom: 0;
-		margin-top: 2rem;
-		text-align: center;
-		text-transform: uppercase;
-		@media only screen and (min-width: $small) {
-			font-size: 1.875rem;
-			margin-top: 0;
-			text-align: left;
-		}
-	}
-	.company,
-	.location {
-		color: $gray-dark;
-		display: inline-block;
-		font-size: 1rem;
-		font-weight: 400;
-		text-transform: uppercase;
-	}
-	.company {
-		text-align: center;
-		@media only screen and (min-width: $small) {
-			text-align: left;
-		}
-	}
-	.location {
-		@media only screen and (min-width: $small) {
-			text-align: left;
-		}
-	}
-}
-
-.select-category-dropdown {
-	margin: 0 0 2rem 0;
-	position: relative;
-	width: 100%;
-	@media only screen and (min-width: $medium) {
-		margin: 0;
-		max-width: 300px;
-		width: 100%;
-	}
-	&.show {
-		button {
-			.icon {
-				transform: rotate(-270deg);
-			}
-		}
-	}
-	button {
-		background-color: $gray-light;
-		color: $blue-dark;
-		font-size: 1rem;
-		margin: 0 !important;
-		padding: .5rem 2rem .4rem 1.5rem;
-		position: relative;
-		width: 100%;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		@media only screen and (min-width: $medium) {
-			text-align: left;
-			width: 100%;
-		}
-		// @media only screen and (min-width: $small) and (max-width: $medium - 1px) {
-		// 	font-size: 0.8125rem;
-		// 	padding: .5rem 2rem .4rem 1rem;
-		// }
-		@media only screen and (min-width: $large) {
-			padding: .5rem 2rem .4rem 1.5rem;
-			font-size: 1rem;
-		}
-		&:hover,
-		&:focus {
-			color: $blue-light;
-		}
-		&:after {
-			display: none;
-		}
-		.icon {
-			width: 12px;
-			position: absolute;
-			right: 14px;
-			top: 10px;
-			transform: rotate(-90deg);
-			transition: rotate .3s ease-in-out;
-			@media only screen and (min-width: $small) and (max-width: $large - 1px) {
-				width: 10px;
-			}
-		}
-		.bg-gray-light & {
-			background-color: $white;
-		}
-	}
-	.dropdown-menu {
-		background-color: lighten($gray-light, 5%);
-		background-clip: inherit;
-		border: 0;
-		border-radius: 0;
-		left: 0;
-		margin-top: 0;
-		width: 100%;
-		&.show {
-			transform: translate3d(8px, 38px, 0px);
-			box-shadow: 0 4px 4px 0 rgba($black, 0.1);
-		}
-		// @media only screen and (min-width: $small) {
-		// 	display: block;
-		// 	float: none;
-		// 	min-width: inherit;
-		// 	position: relative;
-		// 	transform: none;
-		// }
-		&.opened {
-			@media only screen and (min-width: $large) {
-				display: block;
-				float: none;
-				min-width: inherit;
-				position: relative;
-				transform: none;
-			}
-		}
-		a {
-			color: $blue-dark;
-			font-size: 1rem;
-			font-weight: bold;
-			text-transform: uppercase;
-			transition: color .3s ease-in-out;
-			// @media only screen and (min-width: $small) and (max-width: $large - 1px) {
-			// 	font-size: 0.8125rem;
-			// 	padding-left: 1rem;
-			// 	padding-right: 1rem;
-			// }
-			@media only screen and (min-width: $large) {
-				font-size: 1rem;
-			}
-			&.active,
-			&:hover,
-			&:focus {
-				background-color: transparent;
-				color: $blue-light;
-			}
-		}
-	}
-}
-
 .single-banner-container {
 	padding: 20%;
-}
-
-.col-2-4 { 
-	flex: 0 0 20%;
-	max-width: 20%;
-}
-.col-sm-2-4 {
-	@media (min-width: $small) {
-		flex: 0 0 20%;
-		max-width: 20%;
-	}
-}
-.col-md-2-4 {
-	@media (min-width: $medium) {
-		flex: 0 0 20%;
-		max-width: 20%;
-	}
-}
-.col-lg-2-4 {
-	@media (min-width: $large) {
-		flex: 0 0 20%;
-		max-width: 20%;
-	}
-}
-.col-xl-2-4 {
-	@media (min-width: $xlarge) {
-		flex: 0 0 20%;
-		max-width: 20%;
-	}
-}
-
-@media (max-width: 739px) {
-	.card-deck {
-		width: 100%;
-	}
-}
-
-.alert .close {
-	line-height: .8rem;
-}
-
-.no-data {
-	font-size: 1.4rem;
-}
-
-.dropdown-content li > a, 
-.dropdown-content li > span {
-	text-overflow: ellipsis;
-    overflow: hidden;
 }
 
 .page-navigation {
@@ -765,8 +160,15 @@ body a.btn,
 			&.next-link a,
 			&.prev-link a,
 			&:hover a {
-				color: $yellow;
+				color: $blue-light;
 			}
 		}
+	}
+}
+
+@media only screen and (max-width: $medium) {
+	[class*="col-"]:not(:first-child),
+	.col:not(:first-child) {
+		margin-top: 1.2rem;
 	}
 }

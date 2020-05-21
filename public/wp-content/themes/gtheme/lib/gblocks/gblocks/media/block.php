@@ -1,20 +1,18 @@
 <?php
-$padding = get_sub_field('padding');
+$image = isset($image) ? $image : GBLOCKS::getField($block.'_image');
+$padding = isset($padding) ? $padding : GBLOCKS::getField($block.'_padding');
+$link = isset($link) ? $link : GBLOCKS::get_link_url($block.'_link');
+$link_type = isset($link_type) ? $link_type : GBLOCKS::getField($block.'_link_type');
 ?>
-<?php if($image = get_sub_field('full_width_image')){ ?>
+<?php if ($image){ ?>
 	<div class="block-inner">
-		<div class="<?php if($padding){ echo GBLOCKS::css()->row()->get(); } else { echo "block-full-width-image"; } ?>">
-			<?php if($padding){ ?><div class="columns small-12 padded"><?php } ?>
-				<?php if($link = GBLOCKS::get_link_url('link')){ ?>
-					<a class="block-link-<?php echo esc_attr(get_sub_field('link_type'));?>" href="<?php echo esc_url($link); ?>">
-				<?php } ?>
-
+		<div class="<?= $padding ? 'row' : 'full-width-image';?>">
+			<?php if($padding){ ?><div class="colfull-width-image-padded"><?php } ?>
+				<?php if($link){ ?><a class="block-link-<?php echo esc_attr($link_type);?>" href="<?php echo esc_url($link); ?>"><?php } ?>
 					<?php echo GBLOCKS::image($image);?>
-
-				<?php if($link){ ?>
-					</a>
-				<?php } ?>
+				<?php if($link){ ?></a><?php } ?>
 			<?php if($padding){ ?></div><?php } ?>
 		</div>
 	</div>
-<?php } ?>
+<?php 
+}

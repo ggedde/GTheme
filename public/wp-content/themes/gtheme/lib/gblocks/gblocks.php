@@ -2,10 +2,20 @@
 
 add_action( 'admin_menu', array( 'GBLOCKS', 'admin_menu' ));
 add_action( 'wp_loaded', array( 'GBLOCKS', 'init' ));
-add_action( 'admin_init', array( 'GBLOCKS', 'addSettings' ));
+add_action( 'admin_init', array( 'GBLOCKS', 'adminInit' ));
 add_action( 'admin_enqueue_scripts', array('GBLOCKS', 'enqueue_admin_files' ));
 add_action( 'wp_enqueue_scripts', array('GBLOCKS', 'enqueue_files' ));
 add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), array('GBLOCKS', 'plugin_settings_link' ));
+
+add_filter('render_block', function($content, $block) {
+
+    if (trim($content) && strpos($content, 'block-container') === false && strpos($block['blockName'], 'core/') !== false) {
+        $content = '<div class="wp-block block-bg-none" data-type="'.$block['blockName'].'">'.$content.'</div>';
+	}
+	
+    return trim($content);
+}, 1, 2);
+
 
 /**
  *
@@ -13,7 +23,6 @@ add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), array('GBLOCKS', '
  *
  */
 class GBLOCKS {
-
 
 	private static $version = '3.0.0';
 	private static $page = 'admin.php?page=gblocks';
@@ -120,6 +129,9 @@ class GBLOCKS {
 			{
 				foreach (self::$settings['background_colors'] as $color_key => $color_params)
 				{
+
+					echo '<pre>';print_r($color_params);echo '</pre>';
+					
 					$use_css_variable = (!empty($color_params['class']) && $custom_class);
 
 					if(!empty($color_params['value'])){
@@ -133,9 +145,303 @@ class GBLOCKS {
 	<?php
 	}
 
+	public static function setTmceSettings () {
+		if ( !class_exists('Tinymce_Advanced') ) {
+			add_filter('mce_buttons', function ($buttons) {
+				return [
+					'styleselect',
+					'bullist',
+					'numlist',
+					'forecolor',
+					'fontsizeselect',
+					'wp_help',
+				];
+			}, 9);
+		
+			add_filter('mce_buttons_2', function ($buttons) {
+				return [];
+			}, 9);
+		
+			add_filter('tiny_mce_before_init', function ($tinymce) {    
+				$style_formats = array(
+					[
+						'title' => 'Bold',
+						'icon' => 'bold',
+						'format' => 'bold'
+					],
+					[
+						'title' => 'Italic',
+						'icon' => 'italic',
+						'format' => 'italic'
+					],
+					[
+						'title' => 'Underline',
+						'icon' => 'underline',
+						'format' => 'underline'
+					],
+					[
+						'title' => 'Strikethrough',
+						'icon' => 'strikethrough',
+						'format' => 'strikethrough'
+					],
+					[
+						'title' => 'Superscript',
+						'icon' => 'superscript',
+						'format' => 'superscript'
+					],
+					[
+						'title' => 'Subscript',
+						'icon' => 'subscript',
+						'format' => 'subscript'
+					],
+					[
+						'title' => 'Code',
+						'icon' => 'code',
+						'format' => 'code'
+					],
+					[
+						'title' => 'Headings',
+						'icon' => 'forecolor',
+						'items' => [
+							[
+								'title' => 'Heading 1',
+								'format' => 'h1'
+							],
+							[
+								'title' => 'Heading 2',
+								'format' => 'h2'
+							],
+							[
+								'title' => 'Heading 3',
+								'format' => 'h3'
+							],
+							[
+								'title' => 'Heading 4',
+								'format' => 'h4'
+							],
+							[
+								'title' => 'Heading 5',
+								'format' => 'h5'
+							],
+							[
+								'title' => 'Heading 6',
+								'format' => 'h6'
+							]
+						]
+					],
+					[
+						'title' => 'Blocks',
+						'icon' => 'visualblocks',
+						'items' => [
+							[
+								'title' => 'Paragraph',
+								'icon' => 'visualblocks',
+								'format' => 'p'
+							],
+							[
+								'title' => 'Paragraph Large',
+								'icon' => 'visualblocks',
+								'selector' => 'p',
+								'classes' => 'large',
+							],
+							[
+								'title' => 'Blockquote',
+								'icon' => 'blockquote',
+								'format' => 'blockquote'
+							],
+							[
+								'title' => 'Pre',
+								'icon' => 'code',
+								'format' => 'pre'
+							]
+						]
+					],
+					[
+						'title' => 'Alignment',
+						'icon' => 'drag',
+						'items' => [
+							[
+								'title' => 'Left',
+								'icon' => 'alignleft',
+								'format' => 'alignleft'
+							],
+							[
+								'title' => 'Center',
+								'icon' => 'aligncenter',
+								'format' => 'aligncenter'
+							],
+							[
+								'title' => 'Right',
+								'icon' => 'alignright',
+								'format' => 'alignright'
+							],
+							[
+								'title' => 'Justify',
+								'icon' => 'alignjustify',
+								'format' => 'alignjustify'
+							],
+							[
+								'title' => 'Indent',
+								'icon' => 'indent',
+								'selector' => 'p',
+								'styles' => ['padding-left' => '40px']
+							]
+						]
+					],
+					[
+						'title' => 'Columns',
+						'icon' => 'alignjustify',
+						'items' => [
+							[
+								'title' => 'Response - Small',
+								'block' => 'div',
+								'classes' => 'has-columns',
+								'styles' => ['columns' => '200px auto']
+							],
+							[
+								'title' => 'Response - Medium',
+								'block' => 'div',
+								'classes' => 'has-columns',
+								'styles' => ['columns' => '300px auto']
+							],
+							[
+								'title' => 'Response - Large',
+								'block' => 'div',
+								'classes' => 'has-columns',
+								'styles' => ['columns' => '400px auto']
+							],
+							[
+								'title' => 'Response - X-Large',
+								'block' => 'div',
+								'classes' => 'has-columns',
+								'styles' => ['columns' => '550px auto']
+							],
+							[
+								'title' => 'Fixed - 2',
+								'block' => 'div',
+								'classes' => 'has-columns',
+								'styles' => ['columns' => 'auto 2']
+							],
+							[
+								'title' => 'Fixed - 3',
+								'block' => 'div',
+								'classes' => 'has-columns',
+								'styles' => ['columns' => 'auto 3']
+							],
+							[
+								'title' => 'Fixed - 4',
+								'block' => 'div',
+								'classes' => 'has-columns',
+								'styles' => ['columns' => 'auto 4']
+							],
+							[
+								'title' => 'Fixed - 5',
+								'block' => 'div',
+								'classes' => 'has-columns',
+								'styles' => ['columns' => 'auto 5']
+							],
+							[
+								'title' => 'Fixed - 6',
+								'block' => 'div',
+								'classes' => 'has-columns',
+								'styles' => ['columns' => 'auto 6']
+							],
+						]
+					],
+					[
+						'title' => 'Buttons',
+						'icon' => 'removeformat',
+						'items' => [
+							[
+								'title' => 'Primary',
+								'icon' => 'removeformat',
+								'selector' => 'a',
+								'classes' => 'btn btn-primary',
+							],
+							[
+								'title' => 'Secondary',
+								'icon' => 'removeformat',
+								'selector' => 'a',
+								'classes' => 'btn btn-secondary',
+							],
+						],
+					],
+				);
+		
+				$tinymce['style_formats_merge'] = false;
+				$tinymce['style_formats'] = json_encode($style_formats);
+				$tinymce['fontsize_formats'] = "10px 11px 12px 14px 16px 18px 24px 36px 42px 48px";
+				$tinymce['toolbar1'] = '';
+				$tinymce['toolbar2'] = '';
+				$tinymce['menubar'] = true;
+				$tinymce['menu'] = json_encode([
+					'edit' => [
+						'title' => 'Edit',
+						'items' => 'undo redo | cut copy paste pastetext removeformat | selectall | tableprops deletetable cell row column wp_help'
+					],
+					'insert' => [
+						'title' => 'Insert',
+						'items' => 'link media inserttable charmap hr'
+					]
+				]);
+		
+				return $tinymce;
+			}, 9);
+		
+			add_filter( 'mce_external_plugins', function($plugin_array) {
+				$plugin_array['table'] = get_template_directory_uri() .'/lib/gblocks/library/js/tmce-table.js';
+				return $plugin_array;
+			});
+		}
+	}
+
 	public static function renderBlock($block) {
 
 	    self::display_block($block['name']);
+	}
+
+	/**
+	 * Check if Block Editor is active.
+	 * Must only be used after plugins_loaded action is fired.
+	 *
+	 * @return bool
+	 */
+	public static function isGutenbergEditor() {
+		// Gutenberg plugin is installed and activated.
+		$gutenberg = ! ( false === has_filter( 'replace_editor', 'gutenberg_init' ) );
+
+		// Block editor since 5.0.
+		$block_editor = version_compare( $GLOBALS['wp_version'], '5.0-beta', '>' );
+
+		if ( ! $gutenberg && ! $block_editor ) {
+			return false;
+		}
+
+		if ( self::is_classic_editor_plugin_active() ) {
+			$editor_option       = get_option( 'classic-editor-replace' );
+			$block_editor_active = array( 'no-replace', 'block' );
+
+			return in_array( $editor_option, $block_editor_active, true );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check if Classic Editor plugin is active.
+	 *
+	 * @return bool
+	 */
+	public static function is_classic_editor_plugin_active() {
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			include_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		if ( is_plugin_active( 'classic-editor/classic-editor.php' ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -147,7 +453,6 @@ class GBLOCKS {
 	{
 		global $block;
 
-		include_once plugin_dir_path( __FILE__ ).'gblocks-css.php';
 		include plugin_dir_path( __FILE__ ).'plugin-settings.php';
 
 		new GBLOCKS_PLUGIN_SETTINGS(self::$option_key);
@@ -244,7 +549,9 @@ class GBLOCKS {
 							'class' => '',
 							'id' => '',
 						),
-						'placement' => 'top',
+						'open' => 1,
+						'placement' => 'left',
+						'multi_expand' => 0,
 						'endpoint' => 0,          // end tabs to start a new group
 					);
 
@@ -261,7 +568,9 @@ class GBLOCKS {
 							'class' => '',
 							'id' => '',
 						),
+						'open' => 0,
 						'placement' => 'left',
+						'multi_expand' => 0,
 						'endpoint' => 0,          // end tabs to start a new group
 					);
 
@@ -326,70 +635,73 @@ class GBLOCKS {
 
 			$placement = (GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'after_title')) ? 'acf_after_title' : 'normal';
 
-			foreach ($layouts as $layoutKey => $layout) {
+			if (self::isGutenbergEditor()) {
+				foreach ($layouts as $layoutKey => $layout) {
 
-				acf_register_block(array(
-					'name'				=> $layoutKey,
-					'title'				=> __('* '.$layout['label']),
-					'description'		=> __('A custom block by G Blocks'),
-					'render_callback'	=> array(__CLASS__, 'renderBlock'),
-					'category'			=> 'g-blocks',
-					'icon'				=> !empty($layout['gblocks_settings']['icon']) ? str_replace('dashicons-', '', $layout['gblocks_settings']['icon']) : 'admin-comments',
-					'keywords'			=> array( $layoutKey ),
-					'supports' 			=> array('align' => false, 'mode' => false)
-				));
-				
-				acf_add_local_field_group(array(
-					'key' => 'gblock_'.$layoutKey.'_block',
-					'title' => $layout['label'],
-					'fields' => $layout['sub_fields'],
-					'location' => array (
-						array (
+					acf_register_block(array(
+						'name'				=> $layoutKey,
+						'title'				=> __('* '.$layout['label']),
+						'description'		=> __('A custom block by G Blocks'),
+						'render_callback'	=> array(__CLASS__, 'renderBlock'),
+						'category'			=> 'g-blocks',
+						'mode' 				=> 'edit',
+						'icon'				=> !empty($layout['gblocks_settings']['icon']) ? str_replace('dashicons-', '', $layout['gblocks_settings']['icon']) : 'admin-comments',
+						'keywords'			=> array( $layoutKey ),
+						'supports' 			=> array('align' => false, 'mode' => false)
+					));
+					
+					acf_add_local_field_group(array(
+						'key' => 'gblock_'.$layoutKey.'_block',
+						'title' => $layout['label'],
+						'fields' => $layout['sub_fields'],
+						'location' => array (
 							array (
-								'param' => 'block',
-								'operator' => '==',
-								'value' => 'acf/'.$layoutKey,
+								array (
+									'param' => 'block',
+									'operator' => '==',
+									'value' => 'acf/'.$layoutKey,
+								),
 							),
 						),
+						'menu_order' => 0,
+						'position' => 1,
+						'style' => 'no_box',
+						'label_placement' => 'top',
+						'instruction_placement' => 'label',
+						'hide_on_screen' => self::hide_on_screen(),
+						'active' => 1,
+						'description' => '',
+					));
+				}
+			} else {
+				$sections = array (
+					'key' => 'group_gblocks',
+					'title' => 'G-Blocks',
+					'fields' => array (
+						array (
+							'key' => 'field_x1',
+							'label' => 'G-Blocks',
+							'name' => 'gblocks',
+							'type' => 'flexible_content',
+							'layouts' => $layouts,
+							'button_label' => 'Add Content',
+							'min' => '',
+							'max' => '',
+						),
 					),
-					'menu_order' => 0,
-					'position' => 1,
+					'location' => self::get_locations(),
+					'menu_order' => 100,
+					'position' => $placement,
 					'style' => 'no_box',
 					'label_placement' => 'top',
 					'instruction_placement' => 'label',
 					'hide_on_screen' => self::hide_on_screen(),
 					'active' => 1,
 					'description' => '',
-				));
+				);
+				$sections = apply_filters('gblock_default_section', $sections);
+				acf_add_local_field_group($sections);
 			}
-
-			$sections = array (
-				'key' => 'group_gblocks',
-				'title' => 'G-Blocks',
-				'fields' => array (
-					array (
-						'key' => 'field_x1',
-						'label' => 'G-Blocks',
-						'name' => 'gblocks',
-						'type' => 'flexible_content',
-						'layouts' => $layouts,
-						'button_label' => 'Add Content',
-						'min' => '',
-						'max' => '',
-					),
-				),
-				'location' => self::get_locations(),
-				'menu_order' => 100,
-				'position' => $placement,
-				'style' => 'no_box',
-				'label_placement' => 'top',
-				'instruction_placement' => 'label',
-				'hide_on_screen' => self::hide_on_screen(),
-				'active' => 1,
-				'description' => '',
-			);
-			$sections = apply_filters('gblock_default_section', $sections);
-			acf_add_local_field_group($sections);
 
 			$option_pages = (!empty(self::$settings['option_pages']) ? self::$settings['option_pages'] : false);
 
@@ -675,6 +987,16 @@ class GBLOCKS {
 		return $background_fields;
 	}
 
+	public static function getField($field) {
+		// global $block_attributes;
+
+		if (!function_exists('get_field')) {
+			return '';
+		}
+
+		return self::isGutenbergEditor() ? get_field($field) : get_sub_field($field);
+	}
+
 	private static function get_default_fields($block='')
 	{
 		$background_fields = self::get_background_fields($block);
@@ -747,10 +1069,10 @@ class GBLOCKS {
 			        'id' => '',
 			    ),
 			    'choices' => array (
-			        'small' => 'Small Screens',
-			        'medium' => 'Medium Screens',
-			        'large' => 'Large Screens',
-			        'xlarge' => 'Extra Large Screens',
+			        'sm' => 'Small Screens',
+			        'md' => 'Medium Screens',
+			        'lg' => 'Large Screens',
+			        'xl' => 'Extra Large Screens',
 			    ),
 			    'default_value' => array (
 			    ),
@@ -783,9 +1105,79 @@ class GBLOCKS {
 		return $hidden;
 	}
 
-	public static function css()
-	{
-		return new GBLOCKS_CSS();
+	public static function updateGutenbergSettings() {
+
+		if(!self::isGutenbergEditor()) {
+			return;
+		}
+
+		add_filter( 'block_editor_settings' , function ($settings) {
+			unset($settings['styles'][0]);
+			return $settings;
+		});
+	
+		add_theme_support( 'editor-color-palette', array() );
+
+		add_action('admin_footer', function(){ ?>
+			<script>
+			(function($, undefined){
+				var gutenbergValidation = new acf.Model({
+					wait: 'ready',
+					initialize: function(){
+						if (acf.isGutenberg()) {
+							this.customizeEditor();
+						}
+					},
+					customizeEditor: function(){
+						var editor = wp.data.dispatch( 'core/editor' );
+						var notices = wp.data.dispatch( 'core/notices' );
+						var savePost = editor.savePost;
+						editor.savePost = function(){
+							var valid = acf.validateForm({
+								form: $('#editor'),
+								reset: true,
+								complete: function( $form, validator ){
+									editor.unlockPostSaving( 'acf' );
+								},
+								failure: function( $form, validator ){
+									var notice = validator.get('notice');
+									notices.createErrorNotice( notice.get('text'), { 
+										id: 'acf-validation', 
+										isDismissible: true
+									});
+									notice.remove();
+								},
+								success: function(){
+									savePost();
+								}
+							});
+							if( !valid ) {
+								editor.lockPostSaving( 'acf' );
+								return false;
+							}
+							savePost();
+						}
+					}
+				});
+			})(jQuery);
+			</script>
+			
+		<?php 
+		});
+			
+		add_action('acf/validate_save_post', function () {
+			if( empty($_POST) ) return;
+			foreach ( $_POST as $postkey => $postvalue ) {
+				if ('acf' == $postkey || 'acf-block' == substr( $postkey, 0, 9 ) ) {
+					foreach( $postvalue as $key => $value ) {
+						$field = acf_get_field( $key );
+						$input = $postkey . '[' . $key . ']';
+						if( !$field ) continue;
+						acf_validate_value( $value, $field, $input );		
+					}
+				}
+			}
+		});
 	}
 
 	/**
@@ -795,6 +1187,8 @@ class GBLOCKS {
 	 */
 	public static function init()
 	{
+		self::setTmceSettings();
+
 		if(function_exists('acf_add_local_field_group')) {
 
 			add_filter( 'block_categories', function ( $categories) {
@@ -848,11 +1242,8 @@ class GBLOCKS {
 			self::add_hook('filter', 'the_content', 'filter_content', 23);
 		}
 
-		if(!is_admin())
-		{
-			self::add_hook('action', 'wp_head', 'add_head_css');
-
-		}
+		self::add_hook('action', 'wp_head', 'add_head_css');
+		self::add_hook('action', 'admin_head', 'add_head_css');
 
 		//self::add_hook('action', 'wp', 'prepare_blocks');
 
@@ -921,8 +1312,10 @@ class GBLOCKS {
 	 *
 	 * @return void
 	 */
-	public static function addSettings()
+	public static function adminInit()
 	{
+		self::updateGutenbergSettings();
+		
 		$active_settings = get_option(self::$option_key);
 		if(!$active_settings)
 		{
@@ -962,7 +1355,6 @@ class GBLOCKS {
 	 */
 	public static function admin_menu()
 	{
-		$icon = file_get_contents(plugin_dir_path( __FILE__ ) . 'gblocks/content/content_2.svg');
 		add_submenu_page( 'options-general.php', 'G-Blocks', 'G-Blocks', 'manage_options', 'gblocks', array( __CLASS__, 'admin' ));
 	}
 
@@ -1207,13 +1599,65 @@ class GBLOCKS {
 
 
 		// Screen Options
-		if($block_hide)
+		if(!empty($block_hide))
 		{
-			$small = in_array('small', $block_hide);
-			$medium = in_array('medium', $block_hide);
-			$large = in_array('large', $block_hide);
-			$xlarge = in_array('xlarge', $block_hide);
-			$block_attributes['class'] = array_merge($block_attributes['class'], self::css()->hide($small, $medium, $large, $xlarge)->class);
+			$sm = in_array('sm', $block_hide);
+			$md = in_array('md', $block_hide);
+			$lg = in_array('lg', $block_hide);
+			$xl = in_array('xl', $block_hide);
+
+			if ($sm && $md && $lg && $xl) {
+				$block_attributes['class'][] = 'd-none';
+			} 
+			elseif ($sm && !$md && !$lg && !$xl) 
+			{
+				$block_attributes['class'][] = 'd-none d-md-block';
+			} 
+			elseif (!$sm && $md && !$lg && !$xl) 
+			{
+				$block_attributes['class'][] = 'd-md-none d-lg-block';
+			} 
+			elseif (!$sm && !$md && $lg && !$xl) 
+			{
+				$block_attributes['class'][] = 'd-lg-none d-xl-block';
+			} 
+			elseif (!$sm && !$md && !$lg && $xl) 
+			{
+				$block_attributes['class'][] = 'd-xl-none';
+			} 
+			elseif ($sm && $md && !$lg && !$xl) 
+			{
+				$block_attributes['class'][] = 'd-none d-lg-block';
+			} 
+			elseif (!$sm && $md && $lg && !$xl) 
+			{
+				$block_attributes['class'][] = 'd-md-none d-xl-block';
+			} 
+			elseif (!$sm && !$md && $lg && $xl) 
+			{
+				$block_attributes['class'][] = 'd-lg-none';
+			} 
+			elseif ($sm && $md && $lg && !$xl) 
+			{
+				$block_attributes['class'][] = 'd-none d-lg-block';
+			}
+			elseif (!$sm && $md && $lg && $xl) 
+			{
+				$block_attributes['class'][] = 'd-md-none';
+			}
+			elseif (!$sm && $md && !$lg && $xl) 
+			{
+				$block_attributes['class'][] = 'd-md-none d-lg-block d-xl-none';
+			}
+			elseif ($sm && !$md && $lg && !$xl) 
+			{
+				$block_attributes['class'][] = 'd-none d-md-block d-lg-none d-xl-block';
+			}
+			elseif ($sm && !$md && !$lg && $xl) 
+			{
+				$block_attributes['class'][] = 'd-none d-md-block d-xl-none';
+			}
+			$block_attributes['class'] = array_merge($block_attributes['class'], $block_hide);
 		}
 
 		// Background
@@ -1253,7 +1697,7 @@ class GBLOCKS {
 				$image_src = self::get_prefered_image_size_src($block_background_image, '', true);
 				$block_attributes['style'] = " background-image: url('".esc_url($image_src)."'); ";
 
-				if(!GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
+				if(is_admin() || !GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
 				{
 					$block_attributes['background_image_src_preload'] = esc_url($image_src);
 				}
@@ -1265,7 +1709,7 @@ class GBLOCKS {
 				$block_attributes['style'] = ($image_src ? " background-image: url('".$image_src."'); " : '');
 				$block_attributes['background_image_src_preload'] = ($image_src ? $image_src : '');
 
-				if($block_name !== 'banner' && GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
+				if($block_name !== 'banner' && !is_admin() && GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
 				{
 					unset($block_attributes['background_image_src_preload']);
 					
@@ -1344,8 +1788,8 @@ class GBLOCKS {
 		// Class (Keep for Older Versions) #TODO Depricate as this can be handled by "gblocks_attributes" hook
 		$block_attributes['class'] = array_unique($block_attributes['class']);
 
-		$block_attributes['class'] = GBLOCKS::css()->add($block_attributes['class'])->get();
-		$block_attributes['class'] = explode(' ', $block_attributes['class']);
+		// $block_attributes['class'] = GBLOCKS::css()->add($block_attributes['class'])->get();
+		// $block_attributes['class'] = explode(' ', $block_attributes['class']);
 
 		// Allow filtering all attributes - remove empty values, but leave 0
 		$block_attributes = array_filter(apply_filters('gblocks_container_attributes', $block_attributes, $block_name), function($value) {
@@ -1441,6 +1885,10 @@ class GBLOCKS {
 
 		if(self::is_viewable())
 		{
+			if (function_exists('has_block') && has_block('acf/'.$block)) {
+				return true;
+			}
+
 			if(get_field($section, $object_id))
 			{
 				while(the_flexible_field($section, $object_id))
@@ -1911,6 +2359,8 @@ class GBLOCKS {
 					$background_colors_repeater['value'] = array('type' => 'colorpicker', 'label' => 'Value', 'description' => 'Use Hex values (ex. #ff0000)');
 				}
 
+				$background_colors_repeater['dark'] = array('type' => 'checkbox', 'options' => ['text-light bg-dark' => 'Yes'], 'label' => 'Is Dark Background', 'description' => 'Should Text be converted to light text with this background color');
+
 				$fields = array();
 
 				foreach ($block_groups as $group => $blocks)
@@ -2162,22 +2612,9 @@ class GBLOCKS {
 	 */
 	public static function enqueue_files($hook)
 	{
-		if (GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'enqueue_scripts') && self::is_viewable())
-		{
-			wp_enqueue_script( 'gblocks_scripts_js', get_template_directory_uri().'/lib/gblocks/library/js/blocks.min.js', array('jquery'), self::$version, true );
-		}
 		if (GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
 		{
 			wp_enqueue_script( 'gblocks_responsive-images_js', get_template_directory_uri().'/lib/gblocks/library/js/responsive-images.min.js', array('jquery'), self::$version, true );
-		}
-		if (GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'use_foundation') && self::is_viewable())
-		{
-			$foundation_file = self::get_foundation_file_name();
-			wp_enqueue_style( 'foundation_css', get_template_directory_uri().'/lib/gblocks/library/css/'.$foundation_file.'.css' , array(), '6.0.0');
-		}
-		if (GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'use_default') && self::is_viewable())
-		{
-			wp_enqueue_style( 'default_css', get_template_directory_uri().'/lib/gblocks/library/css/blocks.min.css' , array(), self::$version);
 		}
 	}
 
@@ -2195,19 +2632,7 @@ class GBLOCKS {
 					jQuery(function($){
 						$(document).ready(function(){
 
-
-
-						<?php if(GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'enqueue_scripts')){ ?>
-
-							// $('.block-link-video').colorbox({iframe:true, height:'80%', width:'80%'});
-							// $('.block-link-gallery').colorbox({rel:'block-link-gallery', height:'80%', width:'80%', transition:'fade'});
-							// $('.block-inline').colorbox({inline: true, height:'80%', width:'80%', transition:'fade'});
-
-						<?php } ?>
-
-
-
-						<?php if(GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img')){
+						<?php if(!is_admin() && GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img')){
 
 							$image_sizes = array();
 							foreach (self::get_image_sizes() as $name => $image)
@@ -2251,8 +2676,6 @@ class GBLOCKS {
 							$(this).responsiveImages(<?php echo json_encode($filtered_responsive_image_settings);?>);
 
 						<?php } ?>
-
-
 
 						});
 					});
@@ -2593,10 +3016,13 @@ class GBLOCKS {
 	public static function column_width_options()
 	{
 		$column_width_options = array(
-			2 => 'Small',
-			5 => 'Medium',
+			2 => 'X-Small',
+			3 => 'Small',
+			4 => 'Medium-Small',
 			6 => 'Half',
-			8 => 'Large',
+			8 => 'Medium-Large',
+			9 => 'Large',
+			10 => 'X-Large',
 		);
 
 		// allow filtering of column sizes for the media with content block
@@ -2609,13 +3035,19 @@ class GBLOCKS {
 	/**
 	 * Converts a single array of link options into multiple fields
 	 *
-	 * @param  $label, $includes, $show_text
+	 * @param string $name
+	 * @param string $label
+	 * @param array  $includes
+	 * @param bool   $show_text
+	 * @param array  $post_types
+	 * @param array  $conditional_logic
+	 * @param array  $styles
 	 *
 	 * @return array
 	 * @author GG & BF
 	 *
 	 **/
-	public static function get_link_fields($label = 'link', $includes = array(), $show_text = true, $post_types = array(0 => 'all'), $conditional_logic = array())
+	public static function get_link_fields($name = 'link', $label = '', $includes = array(), $show_text = true, $post_types = array(0 => 'all'), $conditional_logic = array(), $styles = array())
 	{
 		$post_types = array();
 
@@ -2634,15 +3066,13 @@ class GBLOCKS {
 			ksort($post_types);
 		}
 
-		$styles = array();
-
-		if(is_array($label))
+		if(is_array($name))
 		{
-			$arr = $label;
+			$arr = $name;
+			$name = isset($arr['name']) ? sanitize_title($arr['name']) : sanitize_title($name);
 			$label = isset($arr['label']) ? $arr['label'] : (isset($arr['name']) ? ucwords(str_replace(array('_', '-'), ' ', $arr['name'])) : 'link');
-			$name = isset($arr['name']) ? sanitize_title($arr['name']) : sanitize_title($label);
 			$includes = isset($arr['includes']) ? $arr['includes'] : array();
-			$styles = isset($arr['styles']) ? $arr['styles'] : array();
+			$styles = isset($arr['styles']) ? $arr['styles'] : $styles;
 			$show_text = isset($arr['show_text']) ? $arr['show_text'] : true;
 			$post_types = isset($arr['post_types']) ? $arr['post_types'] : $post_types;
 			$conditional_logic = isset($arr['conditional_logic']) ? $arr['conditional_logic'] : array();
@@ -2662,7 +3092,7 @@ class GBLOCKS {
 			'file' => 'File Download',
 			'video' => 'Play Video',
 		);
-		$allowed_fields = (!empty($includes)) ? array() : $allowed_options;
+		$allowed_fields = !empty($includes) ? array() : $allowed_options;
 
 		if(!empty($includes)){
 			foreach($includes as $include_key => $include){
@@ -2698,7 +3128,7 @@ class GBLOCKS {
 			$conditional_logic = array();
 		}
 
-		$label_title = ucwords($label);
+		$label_title = ucwords(str_replace(array('-','_'),' ',$label));
 		$fields = array();
 
 		$fields[] = array (
@@ -2839,7 +3269,7 @@ class GBLOCKS {
 
 			$fields[] = array (
 				'key' => 'field_'.$block.'_'.$name.'_style',
-				'label' => 'Styles',
+				'label' => 'Style',
 				'name' => $name.'_style',
 				'type' => 'radio',
 			    'instructions' => '',
@@ -2872,14 +3302,14 @@ class GBLOCKS {
 			'file' => 'File Download',
 			'video' => 'Play Video',
 		);
-		if($type = get_sub_field($field.'_type'))
+		if($type = self::getField($field.'_type'))
 		{
 			if($type != 'none')
 			{
-				$url = get_sub_field($field.'_'.$type);
+				$url = self::getField($field.'_'.$type);
 				if(!array_key_exists($type, $allowed_options))
 				{
-					$url = get_sub_field($field.'_url');
+					$url = self::getField($field.'_url');
 				}
 				if($type == 'video')
 				{
@@ -3043,7 +3473,7 @@ class GBLOCKS {
 
 	public static function image_background($image='featured', $fallback_size='large')
 	{
-		if(GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
+		if(!is_admin() && GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
 		{
 			return self::image_sources($image);
 		}
@@ -3169,7 +3599,7 @@ class GBLOCKS {
 
 		$image_sources = array();
 
-		if(GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
+		if(!is_admin() && GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'add_responsive_img'))
 		{
 			$additional_attributes['src'] = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 

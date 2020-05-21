@@ -1,16 +1,16 @@
 <?php
 
-$block_title = isset($block_title) ? $block_title : get_sub_field('title');
-$block_filter = isset($block_filter) ? $block_filter : get_sub_field('filter');
-$block_filter_post_type = isset($block_filter_post_type) ? $block_filter_post_type : get_sub_field('post_type');
-$block_filter_taxonomy = isset($block_filter_taxonomy) ? $block_filter_taxonomy : get_sub_field('taxonomy');
-$block_filter_author = isset($block_filter_author) ? $block_filter_author : get_sub_field('author');
-$block_filter_custom = isset($block_filter_custom) ? $block_filter_custom : get_sub_field('custom');
+$block_title = isset($block_title) ? $block_title : GBLOCKS::getField($block.'_title');
+$block_filter = isset($block_filter) ? $block_filter : GBLOCKS::getField($block.'_filter');
+$block_filter_post_type = isset($block_filter_post_type) ? $block_filter_post_type : GBLOCKS::getField($block.'_post_type');
+$block_filter_taxonomy = isset($block_filter_taxonomy) ? $block_filter_taxonomy : GBLOCKS::getField($block.'_taxonomy');
+$block_filter_author = isset($block_filter_author) ? $block_filter_author : GBLOCKS::getField($block.'_author');
+$block_filter_custom = isset($block_filter_custom) ? $block_filter_custom : GBLOCKS::getField($block.'_custom');
 
-$block_limit = isset($block_limit) ? $block_limit : get_sub_field('limit');
-$block_view_more_link_type = isset($block_view_more_link) ? $block_view_more_link : get_sub_field('view_more_link_type');
-$block_view_more_link_text = isset($block_view_more_text) ? $block_view_more_text : get_sub_field('view_more_link_text');
-$block_view_more_link_url = isset($block_view_more_link_url) ? $block_view_more_link_url : get_sub_field('view_more_link_'.$block_view_more_link_type);
+$block_limit = isset($block_limit) ? $block_limit : GBLOCKS::getField($block.'_limit');
+$block_view_more_link_type = isset($block_view_more_link) ? $block_view_more_link : GBLOCKS::getField($block.'_view_more_link_type');
+$block_view_more_link_text = isset($block_view_more_text) ? $block_view_more_text : GBLOCKS::getField($block.'_view_more_link_text');
+$block_view_more_link_url = isset($block_view_more_link_url) ? $block_view_more_link_url : GBLOCKS::getField($block.'_view_more_link_'.$block_view_more_link_type);
 
 $unique_item_class = '';
 $found_postids = array();
@@ -169,8 +169,8 @@ if($found_postids)
 <div class="block-inner block-posts-filter-<?php echo $block_filter;?> <?php echo $unique_item_class;?>">
 
 	<?php if($block_title || $block_view_more_link_url){ ?>
-	<div class="<?php echo GBLOCKS::css()->row()->get();?> block-posts-title-container">
-		<div class="<?php echo GBLOCKS::css()->col(12)->get();?> block-posts-title-content">
+	<div class="row block-posts-title-container">
+		<div class="col block-posts-title-content">
 			<?php if($block_title){?>
 				<h2 class="block-posts-title"><?php echo $block_title;?></h2>
 			<?php } ?>
@@ -182,7 +182,7 @@ if($found_postids)
 	</div>
 	<?php } ?>
 
-	<div class="<?php echo GBLOCKS::css()->row()->get();?> block-posts">
+	<div class="row block-posts">
 
 		<?php
 
@@ -199,7 +199,7 @@ if($found_postids)
 
 				?>
 
-				<div class="<?php echo GBLOCKS::css()->col(12, 6, 4)->get();?> block-post">
+				<div class="col col-lg-4 col-md-6 block-post">
 
 					<div class="block-post-entry<?php if(has_post_thumbnail()){ ?> block-post-has-image<?php } ?>">
 					    <a href="<?php the_permalink(); ?>" class="block-post-entry-link">

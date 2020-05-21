@@ -1,25 +1,25 @@
 <?php
 
-$accordians = !empty($block_attributes['is_wp_block']) ? get_field('accordian') : get_sub_field('accordian');
-$expand_first_item = !empty($block_attributes['is_wp_block']) ? get_field('expand_first_item') : get_sub_field('expand_first_item');
+$accordion = isset($accordion) ? $accordion : GBLOCKS::getField($block.'_accordion');
+$expand_first_item = isset($expand_first_item) ? $expand_first_item :  GBLOCKS::getField($block.'_expand_first_item');
 
-if($accordians)
+if($accordion)
 {
     ?>
     <div class="block-inner">
-        <div class="<?php echo GBLOCKS::css()->row()->get();?>">
+        <div class="row">
 
-            <?php foreach($accordians as $accordian_key => $accordian){ ?>
+            <?php foreach($accordion as $accordianKey => $accordianItem){ ?>
 
-                <div class="<?php echo GBLOCKS::css()->col()->get();?>">
-                    <div class="item-container<?php echo (!$accordian_key && $expand_first_item ? ' open' : '');?>">
+                <div class="col-12">
+                    <div class="item-container<?php echo (!$accordianKey && $expand_first_item ? ' open' : '');?>">
                         <span class="item-handle"></span>
                         <span class="item-icon"></span>
                         <h4 class="item-title">
-                            <?php echo $accordian['title'];?>
+                            <?php echo $accordianItem['title'];?>
                         </h4>
                         <div class="item-content">
-                            <?php echo $accordian['text'];?>
+                            <?php echo $accordianItem['text'];?>
                         </div>
                     </div>
                 </div>
@@ -31,7 +31,7 @@ if($accordians)
     <script>
     jQuery(document).ready(function($){
 
-        $('.block-accordian .item-title, .block-accordian .item-container > i.fa').on('click', function(){
+        $('.block-accordian .item-title').off().on('click', function(){
             $(this).closest('.item-container').toggleClass('open');
             $(this).closest('.item-container').find('.item-content').animate({
                 height: "toggle",

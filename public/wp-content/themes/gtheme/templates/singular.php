@@ -8,12 +8,11 @@ if (have_posts()) { while (have_posts()) { the_post();
 		get_template_part('parts/single-banner');
 	}
 
+	echo get_field('sub_title');
+
 	?>
-	<div class="row">
-		<div class="col">
-			<?php the_content(); ?>
-		</div>
-	</div>
+	
+	<?php the_content(); ?>
 	<?php
 }}
 

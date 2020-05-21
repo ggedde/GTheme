@@ -19,3 +19,7 @@ Include Libraries
 @import 'inc/typography';
 @import 'inc/blocks';
 @import 'inc/forms';
+
+body {
+    margin: 1rem !important;
+}

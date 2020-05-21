@@ -15,9 +15,9 @@
 
 $block_fields = array(
 	array (
-	   'key' => 'field_'.$acf_group.'_expand_first_item',
+	   'key' => 'field_'.$block.'_expand_first_item',
 	   'label' => 'Expand First Item',
-	   'name' => 'expand_first_item',
+	   'name' => $block.'_expand_first_item',
 	   'type' => 'true_false',
 	   'instructions' => '',
 	   'required' => 0,
@@ -34,9 +34,9 @@ $block_fields = array(
 	   'default_value' => 0,
 	),
     array (
-        'key' => 'field_'.$block.'_accordian',
-        'label' => 'Accordian Items',
-        'name' => 'accordian',
+        'key' => 'field_'.$block.'_accordion',
+        'label' => 'Accordion Items',
+        'name' => $block.'_accordion',
         'type' => 'repeater',
         'instructions' => '',
         'required' => 0,
@@ -47,7 +47,7 @@ $block_fields = array(
             'id' => '',
         ),
         'collapsed' => '',
-        'min' => '',
+        'min' => '1',
         'max' => '',
         'layout' => 'block',         // table | block | row
         'button_label' => 'Add Item',

@@ -493,7 +493,7 @@ class GBLOCKS_PLUGIN_SETTINGS
 					$checked = '';
 				}
 				?>
-				<span class="gblocks-option-wrapper">
+				<div class="gblocks-option-wrapper">
 					<label>
 						<input type="checkbox" name="<?php echo $settings_attribute;?>[]" value="<?php echo $option_value; ?>" <?php echo $checked; ?>>
 						<span <?php if($block_icon){ echo 'class="dashicons-before '.esc_attr($block_icon).'"'; } ?>><?php echo ucfirst($options_label); ?></span>
@@ -506,7 +506,7 @@ class GBLOCKS_PLUGIN_SETTINGS
 							</div>
 						</div></div>
 					<?php } ?>
-				</span>
+				</div>
 				<?php
 			}
 			if(!empty($deprecated)){
@@ -527,7 +527,7 @@ class GBLOCKS_PLUGIN_SETTINGS
 						$checked = '';
 					}
 					?>
-					<span class="gblocks-option-wrapper">
+					<div class="gblocks-option-wrapper">
 						<label>
 							<input type="checkbox" name="<?php echo $settings_attribute;?>[]" value="<?php echo $option_value; ?>" <?php echo $checked; ?>>
 							<span <?php if($block_icon){ echo 'class="'.esc_attr($block_icon).'"'; } ?>><?php echo ucfirst($options_label); ?></span>
@@ -540,7 +540,7 @@ class GBLOCKS_PLUGIN_SETTINGS
 								</div>
 							</div></div>
 						<?php } ?>
-					</span>
+					</div>
 					<?php
 				}
 			}
@@ -574,7 +574,7 @@ class GBLOCKS_PLUGIN_SETTINGS
 					$checked = '';
 				}
 				?>
-				<span class="gblocks-option-wrapper">
+				<div class="gblocks-option-wrapper">
 					<label>
 						<input type="radio" name="<?php echo $settings_attribute;?>[]" value="<?php echo $option_value; ?>" <?php echo $checked; ?>>
 						<span <?php if($block_icon){ echo 'class="'.esc_attr($block_icon).'"'; } ?>><?php echo ucfirst($options_label); ?></span>
@@ -587,7 +587,7 @@ class GBLOCKS_PLUGIN_SETTINGS
 							</div>
 						</div></div>
 					<?php } ?>
-				</span>
+				</div>
 				<?php
 			}
 		}
@@ -601,7 +601,7 @@ class GBLOCKS_PLUGIN_SETTINGS
 
 		if(!empty($field['description']))
 		{
-			?><span class="description"><?php echo $field['description'];?></span><br><?php
+			?><div class="description"><small><?php echo $field['description'];?></small></div><br><?php
 		}
 	}
 }

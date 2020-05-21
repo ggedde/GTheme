@@ -15,9 +15,30 @@
 
 $block_fields = array(
 	array (
-		'key' => 'field_'.$block.'_1',
-		'label' => 'Title',
-		'name' => 'title',
+		'key' => 'field_'.$block.'_heading',
+		'label' => 'Heading',
+		'name' => $block.'_heading',
+		'type' => 'textarea',
+		'instructions' => '',
+		'required' => 1,
+		'conditional_logic' => 0,
+		'wrapper' => array (
+			'width' => '',
+			'class' => '',
+			'id' => '',
+		),
+		'default_value' => '',
+		'placeholder' => '',
+		'maxlength' => '',
+		'rows' => '2',
+		'new_lines' => 'br',        // wpautop | br | ''
+		'readonly' => 0,
+		'disabled' => 0,
+	),
+	array (
+		'key' => 'field_'.$block.'_sub_heading',
+		'label' => 'Sub Heading',
+		'name' => $block.'_sub_heading',
 		'type' => 'textarea',
 		'instructions' => '',
 		'required' => 0,
@@ -36,10 +57,10 @@ $block_fields = array(
 		'disabled' => 0,
 	),
 	array (
-		'key' => 'field_'.$block.'_2',
-		'label' => 'Sub Title',
-		'name' => 'sub-title',
-		'type' => 'textarea',
+		'key' => 'field_'.$block.'_alignment',
+		'label' => 'Alignment',
+		'name' => $block.'_alignment',
+		'type' => 'radio',
 		'instructions' => '',
 		'required' => 0,
 		'conditional_logic' => 0,
@@ -48,26 +69,20 @@ $block_fields = array(
 			'class' => '',
 			'id' => '',
 		),
-		'default_value' => '',
-		'placeholder' => '',
-		'maxlength' => '',
-		'rows' => '2',
-		'new_lines' => 'br',        // wpautop | br | ''
-		'readonly' => 0,
-		'disabled' => 0,
-	),
-	array (
-		'key' => 'field_'.$block.'_3',
-		'label' => 'Center Text',
-		'name' => 'center',
-		'type' => 'true_false',
-		'message' => '',
-		'default_value' => 0,
-	),
+		'choices' => array (
+	        'text-left' => 'Left',
+	        'text-center d-flex justify-content-center' => 'Center',
+	        'text-right  d-flex justify-content-right' => 'Right',
+	    ),
+		'other_choice' => 0,
+		'save_other_choice' => 0,
+		'default_value' => 'text-left',
+		'layout' => 'horizontal',
+	)
 );
 
 return array (
-	'label' => 'Title',
+	'label' => 'Heading',
 	'name' => $block,
 	'display' => 'block',
 	'min' => '',
@@ -75,20 +90,6 @@ return array (
 	'sub_fields' => $block_fields,
 	'gblocks_settings' => array(
 		'icon' => 'dashicons-editor-textcolor',
-		'description' => '<div class="row">
-				<div class="columns medium-6">
-					<img src="'.plugins_url().'/gblocks/gblocks/title/title.svg">
-				</div>
-				<div class="columns medium-6">
-					<p>When you want to make a statement with your content and break it apart for ease of digestion this block allows you to put a title and subtitle above that content to help differentiate it.</p>
-					<p><strong>Available Fields:</strong></p>
-					<ul>
-						<li>Background</li>
-						<li>Title</li>
-						<li>Sub Title</li>
-						<li>Ability to center text <em>( default is left-aligned )</em></li>
-					</ul>
-				</div>
-			</div>'
+		'description' => ''
 	),
 );
