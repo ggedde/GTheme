@@ -55,13 +55,13 @@ input[type="file"] {
     padding-left: 100px !important;
     color: white;
 	position: relative;
-	border: 1px solid $green !important;
+	border: 1px solid $gray-dark !important;
 	@media only screen and (min-width: 641px) {
 		width: calc(100% - 8px) !important;
 	}
 	&:active,
 	&:focus {
-		border-color: darken($green, 30%) !important;
+		border-color: darken($gray-dark, 30%) !important;
 	}
     cursor: pointer;
     &::-webkit-file-upload-button {
@@ -76,7 +76,7 @@ input[type="file"] {
         width: 100%;
         display: block;
         color: $white;
-        background: $green;
+        background: $gray-dark;
         padding: .95rem 2rem;
         outline: none;
         white-space: nowrap;
@@ -147,7 +147,7 @@ input[type="file"] {
 	}
 	&.input-wrapper-radio,
 	&.input-wrapper-checkbox {
-		border: 1px solid $yellow;
+		border: 1px solid $blue-light;
 		display: inline-block !important;
 		width: 20px !important;
 		height: 20px !important;
@@ -158,7 +158,7 @@ input[type="file"] {
 			margin: 3px;
 		}
 		&.checked {
-			background-color: $yellow;
+			background-color: $blue-light;
 		}
 		input {
 			display: block !important;
@@ -215,7 +215,7 @@ label.btn input[type=checkbox] + label:before,
     top: -2px;
     left: 0;
     height: 1.375rem;
-    border: 1px solid $yellow;
+    border: 1px solid $blue-light;
 	// display: inline-block !important;
 	width: 20px !important;
 	height: 20px !important;
@@ -231,14 +231,14 @@ label.btn input[type=checkbox]:checked + label:before,
     top: -2px;
     left: 0;
     height: 1.375rem;
-    border: 1px solid $yellow;
+    border: 1px solid $blue-light;
 	// display: inline-block !important;
 	width: 20px !important;
 	height: 20px !important;
     transform: rotate(0);
     transform-origin: 100% 100%;
 	backface-visibility: hidden;
-	background-color: $yellow;
+	background-color: $blue-light;
 	box-shadow: inset 0 0 0 2px $white;
 }
 
