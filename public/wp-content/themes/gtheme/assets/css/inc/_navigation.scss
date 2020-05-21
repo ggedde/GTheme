@@ -414,3 +414,164 @@ body.events .global-header-main-menu .menu-item.events a {
 		outline: 0;
 	}
 }
+
+ul.menu {
+	list-style: none;
+	display: inline;
+	margin: 0;
+	padding: 0;
+	li {
+		margin: 0 .5rem;
+		@media only screen and (min-width: $medium) {
+			display: inline-block;
+		}
+		a {
+			&:hover {
+				text-decoration: underline;
+			}
+			.global-header-main-menu & {
+				text-transform: uppercase;
+				font-weight: 600;
+				font-family: $font-secondary;
+				letter-spacing: 2px;
+				color: $gray-dark;
+				text-align: right;
+				display: block;
+				padding: 1rem 0;
+				@media only screen and (min-width: $medium) {
+					color: $white;
+					text-align: left;
+					display: inline;
+				}
+				&.active {
+					color: $yellow;
+				}
+			}
+		}
+		.global-header-main-menu & {
+			font-size: 2.4rem;
+			@media only screen and (min-width: $medium) {
+				font-size: 1.8rem;
+			}
+			a:hover,
+			a:active,
+			a:focus,
+			&.current-menu-item a {
+				text-decoration: none;
+				color: $yellow;
+			}
+		}
+	}
+	.global-header-account-menu & {
+		a {
+			font-size: 1.6rem;
+			color: $gray-dark;
+			text-align: right;
+			display: block;
+			padding: .6rem 0;
+			&.active,
+			&:hover {
+				color: $yellow;
+			}
+		}
+		@media only screen and (min-width: $medium) {
+			position: fixed;
+			top: 1.5rem;
+			right: 2rem;
+			body.admin-bar & {
+				top: 3.3rem;
+			}
+			a {
+				font-size: 1.2rem;
+				color: darken($white, 15%);
+				text-align: left;
+				display: inline;
+				// padding: 0;
+				&.active,
+				&:hover {
+					color: $yellow;
+				}
+			}
+		}
+	}
+}
+
+
+/*
+*   Mobile Menu Button
+*/
+.button-mobile-menu {
+	position: fixed;
+	top: 1.2rem;
+	right: .5rem;
+	background-color: transparent;
+	border: 0 !important;
+	height: 40px;
+	margin: 0;
+	outline: 0;
+	padding: 0;
+	transition: all .3s ease-in-out;
+	width: 45px;
+	z-index: 100;
+	@media only screen and (min-width: $medium) {
+		display: none;
+	}
+	@media only screen and (min-width: 400px) {
+		width: 55px;
+	}
+	span {
+		bottom: 0;
+		left: 6px;
+		margin: auto;
+		position: absolute;
+		right: 6px;
+		top: 0;
+		&::before {
+			top: -9px;
+			@media only screen and (min-width: 400px) {
+				top: -12px;
+			}
+		}
+		&::after {
+			bottom: -9px;
+			@media only screen and (min-width: 400px) {
+				bottom: -12px;
+			}
+		}
+		&::before,
+		&::after {
+			content: '';
+			width: 100%;
+		}
+	}
+	span,
+	span::before,
+	span::after {
+		background-color: $gray-dark;
+		display: block;
+		height: 3px;
+		position: absolute;
+		transition: all 0.2s ease-out;
+	}
+	.mobile-menu-open & {
+		span {
+			background-color: transparent;
+			&::before,
+			&::after {
+				top: 0;
+			}
+			&::before {
+				transform: rotate(45deg);
+			}
+			&::after {
+				transform: rotate(-45deg);
+			}
+		}
+	}
+	&:focus {
+		outline: 0;
+	}
+	.admin-bar & {
+		top: 3.5rem;
+	}
+}
