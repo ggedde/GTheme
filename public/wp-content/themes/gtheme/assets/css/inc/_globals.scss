@@ -6,8 +6,8 @@ html, body {
 }
 
 body {
-	@media only screen and (min-width: $medium) {
-		margin-top: 100px;
+	@media only screen and (min-width: $md) {
+		margin-top: 84px;
 	}
 }
 
@@ -20,20 +20,16 @@ img {
     width: 100%;
     max-width: $max-row-width;
     margin-left: auto;
-    margin-right: auto;
+	margin-right: auto;
+	
+	@media only screen and (max-width: $md) {
+		[class*="col-"]:not(:first-child),
+		.col:not(:first-child) {
+			margin-top: 1.2rem;
+		}
+	}
 }
 
-.bg {
-	&-gray-dark {
-		background-color: $gray-dark;
-	}
-	&-gray-light {
-		background-color: $gray-light !important;
-	}
-	&-gray {
-		background-color: $gray-med !important;
-	}
-}
 .text-light,
 .block-bg-image {
 	h1,
@@ -60,23 +56,8 @@ hr {
 	max-width: 90%;
 	border-top-width: 2px;
 	border-color: rgba($gray-med, .4);
-	.bg-blue-dark,
-	.bg-blue &,
-	.bg-blue-light &,
-	.bg-green &,
-	.bg-yellow &,
-	.bg-grey-dark &,
-	.bg-gray-dark & {
+	.bg-dark & {
 		border-color: rgba(255, 255, 255, .4);
-	}
-}
-
-.text {
-	&-blue-dark {
-		color: $blue-dark;
-	}
-	&-border-blue {
-		border: 2px solid $blue-light;
 	}
 }
 
@@ -166,9 +147,3 @@ p {
 	}
 }
 
-@media only screen and (max-width: $medium) {
-	[class*="col-"]:not(:first-child),
-	.col:not(:first-child) {
-		margin-top: 1.2rem;
-	}
-}

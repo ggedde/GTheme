@@ -1,12 +1,12 @@
 .post-entry {
 	&.press {
 		position: relative;
-		// @media only screen and (min-width: $small) {
+		// @media only screen and (min-width: $sm) {
 			padding-left: 2rem;
 		// }
 		.icon {
 			display: none;
-			// @media only screen and (min-width: $small) {
+			// @media only screen and (min-width: $sm) {
 				display: inline-block;
 				font-size: 30px;
 				left: 0;
@@ -18,7 +18,7 @@
 			font-size: 1.25rem;
 			margin-bottom: .1rem;
 			text-align: left;
-			@media only screen and (min-width: $small) {
+			@media only screen and (min-width: $sm) {
 				font-size: 1.625rem;
 				text-align: left;
 			}
@@ -28,7 +28,7 @@
 			font-size: 0.875rem;
 			margin-bottom: .5rem;
 			text-align: left;
-			@media only screen and (min-width: $small) {
+			@media only screen and (min-width: $sm) {
 				font-size: 1rem;
 				text-align: left;
 			}
@@ -42,7 +42,7 @@
 
 .container-404 .section-inner {
 	padding: 10rem 1rem 4rem;
-	@media only screen and (min-width: $medium) {
+	@media only screen and (min-width: $md) {
 		padding: 12rem 1rem 6rem;
 	}
 }
@@ -65,7 +65,7 @@
 				width: 700%;
 				height: 150%;
 				transform: skewX(93deg);
-				@media only screen and (min-width: $medium) {
+				@media only screen and (min-width: $md) {
 					transform: skewX(-28deg);
 					left: -200%;
 					width: 300%;
@@ -87,14 +87,14 @@
 		max-height: 140px;
 		max-width: 60%;
 		width: 90%;
-		@media only screen and (min-width: $medium) {
+		@media only screen and (min-width: $md) {
 			max-width: 100%;
 			max-height: 180px;
 		}
 	}
 	.col-gm {
 		img {
-			@media only screen and (max-width: $medium) {
+			@media only screen and (max-width: $md) {
 				max-width: 70%;
 			}
 			@media only screen and (max-width: 500px) {
@@ -125,7 +125,7 @@
 		right: 0;
 		opacity: 1;
 	}
-	@media only screen and (min-width: $medium) {
+	@media only screen and (min-width: $md) {
 		top: 0;
 		right: 0;
 		opacity: 1;
@@ -183,7 +183,7 @@
 	padding-top: 1rem;
 	a {
 		color: $white;
-		@media only screen and (max-width: $small) {
+		@media only screen and (max-width: $sm) {
 			margin-top: .5rem;
 		}
 	}
@@ -202,7 +202,7 @@
 		font-size: 1rem;
 		font-weight: 600;
 		color: $gray-dark;
-		@media only screen and (min-width: $medium) {
+		@media only screen and (min-width: $md) {
 			font-size: 1.6rem;
 		}
 		&.active {

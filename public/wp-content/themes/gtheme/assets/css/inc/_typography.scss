@@ -27,7 +27,7 @@ h1,
 	font-size: rem(34);
 	font-weight: 900;
 	text-transform: uppercase;
-	@media only screen and (min-width: $small) {
+	@media only screen and (min-width: $sm) {
 		font-size: rem(58);
 	}
 }
@@ -38,7 +38,7 @@ h2,
 	color: $dark;
 	font-size: rem(28);
 	font-weight: 300;
-	@media only screen and (min-width: $small) {
+	@media only screen and (min-width: $sm) {
 		font-size: rem(35);
 	}
 }
@@ -49,7 +49,7 @@ h3,
 	color: $dark;
 	font-size: rem(26);
 	font-weight: 300;
-	@media only screen and (min-width: $small) {
+	@media only screen and (min-width: $sm) {
 		font-size: rem(30);
 	}
 }
@@ -61,7 +61,7 @@ h4,
 	font-size: rem(20);
 	font-weight: 300;
 	line-height: 1.5;
-	@media only screen and (min-width: $small) {
+	@media only screen and (min-width: $sm) {
 		font-size: rem(22);
 	}
 }
@@ -73,7 +73,7 @@ h5,
 	font-size: rem(15);
 	font-weight: 300;
 	line-height: 1.5;
-	@media only screen and (min-width: $small) {
+	@media only screen and (min-width: $sm) {
 		font-size: rem(16);
 	}
 }
@@ -84,7 +84,7 @@ h6,
 	color: $dark;
 	font-size: rem(12);
 	font-weight: 300;
-	@media only screen and (min-width: $small) {
+	@media only screen and (min-width: $sm) {
 		font-size: rem(14);
 	}
 }
@@ -92,7 +92,7 @@ h6,
 p.large,
 .large p {
 	font-weight: 400;
-	@media only screen and (min-width: $small) {
+	@media only screen and (min-width: $sm) {
 		font-size: rem(20);
 	}
 }

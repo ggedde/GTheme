@@ -2,7 +2,7 @@
 .wp-block[data-type="core/paragraph"],
 .wp-block-freeform {
 	padding: 2rem 0;
-	@media only screen and (min-width: $small) {
+	@media only screen and (min-width: $sm) {
 		padding: 3rem 0;
 	}
 	&.editor-post-title__block {
@@ -24,7 +24,7 @@
 .wp-block[data-type="core/paragraph"] + .wp-block[data-type="acf/content"] .block-container.block-bg-none {
 	padding-top: 0;
 	margin-top: -1.2rem;
-	@media only screen and (min-width: $small) {
+	@media only screen and (min-width: $sm) {
 		margin-top: -2.2rem;
 	}
 }
@@ -40,14 +40,15 @@
 	}
 }
 
-.block-bg-white + .block-bg-white,
-.block-bg-blue + .block-bg-blue,
-.block-bg-blue-light + .block-bg-blue-light,
-.block-bg-green + .block-bg-green,
-.block-bg-gray + .block-bg-gray,
-.block-bg-gray-light + .block-bg-gray-light,
-.block-bg-gray-dark + .block-bg-gray-dark,
-.block-bg-yellow + .block-bg-yellow,
+.block-bg-1 + .block-bg-1,
+.block-bg-2 + .block-bg-2,
+.block-bg-3 + .block-bg-3,
+.block-bg-4 + .block-bg-4,
+.block-bg-5 + .block-bg-5,
+.block-bg-6 + .block-bg-6,
+.block-bg-7 + .block-bg-7,
+.block-bg-8 + .block-bg-8,
+.block-bg-9 + .block-bg-9,
 .block-bg-none:not(.block-media) + .block-bg-none:not(.block-media) {
 	.block-inner {
 		padding-top: 0;
@@ -69,14 +70,6 @@
 			margin-bottom: 0;
 		}
 	}
-	&.bg-blue,
-	&.bg-blue-dark,
-	&.bg-gray-dark,
-	&.bg-image {
-		.item-title {
-			color: $white;
-		}
-	}
 }
 
 .media-right .col-content {
@@ -85,7 +78,7 @@
 
 .columns + .columns {
 	margin-top: 1.5rem;
-	@media only screen and (min-width: $small) {
+	@media only screen and (min-width: $sm) {
 		margin-top: 0;
 	}
 }
@@ -108,7 +101,7 @@
 			position: absolute;
 			top: 18px;
 			left: 15px;
-			border: 2px solid rgba(150,150,150,0.6);
+			border: 1px solid rgba(150,150,150,0.9);
 			border-top: 0;
 			border-left: 0;
 			transform: rotate(-45deg);
@@ -117,8 +110,8 @@
 		}
 		.item-title {
 			padding: .5rem 1rem .5rem 3rem;
-			border: 1px solid rgba(150,150,150,0.6);
-			background-color: rgba(150,150,150,0.3);
+			border: 1px solid rgba(150,150,150,0.2);
+			background-color: rgba(150,150,150,0.2);
 			display: block;
 			width: 100%;
 			cursor: pointer;

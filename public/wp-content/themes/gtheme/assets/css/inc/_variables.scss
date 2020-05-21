@@ -14,31 +14,16 @@ $error: $red;
 
 $dark:          #333333;
 
-$small: 576px;
-$medium: 768px;
-$large: 992px;
-$xlarge: 1200px;
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
 
 $max-row-width: 1000px;
-
-$sm: $small;
-$md: $medium;
-$lg: $large;
-$xl: $xlarge;
 
 $outer-gutter-sm: 1rem;
 $outer-gutter: 2rem;
 
-$mobile-menu: 1000px;
-
-$sidebar-width: 300px;
-$sidebar-width-md: 250px;
-
-$sidebar-nav-width: 350px;
-$sidebar-nav-width-md: 250px;
-
 $roboto: 'Roboto', sans-serif;
 $font-primary: $roboto;
 $font-secondary: $roboto;
-
-$block-cta-sm: 750px;

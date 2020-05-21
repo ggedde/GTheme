@@ -126,11 +126,10 @@ class GBLOCKS {
 			$custom_class = GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'add_custom_color_class');
 
 			if(!empty(self::$settings['background_colors']))
-			{
+			{				
 				foreach (self::$settings['background_colors'] as $color_key => $color_params)
 				{
-
-					echo '<pre>';print_r($color_params);echo '</pre>';
+					echo '<pre>';print_r($color_params['dark'][0]);echo '</pre>';
 					
 					$use_css_variable = (!empty($color_params['class']) && $custom_class);
 
@@ -1597,6 +1596,11 @@ class GBLOCKS {
 			}
 		}
 
+		foreach (self::$settings['background_colors'] as $color_key => $color_params) {
+			if ($block_background === 'block-bg-'.$color_params['_repeater_id'] && !empty($color_params['dark'][0])) {
+				$block_attributes['class'][] = $color_params['dark'][0];
+			}
+		}
 
 		// Screen Options
 		if(!empty($block_hide))

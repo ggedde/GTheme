@@ -214,7 +214,7 @@ nav {
 					padding: 10px 2px;
 					transition: all .2s ease-in-out;
 				}	
-				@media only screen and (min-width: $xlarge) {
+				@media only screen and (min-width: $xl) {
 					padding: 10px 12px;
 				}		
 			}
@@ -422,7 +422,7 @@ ul.menu {
 	padding: 0;
 	li {
 		margin: 0 .5rem;
-		@media only screen and (min-width: $medium) {
+		@media only screen and (min-width: $md) {
 			display: inline-block;
 		}
 		a {
@@ -438,7 +438,7 @@ ul.menu {
 				text-align: right;
 				display: block;
 				padding: 1rem 0;
-				@media only screen and (min-width: $medium) {
+				@media only screen and (min-width: $md) {
 					color: $white;
 					text-align: left;
 					display: inline;
@@ -450,7 +450,7 @@ ul.menu {
 		}
 		.global-header-main-menu & {
 			font-size: 2.4rem;
-			@media only screen and (min-width: $medium) {
+			@media only screen and (min-width: $md) {
 				font-size: 1.8rem;
 			}
 			a:hover,
@@ -474,7 +474,7 @@ ul.menu {
 				color: $yellow;
 			}
 		}
-		@media only screen and (min-width: $medium) {
+		@media only screen and (min-width: $md) {
 			position: fixed;
 			top: 1.5rem;
 			right: 2rem;
@@ -513,7 +513,7 @@ ul.menu {
 	transition: all .3s ease-in-out;
 	width: 45px;
 	z-index: 100;
-	@media only screen and (min-width: $medium) {
+	@media only screen and (min-width: $md) {
 		display: none;
 	}
 	@media only screen and (min-width: 400px) {
