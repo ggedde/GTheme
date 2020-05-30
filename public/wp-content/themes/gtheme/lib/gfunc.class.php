@@ -80,7 +80,7 @@ class FUNC
 				'#Protected:#' => '',
 				'#Private:#' => '',
 			);
-			return preg_replace(array_keys($replaces), $replaces, attribute_escape($title));
+			return preg_replace(array_keys($replaces), $replaces, esc_attr($title));
 		});
 
 		add_action('wp', function () {
