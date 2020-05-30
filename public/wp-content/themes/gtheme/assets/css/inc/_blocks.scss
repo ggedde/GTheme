@@ -1,9 +1,9 @@
 .block-container .block-inner,
 .wp-block[data-type="core/paragraph"],
 .wp-block-freeform {
-	padding: 2rem 0;
+	padding: $section-padding-sm;
 	@media only screen and (min-width: $sm) {
-		padding: 3rem 0;
+		padding: $section-padding;
 	}
 	&.editor-post-title__block {
 		padding: 0 !important;
@@ -52,6 +52,10 @@
 .block-bg-none:not(.block-media) + .block-bg-none:not(.block-media) {
 	.block-inner {
 		padding-top: 0;
+		margin-top: $conjoined-section-padding-offset-sm;
+		@media only screen and (min-width: $sm) {
+			margin-top: $conjoined-section-padding-offset;
+		}
 	}
 }
 
@@ -83,54 +87,49 @@
 	}
 }
 
-.block-media {
-	.block-inner {
-		padding: 0;
-	}
-}
 
-.block-accordian {
-	.columns {
-		display: block;
-		width: 100%;
-	}
-	.item-container {
-		position: relative;
-		.item-icon {
-			transition: transform .2s ease-in-out, top .2s ease-in-out;
-			position: absolute;
-			top: 18px;
-			left: 15px;
-			border: 1px solid rgba(150,150,150,0.9);
-			border-top: 0;
-			border-left: 0;
-			transform: rotate(-45deg);
-			width: 14px;
-			height: 14px;
-		}
-		.item-title {
-			padding: .5rem 1rem .5rem 3rem;
-			border: 1px solid rgba(150,150,150,0.2);
-			background-color: rgba(150,150,150,0.2);
-			display: block;
-			width: 100%;
-			cursor: pointer;
-			margin-top: 1rem;
-		}
-		.item-content p {
-			padding: .5rem .4rem;
-			+ p {
-				padding-top: 0;
-				margin-top: .2rem;
-			}
-		}
-		&.open .item-icon {
-			transform: rotate(45deg);
-			top: 15px;
-			left: 15px;
-		}
-		&:not(.open) .item-content {
-			display: none;
-		}
-	}
-}
+// .block-accordian {
+// 	.columns {
+// 		display: block;
+// 		width: 100%;
+// 	}
+// 	.item-container {
+// 		position: relative;
+// 		.item-icon {
+// 			transition: transform .2s ease-in-out, top .2s ease-in-out;
+// 			position: absolute;
+// 			top: 18px;
+// 			left: 15px;
+// 			border: 1px solid rgba(150,150,150,0.9);
+// 			border-top: 0;
+// 			border-left: 0;
+// 			transform: rotate(-45deg);
+// 			width: 14px;
+// 			height: 14px;
+// 		}
+// 		.item-title {
+// 			padding: .5rem 1rem .5rem 3rem;
+// 			border: 1px solid rgba(150,150,150,0.2);
+// 			background-color: rgba(150,150,150,0.2);
+// 			display: block;
+// 			width: 100%;
+// 			cursor: pointer;
+// 			margin-top: 1rem;
+// 		}
+// 		.item-content p {
+// 			padding: .5rem .4rem;
+// 			+ p {
+// 				padding-top: 0;
+// 				margin-top: .2rem;
+// 			}
+// 		}
+// 		&.open .item-icon {
+// 			transform: rotate(45deg);
+// 			top: 15px;
+// 			left: 15px;
+// 		}
+// 		&:not(.open) .item-content {
+// 			display: none;
+// 		}
+// 	}
+// }

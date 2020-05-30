@@ -37,14 +37,10 @@ $block_fields = array(
 );
 
 return array (
-	'label' => 'Media',
+	'label' => '<span class="dashicons-before dashicons-format-image gblock-acf-icon">Media</span>',
 	'name' => $block,
 	'display' => 'row',
 	'min' => '',
 	'max' => '',
-	'sub_fields' => $block_fields,
-	'gblocks_settings' => array(
-		'icon' => 'dashicons-format-image',
-		'description' => ''
-	),
+	'sub_fields' => $block_fields
 );

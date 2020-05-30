@@ -276,7 +276,7 @@ $block_fields = array(
 		'choices' => GBLOCKS::column_width_options(),
 		'other_choice' => 0,
 		'save_other_choice' => 0,
-		'default_value' => '4',
+		'default_value' => '6',
 		'layout' => 'horizontal',
 		'block_options' => 1
 	),
@@ -340,14 +340,10 @@ $block_fields = array(
 );
 
 return array (
+	'label' => '<span class="dashicons-before dashicons-align-left gblock-acf-icon">Media with Content</span>',
 	'name' => $block,
-	'label' => 'Media with Content',
 	'display' => 'row',
-	'sub_fields' => $block_fields,
 	'min' => '',
 	'max' => '',
-	'gblocks_settings' => array(
-		'icon' => 'dashicons-align-left',
-		'description' => ''
-	),
+	'sub_fields' => $block_fields
 );

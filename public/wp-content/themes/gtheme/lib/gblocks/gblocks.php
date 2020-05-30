@@ -128,9 +128,7 @@ class GBLOCKS {
 			if(!empty(self::$settings['background_colors']))
 			{				
 				foreach (self::$settings['background_colors'] as $color_key => $color_params)
-				{
-					echo '<pre>';print_r($color_params['dark'][0]);echo '</pre>';
-					
+				{	
 					$use_css_variable = (!empty($color_params['class']) && $custom_class);
 
 					if(!empty($color_params['value'])){
@@ -637,16 +635,16 @@ class GBLOCKS {
 			if (self::isGutenbergEditor()) {
 				foreach ($layouts as $layoutKey => $layout) {
 
-					acf_register_block(array(
+					acf_register_block_type(array(
 						'name'				=> $layoutKey,
 						'title'				=> __('* '.$layout['label']),
 						'description'		=> __('A custom block by G Blocks'),
 						'render_callback'	=> array(__CLASS__, 'renderBlock'),
 						'category'			=> 'g-blocks',
-						'mode' 				=> 'edit',
+						'mode' 				=> 'preview',
 						'icon'				=> !empty($layout['gblocks_settings']['icon']) ? str_replace('dashicons-', '', $layout['gblocks_settings']['icon']) : 'admin-comments',
 						'keywords'			=> array( $layoutKey ),
-						'supports' 			=> array('align' => false, 'mode' => false)
+						'supports' 			=> array('align' => true, 'mode' => false)
 					));
 					
 					acf_add_local_field_group(array(
@@ -779,7 +777,7 @@ class GBLOCKS {
 		{
 			foreach (self::$settings['background_colors'] as $color_key => $color_params)
 			{
-				if(!empty($color_params['_repeater_id']))
+				if(isset($color_params['_repeater_id']))
 				{
 					$block_background_colors['block-bg-'.$color_params['_repeater_id']] = $color_params['name'];
 				}
@@ -842,7 +840,7 @@ class GBLOCKS {
 				'label' => 'Background Video URL',
 				'name' => 'block_background_video_url',
 				'type' => 'text',
-				'instructions' => 'Video must be a MP4 Format. <br><br>Use the Background Image below for a Placeholder',
+				'instructions' => 'Video must be a MP4 Format.',
 				'conditional_logic' => array (
 					array (
 						array (
@@ -857,6 +855,7 @@ class GBLOCKS {
 						),
 					),
 				),
+				'placeholder' => 'https://',
 				'column_width' => '',
 				'save_format' => 'object',
 				'preview_size' => 'medium',
@@ -1116,67 +1115,6 @@ class GBLOCKS {
 		});
 	
 		add_theme_support( 'editor-color-palette', array() );
-
-		add_action('admin_footer', function(){ ?>
-			<script>
-			(function($, undefined){
-				var gutenbergValidation = new acf.Model({
-					wait: 'ready',
-					initialize: function(){
-						if (acf.isGutenberg()) {
-							this.customizeEditor();
-						}
-					},
-					customizeEditor: function(){
-						var editor = wp.data.dispatch( 'core/editor' );
-						var notices = wp.data.dispatch( 'core/notices' );
-						var savePost = editor.savePost;
-						editor.savePost = function(){
-							var valid = acf.validateForm({
-								form: $('#editor'),
-								reset: true,
-								complete: function( $form, validator ){
-									editor.unlockPostSaving( 'acf' );
-								},
-								failure: function( $form, validator ){
-									var notice = validator.get('notice');
-									notices.createErrorNotice( notice.get('text'), { 
-										id: 'acf-validation', 
-										isDismissible: true
-									});
-									notice.remove();
-								},
-								success: function(){
-									savePost();
-								}
-							});
-							if( !valid ) {
-								editor.lockPostSaving( 'acf' );
-								return false;
-							}
-							savePost();
-						}
-					}
-				});
-			})(jQuery);
-			</script>
-			
-		<?php 
-		});
-			
-		add_action('acf/validate_save_post', function () {
-			if( empty($_POST) ) return;
-			foreach ( $_POST as $postkey => $postvalue ) {
-				if ('acf' == $postkey || 'acf-block' == substr( $postkey, 0, 9 ) ) {
-					foreach( $postvalue as $key => $value ) {
-						$field = acf_get_field( $key );
-						$input = $postkey . '[' . $key . ']';
-						if( !$field ) continue;
-						acf_validate_value( $value, $field, $input );		
-					}
-				}
-			}
-		});
 	}
 
 	/**
@@ -1277,6 +1215,7 @@ class GBLOCKS {
 		add_action( 'gblocks_display_before' , array(__CLASS__, 'get_block_background_image_markup'), 10, 3);
 	}
 
+
 	/**
 	 * Runs on WP init
 	 *
@@ -1313,7 +1252,7 @@ class GBLOCKS {
 	 */
 	public static function adminInit()
 	{
-		self::updateGutenbergSettings();
+		// self::updateGutenbergSettings();
 		
 		$active_settings = get_option(self::$option_key);
 		if(!$active_settings)
@@ -1324,9 +1263,8 @@ class GBLOCKS {
 				'advanced_options' => array('filter_content', 'enqueue_scripts'),
 				'css_options' => array('enqueue_css', 'use_foundation', 'use_default'),
 				'background_colors' => array(
-					array('name' => 'White', 'value' => '#ffffff'),
-					array('name' => 'Light Gray', 'value' => '#eeeeee'),
-					array('name' => 'Dark Gray', 'value' => '#555555')
+					array('name' => 'Light Gray', 'value' => '#eeeeee', 'dark' => []),
+					array('name' => 'Dark Gray', 'value' => '#555555', 'dark' => ['text-light'])
 				),
 				'foundation' => array('f5'),
 			);
@@ -1594,7 +1532,7 @@ class GBLOCKS {
 					}
 				}
 			}
-		}
+		}		
 
 		foreach (self::$settings['background_colors'] as $color_key => $color_params) {
 			if ($block_background === 'block-bg-'.$color_params['_repeater_id'] && !empty($color_params['dark'][0])) {
@@ -1673,7 +1611,7 @@ class GBLOCKS {
 			{
 				$use_css_variable = (!empty($color_params['class']) && GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'add_custom_color_class'));
 
-				if(!empty($color_params['_repeater_id']) && $block_background === 'block-bg-'.$color_params['_repeater_id'] && $use_css_variable)
+				if(isset($color_params['_repeater_id']) && $block_background === 'block-bg-'.$color_params['_repeater_id'] && $use_css_variable)
 				{
 					if(!GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'enqueue_css'))
 					{
@@ -2360,10 +2298,10 @@ class GBLOCKS {
 
 				if(!GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('css_options', 'disable_colorpicker'))
 				{
-					$background_colors_repeater['value'] = array('type' => 'colorpicker', 'label' => 'Value', 'description' => 'Use Hex values (ex. #ff0000)');
+					$background_colors_repeater['value'] = array('type' => 'colorpicker', 'label' => 'Color', 'description' => '&nbsp;');
 				}
 
-				$background_colors_repeater['dark'] = array('type' => 'checkbox', 'options' => ['text-light bg-dark' => 'Yes'], 'label' => 'Is Dark Background', 'description' => 'Should Text be converted to light text with this background color');
+				$background_colors_repeater['dark'] = array('type' => 'checkbox', 'options' => ['text-light' => 'Make Text Light'], 'label' => '&nbsp;', 'description' => '');
 
 				$fields = array();
 
@@ -2602,9 +2540,9 @@ class GBLOCKS {
 	        return;
 	    }
 
-    	wp_enqueue_script( 'gblocks_scripts_js', get_template_directory_uri().'/lib/gblocks/library/js/blocks.min.js', array('jquery'), self::$version, true );
-	    wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_script( 'wp-color-picker' );
+    	// wp_enqueue_script( 'gblocks_scripts_js', get_template_directory_uri().'/lib/gblocks/library/js/blocks.min.js', array('jquery'), self::$version, true );
+	    // wp_enqueue_style( 'wp-color-picker' );
+		// wp_enqueue_script( 'wp-color-picker' );
 	}
 
 	/**

@@ -22,7 +22,7 @@ $link_type = isset($link_type) ? $link_type : GBLOCKS::getField(str_replace('-',
 				<a class="block-link-<?= esc_attr($link_type);?>" href="<?= esc_url($link); ?>">
 			<?php } ?>
 
-			<div class="media-container">
+			<div class="media-container w-100">
 				<?php if($media_type === 'video' && $video_url){ ?>
 					<video src="<?= $video_url;?>" <?= implode(' ', $video_attributes);?>></video>
 				<?php } ?>
@@ -78,7 +78,7 @@ $link_type = isset($link_type) ? $link_type : GBLOCKS::getField(str_replace('-',
 				</a>
 			<?php } ?>
 		</div>
-		<div class="col col-content d-flex align-items-center">
+		<div class="col col-content d-flex justify-content-center flex-column <?= $placement === 'right' ? 'pr-md-4' : 'pl-md-4';?>">
 			<?= $content; ?>
 		</div>
 	</div>

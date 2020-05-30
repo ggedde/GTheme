@@ -164,16 +164,10 @@ $block_fields = array(
 );
 
 return array (
-	'label' => 'Banner',
+	'label' => '<span class="dashicons-before dashicons-welcome-view-site gblock-acf-icon">Banner</span>',
 	'name' => $block,
 	'display' => 'block',
 	'min' => '',
 	'max' => '',
-	'sub_fields' => $block_fields,
-	'gblocks_settings' => array(
-		'repeater' => false,
-		'repeater_label' => 'Banners',
-		'icon' => 'dashicons-welcome-view-site',
-		'description' => ''
-	),
+	'sub_fields' => $block_fields
 );

@@ -108,178 +108,6 @@ acf_add_local_field_group(array (
             'readonly' => 0,
             'disabled' => 0,
 		),
-		array (
-		   'key' => 'field_'.$acf_group.'_popup_enabled',
-		   'label' => 'Enable Popup',
-		   'name' => 'popup_enabled',
-		   'type' => 'true_false',
-		   'instructions' => '',
-		   'required' => 0,
-		   'conditional_logic' => 0,
-		   'wrapper' => array (
-			   'width' => '',
-			   'class' => '',
-			   'id' => '',
-		   ),
-		   'message' => '',
-		   'ui' => 1,
-		   'ui_on_text' => 'Yes',
-		   'ui_off_text' => 'No',
-		   'default_value' => 0,
-		),
-		array ( 
-			'key' => 'field_'.$acf_group.'_popup_image',
-			'label' => 'Popup Image',
-			'name' => 'popup_image',
-			'instructions' => '',
-			'type' => 'image',
-			'required' => 0,
-			'conditional_logic' => array (
-				array (
-					array (
-						'field' => 'field_'.$acf_group.'_popup_enabled',
-						'operator' => '==',
-						'value' => 1,
-					),
-				),
-			),
-			'wrapper' => array (
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'return_format' => 'object',       // array | url | id
-			'preview_size' => 'medium',
-			'library' => 'all',       // all | uploadedTo
-			'min_width' => '',
-			'min_height' => '',
-			'min_size' => '',
-			'max_width' => '',
-			'max_height' => '',
-			'max_size' => '',
-			'mime_types' => '',
-		),
-		array (
-			'key' => 'field_'.$acf_group.'_popup_title',
-			'label' => 'Popup Title',
-			'name' => 'popup_title',
-			'type' => 'text',
-			'instructions' => '',
-			'required' => 0,
-			'conditional_logic' => array (
-				array (
-					array (
-						'field' => 'field_'.$acf_group.'_popup_enabled',
-						'operator' => '==',
-						'value' => 1,
-					),
-				),
-			),
-			'wrapper' => array (
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'default_value' => '',
-			'placeholder' => '',
-			'formatting' => 'none',       // none | html
-			'prepend' => '',
-			'append' => '',
-			'maxlength' => '',
-			'readonly' => 0,
-			'disabled' => 0,
-		),
-		array ( 
-			'key' => 'field_'.$acf_group.'_popup_logo',
-			'label' => 'Popup Logo',
-			'name' => 'popup_logo',
-			'instructions' => '',
-			'type' => 'image',
-			'required' => 0,
-			'conditional_logic' => array (
-				array (
-					array (
-						'field' => 'field_'.$acf_group.'_popup_enabled',
-						'operator' => '==',
-						'value' => 1,
-					),
-				),
-			),
-			'wrapper' => array (
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'return_format' => 'object',       // array | url | id
-			'preview_size' => 'medium',
-			'library' => 'all',       // all | uploadedTo
-			'min_width' => '',
-			'min_height' => '',
-			'min_size' => '',
-			'max_width' => '',
-			'max_height' => '',
-			'max_size' => '',
-			'mime_types' => '',
-		),
-		array (
-			'key' => 'field_'.$acf_group.'_popup_embed_title',
-			'label' => 'Embed Title',
-			'name' => 'popup_embed_title',
-			'type' => 'text',
-			'instructions' => '',
-			'required' => 0,
-			'conditional_logic' => array (
-				array (
-					array (
-						'field' => 'field_'.$acf_group.'_popup_enabled',
-						'operator' => '==',
-						'value' => 1,
-					),
-				),
-			),
-			'wrapper' => array (
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'default_value' => '',
-			'placeholder' => '',
-			'formatting' => 'none',       // none | html
-			'prepend' => '',
-			'append' => '',
-			'maxlength' => '',
-			'readonly' => 0,
-			'disabled' => 0,
-		),
-		array (
-			'key' => 'field_'.$acf_group.'_popup_embed',
-			'label' => 'Popup Embed Code',
-			'name' => 'popup_embed',
-			'type' => 'textarea',
-			'instructions' => '',
-			'required' => 0,
-			'conditional_logic' => array (
-				array (
-					array (
-						'field' => 'field_'.$acf_group.'_popup_enabled',
-						'operator' => '==',
-						'value' => 1,
-					),
-				),
-			),
-			'wrapper' => array (
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'default_value' => '',
-			'placeholder' => '',
-			'maxlength' => '',
-			'rows' => '',
-			'new_lines' => 'wpautop',        // wpautop | br | ''
-			'readonly' => 0,
-			'disabled' => 0,
-		),
         array (
             'key' => 'field_'.$acf_group.'_logo_tab',
             'label' => 'Logo',
@@ -320,30 +148,30 @@ acf_add_local_field_group(array (
             'max_size' => '',
             'mime_types' => '',
 		),
-		array (
-            'key' => 'field_'.$acf_group.'_footer_logo',
-            'label' => 'Footer Logo Image',
-            'name' => $acf_group.'_footer_logo',
-            'instructions' => '',
-            'type' => 'image',
-            'required' => 0,
-            'conditional_logic' => 0,
-            'wrapper' => array (
-                'width' => '',
-                'class' => '',
-                'id' => '',
-            ),
-            'return_format' => 'object',       // array | url | id
-            'preview_size' => 'medium',
-            'library' => 'all',       // all | uploadedTo
-            'min_width' => '',
-            'min_height' => '',
-            'min_size' => '',
-            'max_width' => '',
-            'max_height' => '',
-            'max_size' => '',
-            'mime_types' => '',
-        ),
+		// array (
+        //     'key' => 'field_'.$acf_group.'_footer_logo',
+        //     'label' => 'Footer Logo Image',
+        //     'name' => $acf_group.'_footer_logo',
+        //     'instructions' => '',
+        //     'type' => 'image',
+        //     'required' => 0,
+        //     'conditional_logic' => 0,
+        //     'wrapper' => array (
+        //         'width' => '',
+        //         'class' => '',
+        //         'id' => '',
+        //     ),
+        //     'return_format' => 'object',       // array | url | id
+        //     'preview_size' => 'medium',
+        //     'library' => 'all',       // all | uploadedTo
+        //     'min_width' => '',
+        //     'min_height' => '',
+        //     'min_size' => '',
+        //     'max_width' => '',
+        //     'max_height' => '',
+        //     'max_size' => '',
+        //     'mime_types' => '',
+        // ),
         array (
             'key' => 'field_'.$acf_group.'_social_tab',
             'label' => 'Social Links',
@@ -359,28 +187,6 @@ acf_add_local_field_group(array (
             ),
             'placement' => 'top',
             'endpoint' => 0,
-		),
-		array ( 
-			'key' => 'field_'.$acf_group.'_footer_social_title',
-			'label' => 'Footer Social Title',
-			'name' => 'footer_social_title',
-			'type' => 'text',
-			'instructions' => '',
-			'required' => 0,
-			'conditional_logic' => 0,
-			'wrapper' => array (
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'default_value' => '',
-			'placeholder' => '',
-			'formatting' => 'none',       // none | html
-			'prepend' => '',
-			'append' => '',
-			'maxlength' => '',
-			'readonly' => 0,
-			'disabled' => 0,
 		),
         array (
             'key' => 'field_'.$acf_group.'_social_links',
@@ -469,6 +275,28 @@ acf_add_local_field_group(array (
                 ),
             ),
         ),
+        array ( 
+			'key' => 'field_'.$acf_group.'_footer_social_title',
+			'label' => 'Footer Social Title',
+			'name' => 'footer_social_title',
+			'type' => 'text',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array (
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'default_value' => '',
+			'placeholder' => '',
+			'formatting' => 'none',       // none | html
+			'prepend' => '',
+			'append' => '',
+			'maxlength' => '',
+			'readonly' => 0,
+			'disabled' => 0,
+		),
         array (
             'key' => 'field_'.$acf_group.'_default_images_tab',
             'label' => 'Default Images',
@@ -513,30 +341,6 @@ acf_add_local_field_group(array (
             'key' => 'field_'.$acf_group.'_default_post_image',
             'label' => 'Default Post Image',
             'name' => $acf_group.'_default_post_image',
-            'instructions' => '',
-            'type' => 'image',
-            'required' => 0,
-            'conditional_logic' => 0,
-            'wrapper' => array (
-                'width' => '',
-                'class' => '',
-                'id' => '',
-            ),
-            'return_format' => 'object',       // array | url | id
-            'preview_size' => 'medium',
-            'library' => 'all',       // all | uploadedTo
-            'min_width' => '',
-            'min_height' => '',
-            'min_size' => '',
-            'max_width' => '',
-            'max_height' => '',
-            'max_size' => '',
-            'mime_types' => '',
-        ),
-		array (
-            'key' => 'field_'.$acf_group.'_post_banner_image',
-            'label' => 'Blog Banner Image',
-            'name' => $acf_group.'_post_banner_image',
             'instructions' => '',
             'type' => 'image',
             'required' => 0,
@@ -661,9 +465,9 @@ acf_add_local_field_group(array (
     'location' => array (
         array (
             array (
-                'param' => 'block', // post_type | post | page | page_template | post_category | taxonomy | options_page
+                'param' => 'options_page', // post_type | post | page | page_template | post_category | taxonomy | options_page
                 'operator' => '==',
-                'value' => 'theme',        // if options_page then use: acf-options  | if page_template then use:  template-example.php
+                'value' => 'acf-options-theme',        // if options_page then use: acf-options  | if page_template then use:  template-example.php
                 'order_no' => 0,
                 'group_no' => 1,
             ),

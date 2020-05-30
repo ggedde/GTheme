@@ -14,6 +14,7 @@ body {
 img {
 	max-width: 100%;
 	display: block;
+	margin: auto;
 }
 
 .row {
@@ -27,6 +28,99 @@ img {
 		.col:not(:first-child) {
 			margin-top: 1.2rem;
 		}
+	}
+}
+
+.cursor-pointer {
+	cursor: pointer;
+}
+
+.btn {
+	position: relative;
+	margin: 0;
+	min-width: 200px;
+	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.16), 0 1px 4px 0 rgba(0, 0, 0, 0.12);
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background-color: rgba(255,255,255,0);
+		transition: background-color .2s ease-in-out;
+	}
+	&:hover {
+		box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 6px 0 rgba(0, 0, 0, 0.12);
+		&::before {
+			background-color: rgba(255,255,255,0.1);
+		}
+	}
+	&-light {
+		&::before {
+			background-color: rgba(0,0,0,0);
+		}
+		&:hover::before {
+			background-color: rgba(0,0,0,0.08);	
+		}
+	}
+	@media only screen and (max-width: $sm) {
+		.text-center & {
+			margin-left: 1rem;
+			margin-right: 1rem;
+			display: block;
+		}
+	}
+	+ .btn {
+		margin-left: 1rem;
+		@media only screen and (max-width: $sm) {
+			margin-top: 1rem;
+		}
+	}
+}
+
+.min-vh-25 {
+    min-height: 25vh !important;
+}
+.min-vh-50 {
+    min-height: 50vh !important;
+}
+.min-vh-75 {
+    min-height: 75vh !important;
+}
+
+.cover,
+.cover-center {
+	background-repeat: no-repeat;
+}
+.cover {
+	background-size: cover;
+}
+.contain {
+	background-size: contain;
+}
+.cover-center {
+	background-size: cover;
+	background-position: center;
+}
+
+.zoom-cover {
+	.cover,
+	.cover-center {
+		transform: scale(1.01);
+		transition: transform .2s ease-in-out;
+	}
+	&:hover {
+		.cover,
+		.cover-center {
+			transform: scale(1.1);
+		}
+	}
+}
+
+@for $i from 1 through 20 {
+	.pad-#{ $i * 5 } {
+		padding: $i * 5%;
 	}
 }
 
@@ -58,13 +152,6 @@ hr {
 	border-color: rgba($gray-med, .4);
 	.bg-dark & {
 		border-color: rgba(255, 255, 255, .4);
-	}
-}
-
-p {
-	margin-bottom: 0;
-	+ p {
-		margin-top: 1rem;
 	}
 }
 

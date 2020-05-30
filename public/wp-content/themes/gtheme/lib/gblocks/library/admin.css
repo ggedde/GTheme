@@ -614,3 +614,20 @@
 .mce-menu .mce-menu-item.mce-active.mce-menu-item-preview.mce-active:hover {
     background: #0073aa;
 }
+
+.button.wp-color-result {
+	margin: 0 !important;
+}
+
+.button.wp-color-result .wp-color-result-text {
+	background-color: #fff;
+}
+
+.acf-fc-popup .gblock-acf-icon {
+	line-height: 1.6
+}
+
+.gblock-acf-icon::before {
+	margin-right: 6px;
+	margin-left: 2px;
+}

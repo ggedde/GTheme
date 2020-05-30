@@ -1,28 +1,24 @@
 <?php
 
-$buttons = isset($buttons) ? $buttons :GBLOCKS::getField($block.'_buttons');
-$title = isset($title) ? $title :GBLOCKS::getField($block.'_title');
+$buttons = isset($buttons) ? $buttons : GBLOCKS::getField($block.'_buttons');
+$title = isset($title) ? $title : GBLOCKS::getField($block.'_title');
 $description = isset($description) ? $description :GBLOCKS::getField($block.'_description');
-$form = isset($form) ? $form :GBLOCKS::getField($block.'_form');
-$alignment = isset($alignment) ? $alignment :GBLOCKS::getField($block.'_alignment');
+$form = isset($form) ? $form : GBLOCKS::getField($block.'_form');
+$alignment = isset($alignment) ? $alignment : GBLOCKS::getField($block.'_alignment');
 
 if($title || $description || $buttons || $form){ ?>
 
 	<div class="block-inner">
 		<div class="row <?= $alignment;?>">
-			<div class="col block-calltoaction-content">
-				<?php if($title){ ?>
-					<h2 class="block-title"><?= esc_html($title); ?></h2>
-				<?php } ?>
+			<div class="col block-calltoaction-content<?= $description ? ' has-description' : '';?><?= !empty($buttons) ? ' has-buttons' : '';?>">
+				<h2 class="block-title"><?= esc_html($title); ?></h2>
 				<?php if($description){ ?>
-					<div class="block-description"><?= $description; ?></div>
+					<div class="block-description mt-3"><?= $description; ?></div>
 				<?php } ?>
-				<?php
 
-				if($buttons)
-				{
-					?>
-					<div class="block-buttons">
+				<?php 
+				if(!empty($buttons)){ ?>
+					<div class="block-buttons mt-4">
 						<?php
 						foreach($buttons as $button)
 						{
@@ -42,16 +38,14 @@ if($title || $description || $buttons || $form){ ?>
 
 							if($button['button_type'] && $button['button_type'] != 'none'){
 							?>
-
-							<a class="<?= (!empty($button['button_style']) ? $button['button_style'].' ' : '');?>block-link-<?= esc_attr($button['button_type']);?>" href="<?= esc_url($link);?>"><?= esc_html($button['button_text']);?></a>
-
+								<a class="<?= (!empty($button['button_style']) ? $button['button_style'].' ' : '');?>block-link-<?= esc_attr($button['button_type']);?>" href="<?= esc_url($link);?>"><?= esc_html($button['button_text']);?></a>
 							<?php
 							}
 						}
 
 						?>
 					</div>
-					<?php
+				<?php 
 				}
 
 				if($form)

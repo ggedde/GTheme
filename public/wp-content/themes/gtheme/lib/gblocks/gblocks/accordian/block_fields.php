@@ -97,16 +97,10 @@ $block_fields = array(
 );
 
 return array (
-	'label' => 'Accordion',
+	'label' => '<span class="dashicons-before dashicons-menu gblock-acf-icon">Accordion</span>',
 	'name' => $block,
 	'display' => 'block',
 	'min' => '',
 	'max' => '',
-	'sub_fields' => $block_fields,
-	'gblocks_settings' => array(
-		'repeater' => false,
-		'repeater_label' => '',
-		'icon' => 'dashicons-menu',
-		'description' => ''
-	),
+	'sub_fields' => $block_fields
 );

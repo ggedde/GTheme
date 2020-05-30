@@ -68,14 +68,10 @@ $block_fields = array(
 );
 
 return array (
-	'label' => 'Quote',
+	'label' => '<span class="dashicons-before dashicons-editor-quote gblock-acf-icon">Quote</span>',
 	'name' => $block,
 	'display' => 'row',
 	'min' => '',
 	'max' => '',
-	'sub_fields' => $block_fields,
-	'gblocks_settings' => array(
-		'icon' => 'dashicons-editor-quote',
-		'description' => ''
-	),
+	'sub_fields' => $block_fields
 );

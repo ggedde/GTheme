@@ -82,14 +82,10 @@ $block_fields = array(
 );
 
 return array (
-	'label' => 'Heading',
+	'label' => '<span class="dashicons-before dashicons-editor-textcolor gblock-acf-icon">Heading</span>',
 	'name' => $block,
 	'display' => 'block',
 	'min' => '',
 	'max' => '',
-	'sub_fields' => $block_fields,
-	'gblocks_settings' => array(
-		'icon' => 'dashicons-editor-textcolor',
-		'description' => ''
-	),
+	'sub_fields' => $block_fields
 );

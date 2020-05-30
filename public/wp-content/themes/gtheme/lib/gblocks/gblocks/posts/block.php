@@ -1,6 +1,5 @@
 <?php
 
-$block_title = isset($block_title) ? $block_title : GBLOCKS::getField($block.'_title');
 $block_filter = isset($block_filter) ? $block_filter : GBLOCKS::getField($block.'_filter');
 $block_filter_post_type = isset($block_filter_post_type) ? $block_filter_post_type : GBLOCKS::getField($block.'_post_type');
 $block_filter_taxonomy = isset($block_filter_taxonomy) ? $block_filter_taxonomy : GBLOCKS::getField($block.'_taxonomy');
@@ -168,20 +167,6 @@ if($found_postids)
 
 <div class="block-inner block-posts-filter-<?php echo $block_filter;?> <?php echo $unique_item_class;?>">
 
-	<?php if($block_title || $block_view_more_link_url){ ?>
-	<div class="row block-posts-title-container">
-		<div class="col block-posts-title-content">
-			<?php if($block_title){?>
-				<h2 class="block-posts-title"><?php echo $block_title;?></h2>
-			<?php } ?>
-
-			<?php if($block_view_more_link_url){?>
-				<a class="block-posts-view-more-link" href="<?php echo $block_view_more_link_url;?>"><?php echo $block_view_more_link_text;?></a>
-			<?php } ?>
-		</div>
-	</div>
-	<?php } ?>
-
 	<div class="row block-posts">
 
 		<?php
@@ -197,17 +182,20 @@ if($found_postids)
 					$type_label = ucwords(get_term($term_id)->name);
 				}
 
+				$image = has_post_thumbnail() ? 'featured' : get_field('theme_options_default_post_image', 'option');
+
 				?>
 
-				<div class="col col-lg-4 col-md-6 block-post">
+				<div class="col-12 col-md-4 col-sm-6 block-post mb-4 pb-2 mt-0">
 
-					<div class="block-post-entry<?php if(has_post_thumbnail()){ ?> block-post-has-image<?php } ?>">
-					    <a href="<?php the_permalink(); ?>" class="block-post-entry-link">
-
-							<?php echo GBLOCKS::image('featured', array('class' => 'block-post-image'), 'div');?>
-
-					        <div class="block-post-content">
-					            <h6 class="block-post-meta">
+					
+						<div class="card h-100 zoom-cover block-post-entry<?php if(has_post_thumbnail()){ ?> block-post-has-image<?php } ?>">
+							<?php if($image) { ?>
+								<div class="overflow-hidden"><?php echo GBLOCKS::image($image, array('class' => 'card-img-top cover-center pad-30'), 'div');?></div>
+							<?php } ?>
+							<div class="card-body">
+								<h4 class="card-title"><a href="<?php the_permalink(); ?>" class="block-post-entry-link stretched-link"><?php the_title(); ?></a></h4>
+								<h6 class="block-post-meta">
 									<?php if(get_post_type()==='post'){?>
 										<span class="block-post-meta-by">By:</span>
 										<span class="block-post-author"><?php the_author(); ?></span>
@@ -217,11 +205,10 @@ if($found_postids)
 									<span class="block-post-meta-separator">|</span>
 									<span class="block-post-date"><?php echo get_the_date(); ?></span>
 								</h6>
-					            <p class="block-post-title"><?php the_title(); ?></p>
-					        </div>
+								<p class="mt-3"><?= wp_trim_words(get_the_excerpt(), 20); ?></p>
+							</div>
+						</div>
 
-					    </a>
-					</div>
 
 				</div>
 
@@ -233,6 +220,13 @@ if($found_postids)
 		wp_reset_query();
 
 		?>
-
 	</div>
+	<?php if($block_view_more_link_url){?>
+		<div class="row text-center justify-content-center mt-3">
+			<div class="col">
+				<a class="block-posts-view-more-link btn btn-primary" href="<?php echo $block_view_more_link_url;?>"><?php echo $block_view_more_link_text;?></a>
+			</div>
+		</div>
+		<?php } ?>
+	
 </div>

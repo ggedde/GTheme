@@ -38,16 +38,10 @@ $block_fields = array(
 );
 
 return array (
-	'label' => 'Embed',
+	'label' => '<span class="dashicons-before dashicons-editor-code gblock-acf-icon">Embed</span>',
 	'name' => $block,
 	'display' => 'block',
 	'min' => '',
 	'max' => '',
-	'sub_fields' => $block_fields,
-	'gblocks_settings' => array(
-		'repeater' => false,
-		'repeater_label' => '',
-		'icon' => 'dashicons-editor-code',
-		'description' => ''
-	),
+	'sub_fields' => $block_fields
 );

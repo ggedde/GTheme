@@ -14,6 +14,7 @@ $error: $red;
 
 $dark:          #333333;
 
+$xs: 460px;
 $sm: 576px;
 $md: 768px;
 $lg: 992px;
@@ -21,8 +22,15 @@ $xl: 1200px;
 
 $max-row-width: 1000px;
 
-$outer-gutter-sm: 1rem;
 $outer-gutter: 2rem;
+$outer-gutter-sm: 1.3rem;
+
+$section-padding: 4rem 1rem;
+$section-padding-sm: 2rem .5rem;
+
+// When background colors are the same
+$conjoined-section-padding-offset: -1rem;
+$conjoined-section-padding-offset-sm: 0rem;
 
 $roboto: 'Roboto', sans-serif;
 $font-primary: $roboto;

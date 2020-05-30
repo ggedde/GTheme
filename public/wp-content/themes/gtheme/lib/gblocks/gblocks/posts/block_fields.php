@@ -17,19 +17,6 @@ foreach(get_taxonomies(array('public' => true)) as $taxonomy)
 }
 
 $block_fields = array(
-	array (
-		'key' => 'field_'.$block.'_title',
-		'label' => 'Title',
-		'name' => $block.'_title',
-		'type' => 'text',
-		'column_width' => '',
-		'default_value' => '',
-		'placeholder' => '',
-		'prepend' => '',
-		'append' => '',
-		'formatting' => 'none',
-		'maxlength' => '',
-	),
     array (
         'key' => 'field_'.$block.'_filter',
         'label' => 'Filter by',
@@ -195,8 +182,8 @@ $block_fields = array(
 	array (
 	    'key' => 'field_'.$block.'_limit',
 	    'label' => 'Limit',
-	    'name' => 'limit',
-	    'type' => $block.'_number',
+	    'name' => $block.'_limit',
+	    'type' => 'number',
 	    'instructions' => '0 = Unlimited',
 	    'required' => 0,
 		'conditional_logic' => array (
@@ -227,14 +214,10 @@ $block_fields = array(
 );
 
 return array (
-	'label' => 'Posts',
+	'label' => '<span class="dashicons-before dashicons-admin-post gblock-acf-icon">Posts</span>',
 	'name' => $block,
 	'display' => 'row',
 	'min' => '',
 	'max' => '',
-    'sub_fields' => $block_fields,
-    'gblocks_settings' => array(
-		'icon' => 'dashicons-admin-post',
-		'description' => ''
-	),
+    'sub_fields' => $block_fields
 );

@@ -20,6 +20,8 @@
 
 include_once dirname(__DIR__) .'/environment.php';
 
+define('WP_SITEURL', WP_HOME);
+
 // ** MySQL settings ** //
 /** The name of the database for WordPress */
 define( 'DB_NAME', $_ENV['DB_NAME'] );

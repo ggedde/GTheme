@@ -50,7 +50,7 @@ class FUNC
             acf_add_options_page(array(
                 'page_title' => 'Theme',
                 'menu_slug' => 'acf-options-theme',
-                'position' => 2,
+                'position' => 80,
             ));
 		}
 		

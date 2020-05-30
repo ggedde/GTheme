@@ -11,14 +11,14 @@ if($heading || $sub_heading)
 		<div class="row <?= $alignment;?>">
 			<div class="col">
 				<?php if($heading){ ?>
-				<div class="block-title h2 <?= $sub_heading ? 'has-sub-title' : '';?>">
+				<h2 class="block-title<?= $sub_heading ? ' has-sub-title mb-2' : '';?>">
 					<?php echo $heading; ?>
-				</div>
+				</h2>
 				<?php } ?>
 				<?php if($sub_heading){ ?>
-					<div class="block-sub-title h4">
+					<h4 class="block-sub-title">
 						<?php echo $sub_heading; ?>
-					</div>
+					</h4>
 				<?php } ?>
 			</div>
 		</div>

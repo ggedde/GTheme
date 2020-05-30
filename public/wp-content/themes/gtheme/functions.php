@@ -23,7 +23,6 @@ FUNC::enqueue_file('master_css', get_template_directory_uri() . '/assets/dist/ma
 
 add_action( 'get_footer', function() {
     wp_enqueue_style( 'fontawesome_css', 'https://use.fontawesome.com/releases/v5.8.2/css/all.css' );
-    wp_enqueue_style( 'adobefont_css', 'https://use.typekit.net/amo4teb.css' );
 });
 
 if ( empty($GLOBALS['pagenow']) || $GLOBALS['pagenow'] !== 'wp-login.php' ) {
@@ -37,18 +36,20 @@ add_action( 'wp_enqueue_scripts', function(){
 	wp_enqueue_style( 'wp-block-library' ); // WordPress core
 }, 100 );
 
-add_action( 'enqueue_block_editor_assets', function() {
-    // wp_enqueue_style(
-    //     'my-block-vendor-editor-css',
-    //     get_template_directory_uri() . '/assets/dist/vendor.min.css',
-    //     [ 'wp-edit-blocks' ]
-    // );
-    // wp_enqueue_style(
-    //     'my-block-editor-css',
-    //     get_template_directory_uri() . '/assets/dist/editor-styles.css?d='.filemtime(get_template_directory() . '/assets/dist/editor-styles.css'),
-    //     [ 'wp-edit-blocks' ]
-    // );
-} );
+if (GBLOCKS::isGutenbergEditor()) {
+    add_action( 'enqueue_block_editor_assets', function() {
+        wp_enqueue_style(
+            'my-block-vendor-editor-css',
+            get_template_directory_uri() . '/assets/dist/vendor.min.css',
+            [ 'wp-edit-blocks' ]
+        );
+        wp_enqueue_style(
+            'my-block-editor-css',
+            get_template_directory_uri() . '/assets/dist/editor-styles.css?d='.filemtime(get_template_directory() . '/assets/dist/editor-styles.css'),
+            [ 'wp-edit-blocks' ]
+        );
+    });
+}
 
 // Add Custom Post Types
 // include_once 'post-types/events.php';

@@ -5,12 +5,6 @@
 *
 */
 
-
-if(function_exists('add_action'))
-{
-	add_action( 'admin_enqueue_scripts', array('GBLOCKS_PLUGIN_SETTINGS', 'add_sortable') );
-}
-
 class GBLOCKS_PLUGIN_SETTINGS
 {
 	private static $option_key = '';
@@ -26,11 +20,14 @@ class GBLOCKS_PLUGIN_SETTINGS
 	public function __construct($option_key)
 	{
 		self::$option_key = $option_key;
+		add_action( 'admin_enqueue_scripts', array(__CLASS__, 'enqueue_scripts') );
 	}
 
-	public static function add_sortable()
+	public static function enqueue_scripts()
 	{
 		wp_enqueue_script( 'jquery-ui-sortable' );
+		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_script( 'wp-color-picker');
 	}
 
 	/**
@@ -60,12 +57,14 @@ class GBLOCKS_PLUGIN_SETTINGS
 						foreach ($value as $rep_i => $rep_values)
 						{
 							$fields[$key]['fields'][$rep_i] = $rep_original_fields;
-
-							foreach ($rep_original_fields as $rep_key => $rep_value)
-							{
-								if(isset($rep_values[$rep_key]))
+							
+							if (is_array($rep_original_fields)) {
+								foreach ($rep_original_fields as $rep_key => $rep_value)
 								{
-									$fields[$key]['fields'][$rep_i][$rep_key]['value'] = $rep_values[$rep_key];
+									if(isset($rep_values[$rep_key]))
+									{
+										$fields[$key]['fields'][$rep_i][$rep_key]['value'] = $rep_values[$rep_key];
+									}
 								}
 							}
 						}

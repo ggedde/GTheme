@@ -18,21 +18,20 @@ $content_alignment = isset($content_alignment) ? $content_alignment : GBLOCKS::g
 
 if($title || $intro || $buttons){ ?>
 <div class="block-inner">
-	<div class="row block-banner-inner-container <?= $content_alignment;?>">
+	<div class="row block-banner-inner-container <?= $content_alignment;?> py-5 align-items-center min-vh-25">
 		<div class="col block-banner-content">
 			<?php if($title && empty($hide_title)){ ?>
 				<h1 class="block-title text-uppercase"><?= GBLOCKS::allow_br(esc_html($title)); ?></h1>
-			<?php if($sub_title){ ?><br/><?php } ?>
 			<?php } ?>
 			<?php if($sub_title){ ?>
-				<h2 class="block-sub-title"><?= GBLOCKS::allow_br(esc_html($sub_title)); ?></h2>
+				<h2 class="block-sub-title mt-3"><?= GBLOCKS::allow_br(esc_html($sub_title)); ?></h2>
 			<?php } ?>
 			<?php if($intro){ ?>
-				<div class="block-intro"><?= $intro; ?></div>
+				<div class="block-intro mt-3"><?= $intro; ?></div>
 			<?php } ?>
 
 			<?php if($buttons){ ?>
-				<div class="block-buttons">
+				<div class="block-buttons mt-4">
 					<?php
 					foreach($buttons as $button)
 					{

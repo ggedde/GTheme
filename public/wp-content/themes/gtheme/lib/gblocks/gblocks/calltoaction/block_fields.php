@@ -67,7 +67,7 @@ $block_fields = array(
 		'layout' => 'block',
 		'button_label' => 'Add Button',
 		'sub_fields' => array(
-			GBLOCKS::get_link_fields('button')
+			GBLOCKS::get_link_fields(array('name' => 'button', 'styles' => array('btn btn-primary' => 'Primary', 'btn btn-secondary' => 'Secondary')))
 		),
 	), 
 	array (
@@ -120,15 +120,10 @@ $block_fields = array(
 );
 
 return array (
-	'label' => 'Call to Action',
+	'label' => '<span class="dashicons-before dashicons-megaphone gblock-acf-icon">Call to Action</span>',
 	'name' => $block,
 	'display' => 'block',
 	'min' => '',
 	'max' => '',
-	'sub_fields' => $block_fields,
-	'gblocks_settings' => array(
-		'version' => '2.0',
-		'icon' => 'dashicons-megaphone',
-		'description' => ''
-	),
+	'sub_fields' => $block_fields
 );

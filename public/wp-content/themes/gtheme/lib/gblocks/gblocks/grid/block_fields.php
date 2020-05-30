@@ -15,20 +15,6 @@
 
 $block_fields = array(
 	array (
-		'key' => 'field_'.$block.'_1',
-		'label' => 'Title',
-		'name' => 'grid_title',
-		'type' => 'text',
-		'column_width' => '',
-		'default_value' => '',
-		'instructions' => '(Optional)',
-		'placeholder' => '',
-		'prepend' => '',
-		'append' => '',
-		'formatting' => 'none',
-		'maxlength' => '',
-	),
-	array (
 	    'key' => 'field_'.$block.'_format',
 	    'label' => 'Format',
 	    'name' => 'format',
@@ -234,34 +220,10 @@ $block_fields = array(
 );
 
 return array (
+	'label' => '<span class="dashicons-before dashicons-screenoptions gblock-acf-icon">Grid</span>',
 	'name' => $block,
-	'label' => 'Grid',
 	'display' => 'block',
-	'sub_fields' => $block_fields,
 	'min' => '',
 	'max' => '',
-	'gblocks_settings' => array(
-		'icon' => 'gblockicon-gallery',
-		'description' => '<div class="row">
-				<div class="columns medium-6">
-					<img src="'.plugins_url().'/gblocks/gblocks/media-gallery/gallery.svg">
-				</div>
-				<div class="columns medium-6">
-					<p>When you want to display more than one image, this flexible block is the way to go. It allows for multiple gallery items each with an ability for a title, image, link and description. Each image will also display in a gallery modal if no link is clicked.</p>
-					<p><strong>Available Fields:</strong></p>
-					<ul>
-						<li>Background</li>
-						<li>Gallery Title</li>
-						<li>Gallery Item
-							<ul>
-								<li>Item Title</li>
-								<li>Image</li>
-								<li>Link <em>( Page, URL, File, Video )</em></li>
-								<li>Description</li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-			</div>'
-	),
+	'sub_fields' => $block_fields
 );

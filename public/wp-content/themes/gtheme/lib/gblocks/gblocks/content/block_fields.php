@@ -56,15 +56,10 @@ $block_fields = array(
 );
 
 return array (
-	'label' => 'Content',
+	'label' => '<span class="dashicons-before dashicons-editor-alignleft gblock-acf-icon">Content</span>',
 	'name' => $block,
 	'display' => 'block',
 	'min' => '',
 	'max' => '',
-	'sub_fields' => $block_fields,
-	'gblocks_settings' => array(
-		'version' => '1.0',
-		'icon' => 'dashicons-editor-alignleft',
-		'description' => ''
-	),
+	'sub_fields' => $block_fields
 );
