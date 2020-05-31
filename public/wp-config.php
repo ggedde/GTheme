@@ -18,8 +18,10 @@
  * @package WordPress
  */
 
-include_once dirname(__DIR__) .'/environment.php';
+$envFile = !empty($_SERVER['APP_ENV_FILE']) ? $_SERVER['APP_ENV_FILE'] : '../.env.json';
+$_ENV = array_merge($_ENV, json_decode(file_get_contents('../.env.json'), true));
 
+define('WP_HOME', 'https://'.$_SERVER['HTTP_HOST']);
 define('WP_SITEURL', WP_HOME);
 
 // ** MySQL settings ** //

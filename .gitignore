@@ -16,6 +16,8 @@ sitemap.xml
 /environment.php
 /tmp/
 /log
+.env.json
+.env
 
 ####### Asset Files #######
 *.psd
