@@ -19,7 +19,7 @@
  */
 
 $envFile = !empty($_SERVER['APP_ENV_FILE']) ? $_SERVER['APP_ENV_FILE'] : '../.env.json';
-$_ENV = array_merge($_ENV, json_decode(file_get_contents('../.env.json'), true));
+$_ENV = array_merge($_ENV, json_decode(file_get_contents($envFile), true));
 
 define('WP_HOME', 'https://'.$_SERVER['HTTP_HOST']);
 define('WP_SITEURL', WP_HOME);
