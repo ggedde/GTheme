@@ -18,8 +18,11 @@
  * @package WordPress
  */
 
-if ($envFile = !empty($_SERVER['APP_ENV_FILE']) ? $_SERVER['APP_ENV_FILE'] : (file_exists('../.env') ? '../.env' : '')) {
-	parse_str(str_replace("\n", '&', file_get_contents($envFile)), $_ENV);
+if (file_exists('../.env')) {
+	parse_str(str_replace("\n", '&', file_get_contents('../.env')), $envVars);
+	foreach($envVars as $envVarKey => $envVarValue) {
+		putenv($envVarKey.'='.$envVarValue);
+	}
 }
 
 define('WP_HOME', 'https://'.$_SERVER['HTTP_HOST']);
@@ -27,19 +30,19 @@ define('WP_SITEURL', WP_HOME);
 
 // ** MySQL settings ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', $_ENV['DB_NAME'] );
+define('DB_NAME', getenv('DB_NAME'));
 
 /** MySQL database username */
-define( 'DB_USER', $_ENV['DB_USER'] );
+define('DB_USER', getenv('DB_USER'));
 
 /** MySQL database password */
-define( 'DB_PASSWORD', $_ENV['DB_PASS'] );
+define('DB_PASSWORD', getenv('DB_PASS'));
 
 /** MySQL hostname */
-define( 'DB_HOST', $_ENV['DB_HOST'] );
+define('DB_HOST', getenv('DB_HOST'));
 
 /** Database Charset to use in creating database tables. */
-define( 'DB_CHARSET', 'utf8' );
+define('DB_CHARSET', 'utf8' );
 
 /** The Database Collate type. Don't change this if in doubt. */
 define( 'DB_COLLATE', '' );
