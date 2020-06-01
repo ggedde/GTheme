@@ -18,8 +18,9 @@
  * @package WordPress
  */
 
-$envFile = !empty($_SERVER['APP_ENV_FILE']) ? $_SERVER['APP_ENV_FILE'] : '../.env.json';
-$_ENV = array_merge($_ENV, json_decode(file_get_contents($envFile), true));
+if ($envFile = !empty($_SERVER['APP_ENV_FILE']) ? $_SERVER['APP_ENV_FILE'] : (file_exists('../.env') ? '../.env' : '')) {
+	parse_str(str_replace("\n", '&', file_get_contents($envFile)), $_ENV);
+}
 
 define('WP_HOME', 'https://'.$_SERVER['HTTP_HOST']);
 define('WP_SITEURL', WP_HOME);
