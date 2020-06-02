@@ -25,7 +25,7 @@ if (file_exists('../.env')) {
 	}
 }
 
-define('WP_HOME', 'http'.(getenv('FORCE_HTTPS') ? 's' : '').'://'.$_SERVER['HTTP_HOST']);
+define('WP_HOME', (getenv('FORCE_HTTPS') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST']);
 define('WP_SITEURL', WP_HOME);
 
 // ** MySQL settings ** //
