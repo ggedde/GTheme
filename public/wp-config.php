@@ -18,9 +18,8 @@
  * @package WordPress
  */
 
-if (file_exists('../.env')) {
-	parse_str(str_replace("\n", '&', file_get_contents('../.env')), $envVars);
-	foreach($envVars as $envVarKey => $envVarValue) {
+if (file_exists(dirname(__DIR__).'/.env')) {
+	foreach(parse_ini_file(dirname(__DIR__).'/.env') as $envVarKey => $envVarValue) {
 		putenv($envVarKey.'='.$envVarValue);
 	}
 }

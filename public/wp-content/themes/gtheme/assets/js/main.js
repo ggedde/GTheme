@@ -27,6 +27,18 @@ jQuery(function ($) {
 		}
 	}
 
+	function formsRender() {
+		$('.custom-select').parent().addClass('md-form').find('.custom-select').removeClass('custom-select').addClass('mdb-select').materialSelect();
+
+		$('.ginput_container_name input, .ginput_container_address input').on('focus', function(){
+			$(this).closest('li.gfield').find('label').addClass('active');
+		})
+	}
+
+	$(document).on('gform_post_render', function(event, form_id, current_page){
+		formsRender();
+	});
+
 
 	/*
 	*
@@ -44,11 +56,13 @@ jQuery(function ($) {
 		g.setScrollVars();
 		g.addDropDownsToSubMenus();
 		g.addListenerToMobileMenuButton();
-		g.wrapInputItems();
+		// g.wrapInputItems();
 		g.updateOverflown();
 		g.removeTelLinksForNonMobile();
 
 		updateScrollTopPosition();
+
+		formsRender();
 	});
 
 	/*

@@ -40,7 +40,7 @@ class FUNC
         add_filter('template_include', array(__CLASS__, 'template_include'), 99);
         add_action('wp_loaded', array(__CLASS__, 'wp_loaded'), 11);
 
-        if (empty($_ENV['ENVIRONMENT']) || $_ENV['ENVIRONMENT'] !== 'local') {
+        if (getenv('ENVIRONMENT') !== 'local') {
             define('ACF_LITE', true); // true hides acf from the admin panel. false shows it.
         }
 
