@@ -262,11 +262,11 @@ class GF_Field_Address extends GF_Field {
 				if ( $is_sub_label_above ) {
 					$city = "<span class='ginput_{$city_location}{$class_suffix} address_city' id='{$field_id}_3_container' {$style}>
                                     <label for='{$field_id}_3' id='{$field_id}_3_label' {$sub_label_class_attribute}>{$address_city_sub_label}</label>
-                                    <input type='text' name='input_{$id}.3' id='{$field_id}_3' value='{$city_value}' {$tabindex} {$disabled_text} {$city_placeholder_attribute}/>
+                                    <input type='text' name='input_{$id}.3' id='{$field_id}_3' value='{$city_value}' {$tabindex} {$disabled_text} {$city_placeholder_attribute} {$required_attribute}/>
                                  </span>";
 				} else {
 					$city = "<span class='ginput_{$city_location}{$class_suffix} address_city' id='{$field_id}_3_container' {$style}>
-                                    <input type='text' name='input_{$id}.3' id='{$field_id}_3' value='{$city_value}' {$tabindex} {$disabled_text} {$city_placeholder_attribute}/>
+                                    <input type='text' name='input_{$id}.3' id='{$field_id}_3' value='{$city_value}' {$tabindex} {$disabled_text} {$city_placeholder_attribute} {$required_attribute}/>
                                     <label for='{$field_id}_3' id='{$field_id}_3_label' {$sub_label_class_attribute}>{$address_city_sub_label}</label>
                                  </span>";
 				}
@@ -551,7 +551,7 @@ class GF_Field_Address extends GF_Field {
 				__( 'Bouvet Island', 'gravityforms' ),
 				__( 'Brazil', 'gravityforms' ),
 				__( 'British Indian Ocean Territory', 'gravityforms' ),
-				__( 'Brunei Darrussalam', 'gravityforms' ),
+				__( 'Brunei Darussalam', 'gravityforms' ),
 				__( 'Bulgaria', 'gravityforms' ),
 				__( 'Burkina Faso', 'gravityforms' ),
 				__( 'Burundi', 'gravityforms' ),
@@ -822,7 +822,7 @@ class GF_Field_Address extends GF_Field {
 			__( 'BOUVET ISLAND', 'gravityforms' )                     => 'BV',
 			__( 'BRAZIL', 'gravityforms' )                            => 'BR',
 			__( 'BRITISH INDIAN OCEAN TERRITORY', 'gravityforms' )    => 'IO',
-			__( 'BRUNEI DARRUSSALAM', 'gravityforms' )                => 'BN',
+			__( 'BRUNEI DARUSSALAM', 'gravityforms' )                 => 'BN',
 			__( 'BULGARIA', 'gravityforms' )                          => 'BG',
 			__( 'BURKINA FASO', 'gravityforms' )                      => 'BF',
 			__( 'BURUNDI', 'gravityforms' )                           => 'BI',
@@ -1260,7 +1260,7 @@ class GF_Field_Address extends GF_Field {
 			if ( empty( $country ) ) {
 				$country = $placeholder;
 			}
-			$selected = strtolower( $code ) == $selected_country ? "selected='selected'" : '';
+			$selected = strtolower( esc_attr( $code ) ) == $selected_country ? "selected='selected'" : '';
 			$str .= "<option value='" . esc_attr( $code ) . "' $selected>" . esc_html( $country ) . '</option>';
 		}
 

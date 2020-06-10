@@ -28,11 +28,27 @@ jQuery(function ($) {
 	}
 
 	function formsRender() {
-		$('.custom-select').parent().addClass('md-form').find('.custom-select').removeClass('custom-select').addClass('mdb-select').materialSelect();
 
+		var mdForm = $('.md-form');
+		if (mdForm.length) {
+			mdForm.find('.custom-select').each(function(){
+				$(this).removeClass('custom-select').addClass('mdb-select').materialSelect();
+			});
+			mdForm.find('input, select, textarea').trigger('change');
+		}
+
+		$('.ginput_container_name input, .ginput_container_address input').each(function(){
+			if ($(this).val()) {
+				$(this).closest('li.gfield').find('label').addClass('active');
+			}
+		})
 		$('.ginput_container_name input, .ginput_container_address input').on('focus', function(){
 			$(this).closest('li.gfield').find('label').addClass('active');
-		})
+		});
+
+		if (typeof bsCustomFileInput !== 'undefined') {
+			bsCustomFileInput.init();
+		}
 	}
 
 	$(document).on('gform_post_render', function(event, form_id, current_page){

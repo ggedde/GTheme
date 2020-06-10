@@ -58,18 +58,60 @@ if (GBLOCKS::isGutenbergEditor()) {
 #######################   CUSTOM THEME FUNCTIONALITY  #########################
 ###############################################################################
 
-if (!is_admin()) {
-    add_filter( 'gform_field_content', function($content, $field, $value, $lead_id, $form_id){
-        $input = 'input_'.$form_id.'_'.$field['id'];
-        $name = 'input_'.$field['id'];
+function updateGformButtonsWithMDB($button) {
+    return str_replace("class='", "class='btn btn-primary ", $button);
+};
 
-        if (in_array($field['type'], ['text', 'email', 'phone'])) {
-            $content = '
-                <div class="md-form ginput_container ginput_container_'.$field['type'].'">
-                    <input name="'.$name.'" type="'.($field['type'] === 'phone' ? 'tel' : $field['type']).'" id="'.$input.'" class="form-control" aria-required="true" aria-invalid="false">
-                    <label class="gfield_label" for="'.$input.'">'.$field['label'].'</label>
-                </div>
-            ';
+if (!is_admin()) {
+    add_filter( 'gform_field_container', function ($field_container, $field, $form, $css_class, $style, $field_content) {
+
+        $classes = 'col-12';
+
+        if (!empty($form['cssClass']) && strpos($form['cssClass'], 'md-form') !== false) {
+            $classes.= ' form-group';
+        }
+
+        if (in_array($field['type'], ['text', 'email', 'phone', 'textarea', 'multiselect', 'select', 'number', 'website'])) {
+            $classes.= $field['size'] === 'small' ? ' col-sm-4' : ($field['size'] === 'large' ? ' col-sm-12' : ' col-sm-6');
+        }
+        return str_replace("class='", "class='".$classes." gfield-type-".$field['type']." ", $field_container);
+        
+    }, 10, 6);
+
+    add_filter( 'gform_next_button', 'updateGformButtonsWithMDB', 10 );
+    add_filter( 'gform_previous_button', 'updateGformButtonsWithMDB', 10 );
+    add_filter( 'gform_submit_button', 'updateGformButtonsWithMDB', 10 );
+
+    add_filter( 'gform_field_content', function($content, $field, $value, $lead_id, $form_id){
+        $id = 'input_'.$form_id.'_'.$field['id'];
+        $name = 'input_'.$field['id'];
+        $hasMdForm = false;
+
+        if (class_exists('GFAPI')) {
+            $form = GFAPI::get_form( $form_id );
+            if (!empty($form['cssClass']) && strpos($form['cssClass'], 'md-form') !== false) {
+                $hasMdForm = true;
+            }
+        }
+
+        preg_match('/\<label.*\<\/label\>/m', $content, $matches);
+        if (!empty($matches[0])) {
+            $label = $matches[0];
+        }
+
+        preg_match('/\<input.*\>/m', $content, $matches);
+        if (!empty($matches[0])) {
+            $input = $matches[0];
+        }
+
+        if (in_array($field['type'], ['text', 'email', 'phone', 'number', 'website'])) {
+            if (!empty($label)) {
+                $content = str_replace($label, '', $content);
+            }
+            if (!empty($input)) {
+                $content = str_replace('<input', $label.'<input', $content);
+                $content = str_replace($input, str_replace("class='", "class='form-control ", $input), $content);
+            }
         }
 
         if (in_array($field['type'], ['multiselect', 'select'])) {
@@ -77,6 +119,7 @@ if (!is_admin()) {
             if (count($field['choices']) > 12) {
                 $content = str_replace('<select', '<select searchable="Search..."', $content);
             }
+            $content = str_replace($content, str_replace("class='gf_placeholder", "disabled selected class='gf_placeholder", $content), $content);
         }
 
         if ($field['type'] === 'consent') {
@@ -85,50 +128,48 @@ if (!is_admin()) {
         
         if ($field['type'] === 'fileupload') {
             if (empty($field['multipleFiles'])) {
-                $content = '
-                <label class="gfield_label" for="'.$input.'">'.$field['label'].'</label>
-                <div class="md-form mt-0">
-                    <div class="file-field">
-                        <div class="btn btn-outline-info waves-effect btn-sm float-left">
-                            <span>Choose file</span>
-                            '.$content.'
+                if ($hasMdForm) {
+                    $content = $label.'
+                    <div class="mt-0">
+                        <div class="file-field">
+                            <div class="btn btn-outline-info btn-sm float-left">
+                                <span class="upload-file-label">Choose file</span>
+                                '.$content.'
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text" placeholder="Upload one or more files" readonly>
+                            </div>
                         </div>
-                        <div class="file-path-wrapper">
-                            <input class="file-path validate" type="text" placeholder="Upload one or more files" readonly>
+                    </div>';
+                } else {
+                    $content = $label.'
+                    <div class="input-group">
+                        <div class="custom-file">
+                            '.str_replace([$label, "type='file' class='"], ['', "type='file' class='custom-file-input "], str_replace("<span", "<label class='custom-file-label' for='".$id."'>Choose file</label><span", $content)).'
                         </div>
-                    </div>
-                </div>';
+                    </div>';
+                }
             } else {
                 $content = str_replace("class='button ", "class='button btn btn-outline-info ml-2 ", $content);
             }
         }
 
         if ($field['type'] === 'textarea') {
-            $content = '
-            <div class="md-form">
-                <label class="gfield_label" for="'.$input.'">'.$field['label'].'</label>
-                <textarea name="'.$name.'" id="'.$input.'" class="form-control md-textarea pt-2" rows="3"></textarea>
-            </div>
-            ';
+            if ($hasMdForm) {
+                $content = str_replace($label, '', $content);
+                $content = str_replace('<textarea', $label.'<textarea', $content);
+                $content = str_replace("class='textarea", "class='textarea md-textarea", $content);
+            } else {
+                $content = str_replace("class='textarea", "class='textarea form-control", $content);
+            }
         }
 
-        if ($field['type'] === 'name') {
-            $content = str_replace("class='name_first'", "class='name_first md-form'", $content);
-            $content = str_replace("class='name_last'", "class='name_last md-form'", $content);
-            $content = '<div class="md-form">'.$content.'</div>';
-        }
-
-        if ($field['type'] === 'address') {
-            $content = str_replace("address_line_1", "address_line_1 md-form", $content);
-            $content = str_replace("address_line_2", "address_line_2 md-form", $content);
-            $content = str_replace("address_city", "address_city md-form", $content);
-            $content = str_replace("address_state", "address_state md-form d-inline-block", $content);
-            $content = str_replace("address_zip", "address_zip md-form", $content);
-            $content = str_replace("address_country", "address_country md-form d-inline-block", $content);
+        if (in_array($field['type'], ['name', 'address', 'list'])) {
             $content = str_replace("<select", "<select class='custom-select'", $content);
-            $content = '<div class="md-form">'.$content.'</div>';
+            if (!$hasMdForm) {
+                $content = str_replace("type='text'", "type='text' class='form-control", $content);
+            }
         }
-
 
         if (in_array($field['type'], ['checkbox', 'radio'])) {
             $content = str_replace("<li class='", "<li class='form-check ", $content);

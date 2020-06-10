@@ -42,8 +42,12 @@ class GFAPI {
 			return false;
 		}
 
+		$form_info = GFFormsModel::get_form( $form_id, true );
+		if ( ! $form_info ) {
+			return false;
+		}
+
 		// Loading form columns into meta.
-		$form_info            = GFFormsModel::get_form( $form_id, true );
 		$form['is_active']    = $form_info->is_active;
 		$form['date_created'] = $form_info->date_created;
 		$form['is_trash']     = $form_info->is_trash;
@@ -327,7 +331,7 @@ class GFAPI {
 			$value = sprintf( "'%s'", $value );
 		}
 		$in_str_arr = array_fill( 0, count( $form_ids ), '%d' );
-		$in_str     = join( $in_str_arr, ',' );
+		$in_str     = join( ',', $in_str_arr );
 		$result     = $wpdb->query(
 			$wpdb->prepare(
 				"
@@ -451,20 +455,10 @@ class GFAPI {
 		// Add default confirmation if form has no confirmations.
 		if ( ! isset( $form_meta['confirmations'] ) || empty( $form_meta['confirmations'] ) ) {
 
-			// Generate confirmation ID.
-			$confirmation_id = uniqid();
+			$confirmation = GFFormsModel::get_default_confirmation();
 
 			// Add default confirmation to form.
-			$form_meta['confirmations'][ $confirmation_id ] = array(
-				'id'          => $confirmation_id,
-				'name'        => __( 'Default Confirmation', 'gravityforms' ),
-				'isDefault'   => true,
-				'type'        => 'message',
-				'message'     => __( 'Thanks for contacting us! We will get in touch with you shortly.', 'gravityforms' ),
-				'url'         => '',
-				'pageId'      => '',
-				'queryString' => '',
-			);
+			$form_meta['confirmations'] = array( $confirmation['id'] => $confirmation );
 
 		}
 
@@ -885,10 +879,8 @@ class GFAPI {
 		}
 		$source_url = $entry['source_url'];
 
-		if ( ! isset( $entry['user_agent'] ) ) {
-			$entry['user_agent'] = 'API';
-		}
-		$user_agent = $entry['user_agent'];
+		$entry['user_agent'] = isset( $entry['user_agent'] ) ? sanitize_text_field( $entry['user_agent'] ) : 'API';
+		$user_agent          = $entry['user_agent'];
 
 		if ( empty( $entry['currency'] ) ) {
 			$entry['currency'] = GFCommon::get_currency();
@@ -996,8 +988,7 @@ class GFAPI {
 
 		foreach ( $form['fields'] as $field ) {
 			/* @var GF_Field $field */
-			$type = GFFormsModel::get_input_type( $field );
-			if ( in_array( $type, array( 'html', 'page', 'section' ) ) ) {
+			if ( $field->displayOnly ) {
 				continue;
 			}
 
@@ -1038,14 +1029,7 @@ class GFAPI {
 			unset( $current_entry[ $column ] );
 		}
 
-		foreach ( $current_entry as $k => $v ) {
-			$lead_detail_id = GFFormsModel::get_lead_detail_id( $current_fields, $k );
-			$field          = self::get_field( $form, $k );
-			$result         = GFFormsModel::queue_batch_field_operation( $form, $entry, $field, $lead_detail_id, $k, '' );
-			if ( false === $result ) {
-				return new WP_Error( 'update_field_values_failed', __( 'There was a problem while updating the field values', 'gravityforms' ), $wpdb->last_error );
-			}
-		}
+		self::purge_missing_entry_values( $form, $entry, $current_entry, $current_fields );
 
 		GFFormsModel::commit_batch_field_operations();
 
@@ -1066,6 +1050,45 @@ class GFAPI {
 		return true;
 	}
 
+	/**
+	 * Delete obsolete fields from the current entry.
+	 *
+	 * The $current_entry object here contains subfields in repeater fields which are no longer available in the
+	 * updated entry. So we need to delete them all from the $entry object.
+	 *
+	 * @since 2.4.11
+	 *
+	 * @param array  $form The form object.
+	 * @param array  $entry The entry object.
+	 * @param array  $current_entry The current entry array.
+	 * @param array  $current_fields Current entry meta gets from DB.
+	 * @param string $item_index Item index.
+	 *
+	 * @return void|WP_Error Return WP_Error if there's DB errors.
+	 */
+	private static function purge_missing_entry_values( $form, &$entry, $current_entry, $current_fields, $item_index = '' ) {
+		global $wpdb;
+
+		if ( $current_entry !== null ) {
+			foreach ( $current_entry as $k => $v ) {
+				$field = self::get_field( $form, $k );
+
+				if ( $field instanceof GF_Field_Repeater && ! empty( $v ) ) {
+					foreach ( $v as $i => $values ) {
+						$new_item_index = $item_index . '_' . $i;
+						self::purge_missing_entry_values( $form, $entry, $values, $current_fields, $new_item_index );
+					}
+				} else {
+					$lead_detail_id = GFFormsModel::get_lead_detail_id( $current_fields, $k, $item_index );
+					$result         = GFFormsModel::queue_batch_field_operation( $form, $entry, $field, $lead_detail_id, $k, '', $item_index );
+					if ( false === $result ) {
+						return new WP_Error( 'update_field_values_failed', __( 'There was a problem while updating the field values', 'gravityforms' ), $wpdb->last_error );
+					}
+				}
+			}
+		}
+	}
+
 	private static function queue_batch_field_operation( $form, $entry, $field, $item_index = '', &$current_entry = array(), $current_fields = array() ) {
 
 		if ( is_array( $field->fields ) ) {
@@ -1075,17 +1098,7 @@ class GFAPI {
 					$new_item_index = $item_index . '_' . $i;
 					$values['id']   = $entry['id'];
 					foreach ( $field->fields as $sub_field ) {
-						self::queue_batch_field_operation( $form, $values, $sub_field, $new_item_index, $current_entry[ $field_id ], $current_fields );
-					}
-				}
-			}
-
-			foreach ( $field->fields as $sub_field ) {
-				foreach ( $current_fields as $current_field ) {
-					if ( intval( $current_field->meta_key ) == $sub_field->id && ! isset( $current_field->update ) ) {
-						$current_field->delete = true;
-						$result = GFFormsModel::queue_batch_field_operation( $form, $entry, $sub_field, $current_field->id, $current_field->meta_key, '', $current_field->item_index );
-						GFCommon::log_debug( __METHOD__ . "(): Deleting: {$field->label}(#{$sub_field->id}{$current_field->item_index} - {$field->type}). Result: " . var_export( $result, 1 ) );
+						self::queue_batch_field_operation( $form, $values, $sub_field, $new_item_index, $current_entry[ $field_id ][ $i ], $current_fields );
 					}
 				}
 			}
@@ -1118,7 +1131,7 @@ class GFAPI {
 			$field_value = isset( $entry[ (string) $field_id ] ) ? $entry[ (string) $field_id ] : '';
 			$current_value = isset( $current_entry[ (string) $field_id ] ) ? $current_entry[ (string) $field_id ] : '';
 			if ( empty( $current_entry ) || $field_value != $current_value ) {
-				$lead_detail_id = $current_fields ? GFFormsModel::get_lead_detail_id( $current_fields, $field_id ) : 0;
+				$lead_detail_id = $current_fields ? GFFormsModel::get_lead_detail_id( $current_fields, $field_id, $item_index ) : 0;
 				$result         = GFFormsModel::queue_batch_field_operation( $form, $entry, $field, $lead_detail_id, $field_id, $field_value, $item_index );
 				if ( false === $result ) {
 					return new WP_Error( 'update_field_values_failed', __( 'There was a problem while updating the field values', 'gravityforms' ) );
@@ -1196,7 +1209,7 @@ class GFAPI {
 		$request_ip     = rgars( $form, 'personalData/preventIP' ) ? '' : GFFormsModel::get_ip();
 		$ip             = isset( $entry['ip'] ) ? $entry['ip'] : $request_ip;
 		$source_url     = isset( $entry['source_url'] ) ? $entry['source_url'] : esc_url_raw( GFFormsModel::get_current_page_url() );
-		$user_agent     = isset( $entry['user_agent'] ) ? $entry['user_agent'] : 'API';
+		$user_agent     = isset( $entry['user_agent'] ) ? sanitize_text_field( $entry['user_agent'] ) : 'API';
 		$currency       = isset( $entry['currency'] ) ? $entry['currency'] : GFCommon::get_currency();
 		$payment_status = isset( $entry['payment_status'] ) ? sprintf( "'%s'", esc_sql( $entry['payment_status'] ) ) : 'NULL';
 		$payment_date   = strtotime( rgar( $entry, 'payment_date' ) ) ? sprintf( "'%s'", gmdate( 'Y-m-d H:i:s', strtotime( "{$entry['payment_date']}" ) ) ) : 'NULL';
@@ -1237,7 +1250,7 @@ class GFAPI {
 
 		foreach ( $form['fields'] as $field ) {
 			/* @var GF_Field $field */
-			if ( in_array( $field->type, array( 'html', 'page', 'section' ) ) ) {
+			if ( $field->displayOnly ) {
 				continue;
 			}
 			self::queue_batch_field_operation( $form, $entry, $field );
@@ -1362,19 +1375,207 @@ class GFAPI {
 		$field = self::get_field( $form, $input_id );
 
 		$entry_meta_table_name = GFFormsModel::get_entry_meta_table_name();
+		$result                = true;
 
-		$sql = $wpdb->prepare( "SELECT id FROM {$entry_meta_table_name} WHERE entry_id=%d AND meta_key=%s", $entry_id, $input_id );
+		// If it's a Repeater field.
+		if ( $field instanceof GF_Field_Repeater && isset( $field->fields ) && is_array( $field->fields ) ) {
+			if ( isset( $entry[ $input_id ] ) ) {
+				// delete all values in the repeater field.
+				$result = GFFormsModel::update_entry_field_value( $form, $entry, $field, 0, $input_id, '' );
+			}
+			if ( true !== $result ) {
+				return $result;
+			}
 
-		if ( $item_index ) {
-			$sql .= $wpdb->prepare( ' AND item_index=%s', $item_index );
+			foreach ( $value as $i => $sub_values ) {
+				$new_item_index = $item_index . '_' . $i;
+				foreach ( $sub_values as $key => $sub_value ) {
+					$result = self::update_entry_field( $entry_id, $key, $sub_value, $new_item_index );
+
+					if ( true !== $result ) {
+						return $result;
+					}
+				}
+			}
+		} else {
+			$sql = $wpdb->prepare( "SELECT id FROM {$entry_meta_table_name} WHERE entry_id=%d AND meta_key=%s", $entry_id, $input_id );
+			if ( $item_index ) {
+				$sql .= $wpdb->prepare( ' AND item_index=%s', $item_index );
+			}
+
+			$lead_detail_id = $wpdb->get_var( $sql );
+
+			if ( ! isset( $entry[ $input_id ] ) || ( $value === 0 && $entry[ $input_id ] !== '0' ) || $entry[ $input_id ] != $value ) {
+				$result = GFFormsModel::update_entry_field_value( $form, $entry, $field, $lead_detail_id, $input_id, $value, $item_index );
+			}
 		}
 
-		$lead_detail_id = $wpdb->get_var( $sql );
+		return $result;
+	}
 
-		$result = true;
-		if ( ! isset( $entry[ $input_id ] ) || $entry[ $input_id ] != $value ) {
-			$result = GFFormsModel::update_entry_field_value( $form, $entry, $field, $lead_detail_id, $input_id, $value, $item_index );
+	// ENTRY NOTES ------------------------------------------------
+
+	/**
+	 * Get notes based on search criteria.
+	 *
+	 * @since 2.4.18
+	 *
+	 * @param array $search_criteria Array of search criteria.
+	 * @param array $sorting Sort key and direction.
+	 * @return array|bool
+	 */
+	public static function get_notes( $search_criteria = array(), $sorting = null ) {
+
+		if ( ! $sorting ) {
+			$sorting = array(
+				'key'        => 'id',
+				'direction'  => 'ASC',
+				'is_numeric' => true,
+			);
 		}
+
+		$notes = GFFormsModel::get_notes( $search_criteria, $sorting );
+
+		if ( empty( $notes ) ) {
+			return false;
+		}
+
+		return $notes;
+	}
+
+	/**
+	 * Get note by ID.
+	 *
+	 * @since 2.4.18
+	 *
+	 * @param int $note_id ID of the note to retrieve.
+	 * @return array|WP_Error
+	 */
+	public static function get_note( $note_id ) {
+		$note = GFFormsModel::get_notes( array( 'id' => $note_id ) );
+
+		if ( empty( $note ) ) {
+			return new WP_Error( 'note_not_found', __( 'Note not found', 'gravityforms' ) );
+		}
+
+		return $note[0];
+	}
+
+	/**
+	 * Create one note for an entry.
+	 *
+	 * @since 2.4.18
+	 *
+	 * @param int    $entry_id ID of the entry to add the note to.
+	 * @param int    $user_id ID of the user to associate with the note.
+	 * @param string $user_name Name of the user to associate with the note.
+	 * @param string $note Text of the note.
+	 * @param string $note_type Note type.
+	 * @param null   $sub_type Not sub-type.
+	 * @return array|int|void|WP_Error
+	 */
+	public static function add_note( $entry_id, $user_id, $user_name, $note, $note_type = 'user', $sub_type = null ) {
+		if ( gf_upgrade()->get_submissions_block() ) {
+			return new WP_Error( 'submissions_blocked', __( 'Submissions are currently blocked due to an upgrade in progress', 'gravityforms' ) );
+		}
+
+		if ( ! self::entry_exists( $entry_id ) ) {
+			return new WP_Error( 'invalid_entry', __( 'Invalid entry', 'gravityforms' ), $entry_id );
+		}
+
+		if ( empty( $note ) || ! is_string( $note ) ) {
+			return new WP_Error( 'invalid_note', __( 'Invalid or empty note', 'gravityforms' ), $entry_id );
+		}
+
+		$new_note = GFFormsModel::add_note( intval( $entry_id ), $user_id, $user_name, wp_kses_post( $note ), sanitize_text_field( $note_type ), sanitize_text_field( $sub_type ) );
+
+		return $new_note;
+	}
+
+	/**
+	 * Delete one note.
+	 *
+	 * @since 2.4.18
+	 *
+	 * @param int $note_id ID of the note to delete.
+	 * @return int|WP_Error ID of the deleted note.
+	 */
+	public static function delete_note( $note_id ) {
+		$result = GFFormsModel::delete_note( $note_id );
+
+		if ( ! $result ) {
+			return new WP_Error( 'invalid_note', __( 'Invalid note', 'gravityforms' ), $note_id );
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Update a note.
+	 *
+	 * @since 2.4.18
+	 *
+	 * @param array $note {
+	 * 		Note data to update.
+	 *
+	 *		@type int    $entry_id     ID of the entry associated with the note.
+	 *		@type int    $user_id      ID of the user associated with the note.
+	 * 		@type string $user_name    Name of the user associated with the note.
+	 *		@type string $date_created Date and time the note was created, in SQL datetime format.
+	 *		@type string $value        The text of the note.
+	 *		@type string $note_type    The note type.
+	 *		@type string $sub_type     The note subtype.
+	 * }
+	 * @param int   $note_id ID of the note to update.
+	 * @return bool|WP_Error
+	 */
+	public static function update_note( $note, $note_id = '' ) {
+		if ( gf_upgrade()->get_submissions_block() ) {
+			return new WP_Error( 'submissions_blocked', __( 'Submissions are currently blocked due to an upgrade in progress', 'gravityforms' ) );
+		}
+
+		if ( ! is_array( $note ) || empty( $note ) ) {
+			return new WP_Error( 'invalid_note_format', __( 'Invalid note format', 'gravityforms' ) );
+		}
+
+		if ( empty( $note_id ) ) {
+			if ( rgar( $note, 'id' ) ) {
+				$note_id = absint( $note['id'] );
+			}
+		} else {
+			$note_id = absint( $note_id );
+		}
+
+		if ( empty( $note_id ) ) {
+			return new WP_Error( 'missing_note_id', __( 'Missing note id', 'gravityforms' ) );
+		}
+
+		// make sure the note exists.
+		$current_note = self::get_note( $note_id );
+		if ( ! $current_note || is_wp_error( $current_note ) ) {
+			return new WP_Error( 'note_not_found', __( 'Note not found', 'gravityforms' ) );
+		}
+
+		$note_properties = array(
+			'id',
+			'entry_id',
+			'user_id',
+			'user_name',
+			'date_created',
+			'value',
+			'note_type',
+			'sub_type',
+		);
+
+		$current_note_array = (array) $current_note;
+
+		foreach ( $note_properties as $property ) {
+			if ( ! isset( $note[ $property ] ) ) {
+				$note[ $property ] = $current_note_array[ $property ];
+			}
+		}
+
+		$result = GFFormsModel::update_note( $note['id'], $note['entry_id'], $note['user_id'], $note['user_name'], $note['date_created'], $note['value'], $note['note_type'], $note['sub_type'] );
 
 		return $result;
 	}
@@ -1452,7 +1653,6 @@ class GFAPI {
 		$input_values[ 'gform_source_page_number_' . $form_id ] = absint( $source_page );
 		$input_values['gform_field_values']                     = $field_values;
 
-
 		require_once( GFCommon::get_base_path() . '/form_display.php' );
 
 		if ( ! isset( $_POST ) ) {
@@ -1464,14 +1664,21 @@ class GFAPI {
 		// Ensure that confirmation handler doesn't send a redirect header or add redirect JavaScript.
 		add_filter( 'gform_suppress_confirmation_redirect', '__return_true' );
 
+		// Ensure the state field is in the submission.
+		add_filter( 'gform_pre_validation', array( 'GFAPI', 'submit_form_filter_gform_pre_validation' ), 50 );
+
 		try {
 			GFFormDisplay::process_form( $form_id );
 		} catch ( Exception $ex ) {
 			remove_filter( 'gform_suppress_confirmation_redirect', '__return_true' );
+			remove_filter( 'gform_pre_validation', array( 'GFAPI', 'submit_form_filter_gform_pre_validation' ), 50 );
 			return new WP_Error( 'error_processing_form', __( 'There was an error while processing the form:', 'gravityforms' ) . ' ' . $ex->getCode() . ' ' . $ex->getMessage() );
 		}
 
 		remove_filter( 'gform_suppress_confirmation_redirect', '__return_true' );
+
+		remove_filter( 'gform_pre_validation', array( 'GFAPI', 'submit_form_filter_gform_pre_validation' ), 50 );
+
 
 		if ( empty( GFFormDisplay::$submission ) ) {
 			return new WP_Error( 'error_processing_form', __( 'There was an error while processing the form:', 'gravityforms' ) );
@@ -1528,6 +1735,26 @@ class GFAPI {
 		return $result;
 	}
 
+	/**
+	 * Ensure that the state field is set when the form is submitted via GFAPI::submit_form()
+	 * or via the POST forms/[id]/submissions REST API endpoint.
+	 *
+	 * @since 2.4.11
+	 *
+	 * @param array $form
+	 *
+	 * @return array
+	 */
+	public static function submit_form_filter_gform_pre_validation( $form ) {
+		$name = 'state_' . absint( $form['id'] );
+		if ( ! isset( $_POST[ $name ] ) ) {
+			$field_values   = rgpost( 'gform_field_values' );
+			$_POST[ $name ] = GFFormDisplay::get_state( $form, $field_values );
+		}
+
+		return $form;
+	}
+
 	// FEEDS ------------------------------------------------------
 
 	/**
@@ -1561,7 +1788,7 @@ class GFAPI {
 				$feed_ids = array( $feed_ids );
 			}
 			$in_str_arr  = array_fill( 0, count( $feed_ids ), '%d' );
-			$in_str      = join( $in_str_arr, ',' );
+			$in_str      = join( ',', $in_str_arr );
 			$where_arr[] = $wpdb->prepare( "id IN ($in_str)", $feed_ids );
 		}
 
@@ -1871,6 +2098,34 @@ class GFAPI {
 	 */
 	public static function entry_exists( $entry_id ) {
 		return GFFormsModel::entry_exists( $entry_id );
+	}
+
+	/**
+	 * Write an error message to the Gravity Forms API log.
+	 *
+	 * @since 2.4.11
+	 *
+	 * @param string $message The message to be logged.
+	 */
+	public static function log_error( $message ) {
+		if ( class_exists( 'GFLogging' ) ) {
+			GFLogging::include_logger();
+			GFLogging::log_message( 'gravityformsapi', $message, KLogger::ERROR );
+		}
+	}
+
+	/**
+	 * Write a debug message to the Gravity Forms API log.
+	 *
+	 * @since 2.4.11
+	 *
+	 * @param string $message The message to be logged.
+	 */
+	public static function log_debug( $message ) {
+		if ( class_exists( 'GFLogging' ) ) {
+			GFLogging::include_logger();
+			GFLogging::log_message( 'gravityformsapi', $message, KLogger::DEBUG );
+		}
 	}
 
 }

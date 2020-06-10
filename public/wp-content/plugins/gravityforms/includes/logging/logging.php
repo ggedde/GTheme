@@ -166,6 +166,8 @@ class GFLogging extends GFAddOn {
 	 * Register needed hooks and included needed libraries.
 	 *
 	 * @since  2.2
+	 * @since  2.4.18 Removed caps integrations to prevent them being added to the Add-Ons group.
+	 *
 	 * @access public
 	 */
 	public function init() {
@@ -173,6 +175,11 @@ class GFLogging extends GFAddOn {
 		parent::init();
 
 		$this->include_logger();
+
+		remove_action( 'members_register_cap_groups', array( $this, 'members_register_cap_group' ), 11 );
+		remove_action( 'members_register_caps', array( $this, 'members_register_caps' ), 11 );
+		remove_filter( 'ure_capabilities_groups_tree', array( $this, 'filter_ure_capabilities_groups_tree' ), 11 );
+		remove_filter( 'ure_custom_capability_groups', array( $this, 'filter_ure_custom_capability_groups' ), 10 );
 
 	}
 
@@ -451,9 +458,9 @@ class GFLogging extends GFAddOn {
 	 *
 	 * @access public
 	 *
-	 * @param string   $plugin Plugin name.
-	 * @param string   $message (default: null) Message to log.
-	 * @param constant $message_type (default: KLogger::DEBUG) Message type.
+	 * @param string $plugin       Plugin name.
+	 * @param string $message      (default: null) Message to log.
+	 * @param int    $message_type (default: KLogger::DEBUG) Message type.
 	 *
 	 * NOTE: This function is static for backwards compatibility reasons. Some legacy add-ons still reference this function statically
 	 */
@@ -478,7 +485,23 @@ class GFLogging extends GFAddOn {
 
 		// Log message.
 		$log = $instance->get_logger( $plugin, $plugin_setting['log_level'] );
-		$log->Log( $message, $message_type );
+
+		/**
+		* Filters the logging message.
+		*
+		* @since 2.4.15
+		*
+		* @param string $message        The current logging message.
+		* @param string $message_type   The current logging message type.
+		* @param array  $plugin_setting The logging setting for plugin.
+		* @param object $log            The KLogger instance.
+		* @param object $GFLogging      The Gravity Forms Logging object.
+		*/
+		$message = apply_filters( 'gform_logging_message', $message, $message_type, $plugin_setting, $log, $instance );
+
+		if ( $message ) {
+			$log->Log( $message, $message_type );
+		}
 
 	}
 
@@ -514,7 +537,7 @@ class GFLogging extends GFAddOn {
 		$dir = $this->get_log_dir();
 
 		if ( is_dir( $dir ) ) {
-			$files = glob( "{$dir}{,.}*", GLOB_BRACE ); // Get all file names.
+			$files = GFCommon::glob( '*', $dir ); // Get all file names.
 			foreach ( $files as $file ) {
 				if ( is_file( $file ) ) {
 					unlink( $file ); // Delete file.
@@ -567,14 +590,18 @@ class GFLogging extends GFAddOn {
 	 */
 	public function get_log_file_name( $plugin_name ) {
 
+		$plugin_setting = $this->get_plugin_setting( $plugin_name );
+
+		if ( rgempty( 'file_name', $plugin_setting ) ) {
+			return '';
+		}
+
 		$log_dir = $this->get_log_dir();
 
 		if ( ! file_exists( $log_dir ) ) {
 			wp_mkdir_p( $log_dir );
 			@touch( $log_dir . 'index.html' );
 		}
-
-		$plugin_setting = $this->get_plugin_setting( $plugin_name );
 
 		return $log_dir . $plugin_name . '_' . $plugin_setting['file_name'] . '.txt';
 
@@ -701,6 +728,15 @@ class GFLogging extends GFAddOn {
 	}
 
 	/**
+	 * Flushes the cached KLogger objects.
+	 *
+	 * @since 2.4.15
+	 */
+	public function flush_loggers() {
+		$this->loggers = array();
+	}
+
+	/**
 	 * Disable all logging.
 	 *
 	 * @since  2.2
@@ -739,7 +775,7 @@ class GFLogging extends GFAddOn {
 		}
 
 		// Get files which match the base name.
-		$similar_files = glob( $folder . $file_base . '*.*' );
+		$similar_files = GFCommon::glob( $file_base . '*.*', $folder );
 		$file_count    = count( $similar_files );
 
 		// Check quantity of files and delete older ones if too many.
@@ -965,30 +1001,6 @@ class GFLogging extends GFAddOn {
 	 */
 	public function load_text_domain() {
 		GFCommon::load_gf_text_domain();
-	}
-
-	/**
-	 * Register Gravity Forms capabilities with Gravity Forms group in User Role Editor plugin.
-	 *
-	 * @since  2.4
-	 *
-	 * @param array  $groups Current capability groups.
-	 * @param string $cap_id Capability identifier.
-	 *
-	 * @return array
-	 */
-	public function filter_ure_custom_capability_groups( $groups = array(), $cap_id = '' ) {
-
-		// Get Add-On capabilities.
-		$caps = $this->_capabilities;
-
-		// If capability belongs to Add-On, register it to group.
-		if ( in_array( $cap_id, $caps, true ) ) {
-			$groups[] = 'gravityforms';
-		}
-
-		return $groups;
-
 	}
 
 }

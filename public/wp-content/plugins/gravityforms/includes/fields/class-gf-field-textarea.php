@@ -44,6 +44,8 @@ class GF_Field_Textarea extends GF_Field {
 
 	public function get_field_input( $form, $value = '', $entry = null ) {
 
+		global $current_screen;
+
 		$form_id         = absint( $form['id'] );
 		$is_entry_detail = $this->is_entry_detail();
 		$is_form_editor  = $this->is_form_editor();
@@ -68,15 +70,20 @@ class GF_Field_Textarea extends GF_Field {
 
 		if ( $this->get_allowable_tags() === false ) {
 			$value = esc_textarea( $value );
+		} else {
+			$value = wp_kses_post( $value );
 		}
 
 		//see if the field is set to use the rich text editor
-		if ( ! $is_admin && $this->is_rich_edit_enabled() ) {
+		if ( ! $is_admin && $this->is_rich_edit_enabled() && ( ! $current_screen || ( $current_screen && ! rgobj( $current_screen, 'is_block_editor' ) ) ) ) {
 			//placeholders cannot be used with the rte; message displayed in admin when this occurs
 			//field cannot be used in conditional logic by another field; message displayed in admin and field removed from conditional logic drop down
 			$tabindex = GFCommon::$tab_index > 0 ? GFCommon::$tab_index ++ : '';
 
 			add_filter( 'mce_buttons', array( $this, 'filter_mce_buttons' ), 10, 2 );
+			add_filter( 'mce_buttons_2', array( $this, 'filter_mce_buttons' ), 10, 2 );
+			add_filter( 'mce_buttons_3', array( $this, 'filter_mce_buttons' ), 10, 2 );
+			add_filter( 'mce_buttons_4', array( $this, 'filter_mce_buttons' ), 10, 2 );
 
 			/**
 			 * Filters the field options for the rich text editor.
@@ -120,6 +127,9 @@ class GF_Field_Textarea extends GF_Field {
 			$input = ob_get_clean();
 
 			remove_filter( 'mce_buttons', array( $this, 'filter_mce_buttons' ), 10 );
+			remove_filter( 'mce_buttons_2', array( $this, 'filter_mce_buttons' ), 10 );
+			remove_filter( 'mce_buttons_3', array( $this, 'filter_mce_buttons' ), 10 );
+			remove_filter( 'mce_buttons_4', array( $this, 'filter_mce_buttons' ), 10 );
 		} else {
 
 			$input       = '';
@@ -172,12 +182,16 @@ class GF_Field_Textarea extends GF_Field {
 
 		preg_match_all( $pattern, $script, $matches, PREG_SET_ORDER );
 
+		// Fix editor height issue: https://core.trac.wordpress.org/ticket/45461.
+		$wp_version       = get_bloginfo( 'version' );
+		$height_issue_fix = version_compare( $wp_version, '5.0', '>=' ) && version_compare( $wp_version, '5.2', '<' ) ? ' gform_post_conditional_logic' : '';
+
 		foreach ( $matches as $match ) {
 
 			list( $search, $open_tag, $guts, $close_tag ) = $match;
 
 			$custom  = "if ( typeof current_page === 'undefined' ) { return; }\nfor( var id in tinymce.editors ) { tinymce.EditorManager.remove( tinymce.editors[id] ); }";
-			$replace = sprintf( "%s\njQuery( document ).on( 'gform_post_render gform_post_conditional_logic', function( event, form_id, current_page ) { \n%s\n%s } );\n%s", $open_tag, $custom, $guts, $close_tag );
+			$replace = sprintf( "%s\njQuery( document ).on( 'gform_post_render%s', function( event, form_id, current_page ) { \n%s\n%s } );\n%s", $open_tag, $height_issue_fix, $custom, $guts, $close_tag );
 			$script  = str_replace( $search, $replace, $script );
 
 		}
@@ -192,6 +206,31 @@ class GF_Field_Textarea extends GF_Field {
 		if ( $remove_key !== false ) {
 			unset( $mce_buttons[ $remove_key ] );
 		}
+
+		// Get current filter to detect which mce_buttons core filter is running.
+		$current_filter = current_filter();
+
+		// Depending on the current mce_buttons filter, set variable to support filtering all potential rows.
+		switch ( $current_filter ) {
+
+			case 'mce_buttons_2':
+				$mce_filter = '_row_two';
+				break;
+
+			case 'mce_buttons_3':
+				$mce_filter = '_row_three';
+				break;
+
+			case 'mce_buttons_4':
+				$mce_filter = '_row_four';
+				break;
+
+			default:
+				$mce_filter = '';
+				break;
+
+		}
+
 		/**
 		 * Filters the buttons within the TinyMCE editor
 		 *
@@ -203,9 +242,7 @@ class GF_Field_Textarea extends GF_Field {
 		 *
 		 * Additional filters for specific form and fields IDs.
 		 */
-		$mce_buttons = apply_filters( 'gform_rich_text_editor_buttons',                                            $mce_buttons, $editor_id, $this );
-		$mce_buttons = apply_filters( sprintf( 'gform_rich_text_editor_buttons_%d', $this->formId ),               $mce_buttons, $editor_id, $this );
-		$mce_buttons = apply_filters( sprintf( 'gform_rich_text_editor_buttons_%d_%d', $this->formId, $this->id ), $mce_buttons, $editor_id, $this );
+		$mce_buttons = gf_apply_filters( array( 'gform_rich_text_editor_buttons' . $mce_filter, $this->formId, $this->id ), $mce_buttons, $editor_id, $this );
 
 		return $mce_buttons;
 	}
