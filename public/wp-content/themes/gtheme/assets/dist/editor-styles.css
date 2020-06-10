@@ -612,23 +612,8 @@ select {
   -webkit-appearance: none;
 }
 
-.btn .gfield_label {
-  display: none;
-}
-
 .dropdown-content li > a, .dropdown-content li > span {
   color: #333333;
-}
-
-.mdb-select .dropdown-content.select-dropdown li {
-  margin-bottom: 0 !important;
-}
-.mdb-select .dropdown-content.select-dropdown li.disabled .filtrable label {
-  display: none;
-}
-
-.ginput_container_multiselect .input-wrapper-select select[multiple=multiple] {
-  overflow: hidden;
 }
 
 body {

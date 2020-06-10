@@ -30188,6 +30188,7 @@ table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorti
   border: 0;
 }
 .gform_wrapper .gform_ajax_spinner,
+.gform_wrapper .btn .gfield_label,
 .gform_wrapper .gf_progressbar {
   display: none;
 }

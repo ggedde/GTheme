@@ -4,8 +4,6 @@
 
 jQuery(function ($) {
 
-	// $('body').hide();
-
 	var scrollClassThreshold = 80;
 
 	/*
@@ -27,7 +25,7 @@ jQuery(function ($) {
 		}
 	}
 
-	function formsRender() {
+	function MdbformsRender() {
 
 		var mdForm = $('.md-form');
 		if (mdForm.length) {
@@ -52,7 +50,7 @@ jQuery(function ($) {
 	}
 
 	$(document).on('gform_post_render', function(event, form_id, current_page){
-		formsRender();
+		MdbformsRender();
 	});
 
 
@@ -78,7 +76,7 @@ jQuery(function ($) {
 
 		updateScrollTopPosition();
 
-		formsRender();
+		MdbformsRender();
 	});
 
 	/*
