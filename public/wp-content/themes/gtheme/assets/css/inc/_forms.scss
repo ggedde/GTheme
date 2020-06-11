@@ -6,3 +6,83 @@ select {
 .dropdown-content li > a, .dropdown-content li > span {
     color: $dark;
 }
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="file"],
+input[type="url"],
+input[type="number"],
+.custom-file-label,
+textarea,
+select {
+	form.bootstrap & {
+		background-color: rgba(250, 250, 250, .6) !important;
+		.text-light & {
+			background-color: rgba(255, 255, 255, .05) !important;
+		}
+	}
+	border-color: rgba(0, 0, 0, .2) !important;
+	.text-light & {
+		border-color: rgba(255, 255, 255, .3) !important;
+		color: darken($text-light, 10%) !important;
+	}
+
+}
+
+.form-check-input[type=radio] + label:before, 
+.form-check-input[type=radio] + label:after, 
+label.btn input[type=radio] + label:before, 
+label.btn input[type=radio] + label:after {
+	left: -3px;
+}
+
+// form.bootstrap.nested-labels {
+// 	.gfield-type-text,
+// 	.gfield-type-email,
+// 	.gfield-type-phone,
+// 	.gfield-type-number,
+// 	.gfield-type-website,
+// 	.gfield-type-select,
+// 	.gfield-type-textarea {
+// 		.gfield_label {
+// 			opacity: 0.6;
+// 			position: relative;
+// 			z-index: 1;
+// 			transform: translate(11px, 31px);
+// 			transition: all .3s ease-in-out;
+// 			&.active {
+// 				transform: none !important;
+// 				opacity: 1;
+// 			}
+// 		}
+// 	}
+// }
+
+form.md-form {
+	label {
+		.text-light & {
+			color: inherit;
+			opacity: 0.7;
+		}
+	}
+	label.active {
+		left: 0;
+	}
+	.ginput_container_textarea {
+		margin-top: 2rem;
+		.gfield_label {
+			transform: translate(0,-18px) scale(1) !important;
+			&.active {
+				transform: translate(0,-22px) scale(0.8) !important;
+			}
+		}
+		.md-textarea {
+			padding: 4px 8px;
+			width: calc(100% - 16px);
+			border: 1px solid;
+			border-radius: 3px;
+		}
+	}
+}

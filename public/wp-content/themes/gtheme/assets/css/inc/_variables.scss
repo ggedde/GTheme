@@ -5,17 +5,24 @@ $gray-dark:      #60605D;
 $gray-med-dark:  #6D6E71;
 $gray-med:       #E4E4E3;
 $gray-light:     #F2F1F1;
-$red:            #e31c43;
+$red:            #e33c33;
 $black:          #000000;
 $white:          #ffffff;
 $info:           #33b5e5;
 
-$error: $red;
+$error:          $red;
+$error-light:    lighten($red, 10%);
 
-$dark:          #333333;
+$light:          #efefef;
+$dark:           #333333;
+
+
 
 $color-primary:   $blue-light;
 $color-secondary: $info;
+
+$text-light:    $light;
+$text-dark:     $dark;
 
 $xs: 460px;
 $sm: 576px;

@@ -35,6 +35,9 @@
 		border: 0 !important;
 		margin-bottom: 1rem !important;
 		padding: 0 !important;
+		.text-light & {
+			color: $error-light !important;
+		}
 	}
 
 	.validation_message {
@@ -44,6 +47,10 @@
 		border: 0;
 		padding: 0;
 		margin: 0;
+		background-color: transparent;
+		.text-light & {
+			color: $error-light !important;
+		}
 	}
 
 	/* Gravity Forms CSS Error Fixes */
@@ -62,10 +69,20 @@
 		border: 0 !important;
 		background: none !important;
 		margin-top: 0 !important;
-		.gfield_label,
-		span label,
-		.gfield_label span {
-			color: $error !important;
+		input[type="text"],
+		input[type="email"],
+		input[type="password"],
+		input[type="tel"],
+		input[type="file"],
+		input[type="url"],
+		input[type="number"],
+		.custom-file-label,
+		textarea,
+		select {
+			border-color: $error !important;
+			.text-light & {
+				border-color: $error-light !important;
+			}
 		}
 	}
 
@@ -102,8 +119,8 @@
 
 	.ginput_container_textarea textarea {
 		min-height: 80px;
-		max-height: 400px;
-		height: 140px;
+		max-height: 300px;
+		height: auto;
 	}
 
 	.gfield_list_icons {
@@ -127,7 +144,6 @@
 		li.gfield.gf_list_4col ul.gfield_radio,
 		li.gfield.gf_list_5col ul.gfield_checkbox,
 		li.gfield.gf_list_5col ul.gfield_radio {
-			overflow: hidden;
 			li {
 				float: left;
 			}
@@ -154,15 +170,71 @@
 		}
 	}
 
+	.form-check-ripple {
+		height: 36px;
+		background: rgba(200,200,200, 0.2);
+		width: 36px;
+		border-radius: 50%;
+		position: absolute;
+		left: -9px;
+		top: -6px;
+		transform: scale(0);
+		transition: transform .1s ease-out;
+		&.show {
+			transform: scale(1);
+		}
+	}
+
+	.ginput_container_consent {
+		.form-check-ripple {
+			left: -3px;
+		}
+	}
+	
 	.field_description_below .gfield_description,
 	.instruction.validation_message,
-	.ginput_container_name label,
-	.ginput_container_address label {
+	form:not(.nested-labels) .ginput_container_name label,
+	form:not(.nested-labels) .ginput_container_address label {
 		padding-left: 4px;
 		margin-top: 4px;
 		font-size: 0.8rem !important;
 		color: lighten($gray-dark, 10%);
 		height: auto;
+	}
+
+	form.bootstrap.nested-labels {
+		.gfield-type-text .gfield_label,
+		.gfield-type-email .gfield_label,
+		.gfield-type-phone .gfield_label,
+		.gfield-type-number .gfield_label,
+		.gfield-type-website .gfield_label,
+		.gfield-type-select .gfield_label,
+		.gfield-type-textarea .gfield_label,
+		.field_sublabel_above .ginput_container_name label,
+		.field_sublabel_above .ginput_container_address label,
+		.field_sublabel_below .ginput_container_name label,
+		.field_sublabel_below .ginput_container_address label {
+			height: 24px;
+			opacity: 0.6;
+			position: relative;
+			z-index: 1;
+			transform: translate(11px, 31px);
+			transition: all .3s ease-in-out;
+			pointer-events: none;
+			&.active {
+				transform: none !important;
+				opacity: 1;
+				pointer-events: all;
+			}
+		}
+		.field_sublabel_below .ginput_container_name label,
+		.field_sublabel_below .ginput_container_address label {
+			transform: translate(11px, -31px);
+			&.active { 
+				font-size: .8rem;
+				font-weight: 300;
+			}
+		}
 	}
 
 	.hidden_sub_label {
@@ -237,14 +309,20 @@
 		transform: none;
 	}
 	
-	.gfield_label {
+	.gfield_label,
+	.ginput_container_name label,
+	.ginput_container_address label {
 		margin-bottom: 0;
 		font-weight: 500;
 	}
 
 	.gfield_required {
-		padding-left: 1px;
-		color: $danger;
+		padding-left: 3px;
+		color: rgba(0,0,0,0.5);
+		font-weight: 100;
+		.text-light & {
+			color: rgba(255,255,255,0.5);
+		}
 	}
 
 	.gform_footer {
@@ -277,9 +355,6 @@
 			top: 38px;
 			left: 0;
 			width: 100%;
-		}
-		.custom-file-label {
-			color: #aaa;
 		}
 		.ginput_container_fileupload {
 			[id^="extensions_message"] {

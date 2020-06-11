@@ -30169,20 +30169,27 @@ table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorti
   left: -9000px;
 }
 .gform_wrapper div.validation_error {
-  color: #e31c43 !important;
+  color: #e33c33 !important;
   font-size: 1.2em;
   font-weight: bold;
   border: 0 !important;
   margin-bottom: 1rem !important;
   padding: 0 !important;
 }
+.text-light .gform_wrapper div.validation_error {
+  color: #e96760 !important;
+}
 .gform_wrapper .validation_message {
-  color: #e31c43 !important;
+  color: #e33c33 !important;
   letter-spacing: normal;
   font-size: 0.8em;
   border: 0;
   padding: 0;
   margin: 0;
+  background-color: transparent;
+}
+.text-light .gform_wrapper .validation_message {
+  color: #e96760 !important;
 }
 .gform_wrapper img {
   border: 0;
@@ -30198,10 +30205,29 @@ table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorti
   background: none !important;
   margin-top: 0 !important;
 }
-.gform_wrapper .gfield_error .gfield_label,
-.gform_wrapper .gfield_error span label,
-.gform_wrapper .gfield_error .gfield_label span {
-  color: #e31c43 !important;
+.gform_wrapper .gfield_error input[type=text],
+.gform_wrapper .gfield_error input[type=email],
+.gform_wrapper .gfield_error input[type=password],
+.gform_wrapper .gfield_error input[type=tel],
+.gform_wrapper .gfield_error input[type=file],
+.gform_wrapper .gfield_error input[type=url],
+.gform_wrapper .gfield_error input[type=number],
+.gform_wrapper .gfield_error .custom-file-label,
+.gform_wrapper .gfield_error textarea,
+.gform_wrapper .gfield_error select {
+  border-color: #e33c33 !important;
+}
+.text-light .gform_wrapper .gfield_error input[type=text],
+.text-light .gform_wrapper .gfield_error input[type=email],
+.text-light .gform_wrapper .gfield_error input[type=password],
+.text-light .gform_wrapper .gfield_error input[type=tel],
+.text-light .gform_wrapper .gfield_error input[type=file],
+.text-light .gform_wrapper .gfield_error input[type=url],
+.text-light .gform_wrapper .gfield_error input[type=number],
+.text-light .gform_wrapper .gfield_error .custom-file-label,
+.text-light .gform_wrapper .gfield_error textarea,
+.text-light .gform_wrapper .gfield_error select {
+  border-color: #e96760 !important;
 }
 .gform_wrapper .gform_heading,
 .gform_wrapper .validation_error {
@@ -30230,8 +30256,8 @@ table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorti
 }
 .gform_wrapper .ginput_container_textarea textarea {
   min-height: 80px;
-  max-height: 400px;
-  height: 140px;
+  max-height: 300px;
+  height: auto;
 }
 .gform_wrapper .gfield_list_icons {
   display: flex;
@@ -30245,16 +30271,6 @@ table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorti
   margin-right: 0.5rem;
 }
 @media only screen and (min-width: 576px) {
-  .gform_wrapper li.gfield.gf_list_2col ul.gfield_checkbox,
-.gform_wrapper li.gfield.gf_list_2col ul.gfield_radio,
-.gform_wrapper li.gfield.gf_list_3col ul.gfield_checkbox,
-.gform_wrapper li.gfield.gf_list_3col ul.gfield_radio,
-.gform_wrapper li.gfield.gf_list_4col ul.gfield_checkbox,
-.gform_wrapper li.gfield.gf_list_4col ul.gfield_radio,
-.gform_wrapper li.gfield.gf_list_5col ul.gfield_checkbox,
-.gform_wrapper li.gfield.gf_list_5col ul.gfield_radio {
-    overflow: hidden;
-  }
   .gform_wrapper li.gfield.gf_list_2col ul.gfield_checkbox li,
 .gform_wrapper li.gfield.gf_list_2col ul.gfield_radio li,
 .gform_wrapper li.gfield.gf_list_3col ul.gfield_checkbox li,
@@ -30282,15 +30298,75 @@ table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorti
     width: 15%;
   }
 }
+.gform_wrapper .form-check-ripple {
+  height: 36px;
+  background: rgba(200, 200, 200, 0.2);
+  width: 36px;
+  border-radius: 50%;
+  position: absolute;
+  left: -9px;
+  top: -6px;
+  transform: scale(0);
+  transition: transform 0.1s ease-out;
+}
+.gform_wrapper .form-check-ripple.show {
+  transform: scale(1);
+}
+.gform_wrapper .ginput_container_consent .form-check-ripple {
+  left: -3px;
+}
 .gform_wrapper .field_description_below .gfield_description,
 .gform_wrapper .instruction.validation_message,
-.gform_wrapper .ginput_container_name label,
-.gform_wrapper .ginput_container_address label {
+.gform_wrapper form:not(.nested-labels) .ginput_container_name label,
+.gform_wrapper form:not(.nested-labels) .ginput_container_address label {
   padding-left: 4px;
   margin-top: 4px;
   font-size: 0.8rem !important;
   color: #7a7a76;
   height: auto;
+}
+.gform_wrapper form.bootstrap.nested-labels .gfield-type-text .gfield_label,
+.gform_wrapper form.bootstrap.nested-labels .gfield-type-email .gfield_label,
+.gform_wrapper form.bootstrap.nested-labels .gfield-type-phone .gfield_label,
+.gform_wrapper form.bootstrap.nested-labels .gfield-type-number .gfield_label,
+.gform_wrapper form.bootstrap.nested-labels .gfield-type-website .gfield_label,
+.gform_wrapper form.bootstrap.nested-labels .gfield-type-select .gfield_label,
+.gform_wrapper form.bootstrap.nested-labels .gfield-type-textarea .gfield_label,
+.gform_wrapper form.bootstrap.nested-labels .field_sublabel_above .ginput_container_name label,
+.gform_wrapper form.bootstrap.nested-labels .field_sublabel_above .ginput_container_address label,
+.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_name label,
+.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_address label {
+  height: 24px;
+  opacity: 0.6;
+  position: relative;
+  z-index: 1;
+  transform: translate(11px, 31px);
+  transition: all 0.3s ease-in-out;
+  pointer-events: none;
+}
+.gform_wrapper form.bootstrap.nested-labels .gfield-type-text .gfield_label.active,
+.gform_wrapper form.bootstrap.nested-labels .gfield-type-email .gfield_label.active,
+.gform_wrapper form.bootstrap.nested-labels .gfield-type-phone .gfield_label.active,
+.gform_wrapper form.bootstrap.nested-labels .gfield-type-number .gfield_label.active,
+.gform_wrapper form.bootstrap.nested-labels .gfield-type-website .gfield_label.active,
+.gform_wrapper form.bootstrap.nested-labels .gfield-type-select .gfield_label.active,
+.gform_wrapper form.bootstrap.nested-labels .gfield-type-textarea .gfield_label.active,
+.gform_wrapper form.bootstrap.nested-labels .field_sublabel_above .ginput_container_name label.active,
+.gform_wrapper form.bootstrap.nested-labels .field_sublabel_above .ginput_container_address label.active,
+.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_name label.active,
+.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_address label.active {
+  transform: none !important;
+  opacity: 1;
+  pointer-events: all;
+}
+.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_name label,
+.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_address label {
+  transform: translate(11px, -31px);
+}
+.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_name label.active,
+.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_address label.active {
+  font-size: 0.8rem;
+  font-weight: 300;
 }
 .gform_wrapper .hidden_sub_label {
   display: none;
@@ -30368,13 +30444,19 @@ table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorti
 .gform_wrapper .multiple-select-dropdown label {
   transform: none;
 }
-.gform_wrapper .gfield_label {
+.gform_wrapper .gfield_label,
+.gform_wrapper .ginput_container_name label,
+.gform_wrapper .ginput_container_address label {
   margin-bottom: 0;
   font-weight: 500;
 }
 .gform_wrapper .gfield_required {
-  padding-left: 1px;
-  color: #dc3545;
+  padding-left: 3px;
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 100;
+}
+.text-light .gform_wrapper .gfield_required {
+  color: rgba(255, 255, 255, 0.5);
 }
 .gform_wrapper .gform_footer {
   display: flex;
@@ -30404,9 +30486,6 @@ table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorti
   top: 38px;
   left: 0;
   width: 100%;
-}
-.gform_wrapper .gfield-type-fileupload .custom-file-label {
-  color: #aaa;
 }
 .gform_wrapper .gfield-type-fileupload .ginput_container_fileupload [id^=extensions_message] {
   position: absolute;

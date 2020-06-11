@@ -1,3 +1,11 @@
+.global-header {
+	height: 75px;
+}
+body {
+	@media only screen and (min-width: $md) {
+		margin-top: 75px;
+	}
+}
 .post-entry {
 	&.press {
 		position: relative;
@@ -39,7 +47,6 @@
 	}
 }
 
-
 .container-404 .section-inner {
 	padding: 10rem 1rem 4rem;
 	@media only screen and (min-width: $md) {
@@ -47,94 +54,15 @@
 	}
 }
 
-
-.global-banner {
-	background-color: $blue-light;
-	> .row {
-		.col {
-			padding: 1.4rem 0;
-			position: relative;
-			text-align: center;
-			display: flex;
-			justify-content: center;
-			&:first-child:before {
-				content: '';
-				position: absolute;
-				top: 0;
-				left: -500%;
-				width: 700%;
-				height: 150%;
-				transform: skewX(93deg);
-				@media only screen and (min-width: $md) {
-					transform: skewX(-28deg);
-					left: -200%;
-					width: 300%;
-					height: 100%;
-				}
-			}
-			> * {
-				position: relative;
-			}
-			.logo-container {
-				width: 100%;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-			}
-		}
-	}
-	img {
-		max-height: 140px;
-		max-width: 60%;
-		width: 90%;
-		@media only screen and (min-width: $md) {
-			max-width: 100%;
-			max-height: 180px;
-		}
-	}
-	.col-gm {
-		img {
-			@media only screen and (max-width: $md) {
-				max-width: 70%;
-			}
-			@media only screen and (max-width: 500px) {
-				margin-left: -2rem;
-				max-width: 76%;
-			}
-		}
-	}
-	.col-nao {
-		img {
-			max-height: 134px;
-		}
-	}
-}
 .global-header {
+	height: 75px;
 	transition: all .2s ease-in-out;
 	position: fixed;
-	opacity: 0;
 	top: 0;
-	right: -300px;
-	background-color: $white;
+	background-color: $gray-dark;
 	width: 100%;
-	max-width: 300px;
 	z-index: 2;
-	padding: 5rem 1.6rem 3rem;
-	.mobile-menu-open & {
-		top: 0;
-		right: 0;
-		opacity: 1;
-	}
-	@media only screen and (min-width: $md) {
-		top: 0;
-		right: 0;
-		opacity: 1;
-		max-width: none;
-		position: fixed;
-		background-color: $gray-dark;
-		color: $white;
-		padding: 1.1rem 1rem !important;
-	}
+	padding: 1.1rem 1rem !important;
 	@media only screen and (min-width: 1000px) {
 		text-align: center;
 	}
@@ -147,6 +75,11 @@
 	* {
 		color: $white;
 		margin: 0;
+	}
+	img {
+		top: 50%;
+    	position: relative;
+    	transform: translateY(-50%);
 	}
 }
 

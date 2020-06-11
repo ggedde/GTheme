@@ -39,14 +39,14 @@
 
 	<section class="global-wrapper">
 
-		<header class="global-header bg-light sticky-top z-depth-1">
+		<header class="global-header bg-dark sticky-top z-depth-1">
 
-			<div class="row p-3 h-100">
+			<div class="row h-100">
 				<div class="col global-header-logo-col h-100">
 					<a href="<?php echo site_url(); ?>" class="h-100" title="<?php echo bloginfo('name'); ?>">
 						<div class="global-header-logo h-100">
 							<?php if ($logo = (function_exists('get_field') ? get_field('theme_options_logo', 'option') : '')) {?>
-							<img src="<?php echo $logo['sizes']['large']; ?>" alt="<?php echo $logo['alt']; ?>">
+							<img class="mh-100" src="<?php echo $logo['sizes']['large']; ?>" alt="<?php echo $logo['alt']; ?>">
 							<?php }?>
 						</div>
 					</a>

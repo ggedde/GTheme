@@ -79,7 +79,7 @@
     <div class="card-body px-lg-5 pt-0">
 
         <!-- Form -->
-        <form class="text-center text-light" action="#!" dark>
+        <form class="text-center" action="#!" dark>
 
             <!-- Name -->
             <div class="md-form mt-3">

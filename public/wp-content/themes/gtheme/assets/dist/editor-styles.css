@@ -14,12 +14,6 @@ html #tinymce, body #tinymce {
   overflow-x: visible;
 }
 
-@media only screen and (min-width: 768px) {
-  body {
-    margin-top: 84px;
-  }
-}
-
 img {
   max-width: 100%;
   display: block;
@@ -444,7 +438,7 @@ a {
   color: #3CA6B4;
 }
 .site-2 a {
-  color: #e31c43;
+  color: #e33c33;
 }
 a[href^=tel] {
   color: inherit;
@@ -453,7 +447,7 @@ a:hover, a:focus {
   color: #333333;
 }
 .site-2 a:hover, .site-2 a:focus {
-  color: #cc193c;
+  color: #de281e;
 }
 h1 a, h2 a, h3 a, h4 a {
   color: inherit;
@@ -614,6 +608,86 @@ select {
 
 .dropdown-content li > a, .dropdown-content li > span {
   color: #333333;
+}
+
+input[type=text],
+input[type=email],
+input[type=password],
+input[type=tel],
+input[type=file],
+input[type=url],
+input[type=number],
+.custom-file-label,
+textarea,
+select {
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+form.bootstrap input[type=text],
+form.bootstrap input[type=email],
+form.bootstrap input[type=password],
+form.bootstrap input[type=tel],
+form.bootstrap input[type=file],
+form.bootstrap input[type=url],
+form.bootstrap input[type=number],
+form.bootstrap .custom-file-label,
+form.bootstrap textarea,
+form.bootstrap select {
+  background-color: rgba(250, 250, 250, 0.6) !important;
+}
+.text-light form.bootstrap input[type=text],
+.text-light form.bootstrap input[type=email],
+.text-light form.bootstrap input[type=password],
+.text-light form.bootstrap input[type=tel],
+.text-light form.bootstrap input[type=file],
+.text-light form.bootstrap input[type=url],
+.text-light form.bootstrap input[type=number],
+.text-light form.bootstrap .custom-file-label,
+.text-light form.bootstrap textarea,
+.text-light form.bootstrap select {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+.text-light input[type=text],
+.text-light input[type=email],
+.text-light input[type=password],
+.text-light input[type=tel],
+.text-light input[type=file],
+.text-light input[type=url],
+.text-light input[type=number],
+.text-light .custom-file-label,
+.text-light textarea,
+.text-light select {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #d6d6d6 !important;
+}
+
+.form-check-input[type=radio] + label:before,
+.form-check-input[type=radio] + label:after,
+label.btn input[type=radio] + label:before,
+label.btn input[type=radio] + label:after {
+  left: -3px;
+}
+
+.text-light form.md-form label {
+  color: inherit;
+  opacity: 0.7;
+}
+form.md-form label.active {
+  left: 0;
+}
+form.md-form .ginput_container_textarea {
+  margin-top: 2rem;
+}
+form.md-form .ginput_container_textarea .gfield_label {
+  transform: translate(0, -18px) scale(1) !important;
+}
+form.md-form .ginput_container_textarea .gfield_label.active {
+  transform: translate(0, -22px) scale(0.8) !important;
+}
+form.md-form .ginput_container_textarea .md-textarea {
+  padding: 4px 8px;
+  width: calc(100% - 16px);
+  border: 1px solid;
+  border-radius: 3px;
 }
 
 body {

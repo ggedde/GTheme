@@ -51,8 +51,14 @@ if($title || $description || $buttons || $form){ ?>
 				if($form)
 				{
 					?>
-					<div class="block-form">
-						<?php if(function_exists('gravity_form')){ gravity_form($form, false, false, false, null, true); } ?>
+
+					<div class="block-form card rgba-grey-slight mt-4" >
+						<h5 class="card-header white-text py-3 rgba-blue-strong">
+							<strong>Contact us</strong>
+						</h5>
+						<div class="card-body text-left p-4 m-2 text-light">
+							<?php if(function_exists('gravity_form')){ gravity_form($form, false, false, false, null, true); } ?>
+						</div>
 					</div>
 					<?php
 				}

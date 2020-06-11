@@ -5,12 +5,6 @@ html, body {
 	}
 }
 
-body {
-	@media only screen and (min-width: $md) {
-		margin-top: 84px;
-	}
-}
-
 img {
 	max-width: 100%;
 	display: block;
