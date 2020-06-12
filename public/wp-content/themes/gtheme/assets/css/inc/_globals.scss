@@ -11,6 +11,17 @@ img {
 	margin: auto;
 }
 
+.fit-image {
+	position: absolute;
+	min-width: 100%;
+	min-height: 100%;
+	height: auto;
+	width: auto;
+	object-fit: cover;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
 .row {
     width: 100%;
     max-width: $max-row-width;

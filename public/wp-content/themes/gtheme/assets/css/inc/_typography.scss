@@ -122,10 +122,7 @@ a {
 	}
 	&:hover,
 	&:focus {
-		color: $dark;
-		.site-2 & {
-			color: darken($red, 5%);
-		}
+		color: $info;
 	}
 	h1 &,
 	h2 &,

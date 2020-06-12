@@ -99,7 +99,7 @@ class GBLOCKS {
 		}
 		.block-bg-overlay .block-bg-overlay-container {
 			content: '';
-			display: block;
+			display: block !important;
 			position: absolute;
 			background-color: rgba(0, 0, 0, 0.5);
 			top: 0;

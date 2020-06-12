@@ -1,11 +1,15 @@
-<?php get_header(); ?>
+<?php get_header(); 
+
+if(!GBLOCKS::has_block('banner'))
+	{
+		get_template_part('parts/default-banner');
+	}
+	?>
 
 	<section class="section-container">
 		<div class="section-inner">
 			<div class="row">
-				<div class="columns">
-					<h1>404 - Not Found</h1>
-
+				<div class="col">
 					<p>We're sorry, the page you requested cannot be found.</p>
 
 					<p>If you typed the URL yourself, please make sure that the spelling is correct. <br />

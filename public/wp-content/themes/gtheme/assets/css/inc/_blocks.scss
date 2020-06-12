@@ -29,16 +29,16 @@
 	}
 }
 
-.global-content .block-bg-overlay {
-	&.block-bg-image,
-	> .block-bg-image-container {
-		background-color: rgba(0, 32, 70, 0.6);
-		background-blend-mode: multiply;
-	}
-	.block-bg-overlay-container {
-		display: none;
-	}
-}
+// .global-content .block-bg-overlay {
+// 	&.block-bg-image,
+// 	> .block-bg-image-container {
+// 		background-color: rgba(0, 32, 70, 0.6);
+// 		background-blend-mode: multiply;
+// 	}
+// 	.block-bg-overlay-container {
+// 		display: none;
+// 	}
+// }
 
 .block-bg-1 + .block-bg-1,
 .block-bg-2 + .block-bg-2,
@@ -74,6 +74,10 @@
 			margin-bottom: 0;
 		}
 	}
+}
+
+.block-container.block-banner {
+	padding-top: 4%;
 }
 
 .media-right .col-content {

@@ -38,15 +38,13 @@
     ?>
 
 	<section class="global-wrapper">
-
-		<header class="global-header bg-dark sticky-top z-depth-1">
-
-			<div class="row h-100">
-				<div class="col global-header-logo-col h-100">
+		<header class="global-header light-text">
+			<div class="row h-100 m-auto">
+				<div class="col-4 global-header-logo-col h-100">
 					<a href="<?php echo site_url(); ?>" class="h-100" title="<?php echo bloginfo('name'); ?>">
 						<div class="global-header-logo h-100">
 							<?php if ($logo = (function_exists('get_field') ? get_field('theme_options_logo', 'option') : '')) {?>
-							<img class="mh-100" src="<?php echo $logo['sizes']['large']; ?>" alt="<?php echo $logo['alt']; ?>">
+							<img class="mh-100 m-0" src="<?php echo $logo['sizes']['large']; ?>" alt="<?php echo $logo['alt']; ?>">
 							<?php }?>
 						</div>
 					</a>
@@ -56,7 +54,7 @@
 						<?php FUNC::menu('main-menu');?>
 					</nav>
 				</div>
-				<div class="col d-flex align-items-center justify-content-end d-lg-none">
+				<div class="col-8 d-flex align-items-center justify-content-end d-lg-none">
 					<button class="button-mobile-menu">
 						<span></span>
 					</button>

@@ -1409,6 +1409,7 @@ class FUNC
     public static function get_default_menus()
     {
         $menues = array(
+            'utility-menu' => 'Utility Menu', // main nav in header
             'main-menu' => 'Main Menu', // main nav in header
             'footer-menu' => 'Footer Menu', // secondary nav in footer
             'mobile-menu' => 'Mobile Menu', // Mobile nav in header
@@ -1661,6 +1662,8 @@ class FUNC
             return $template_dir . '/archive.php';
         } elseif ((is_archive() || is_home()) && file_exists($template_dir . '/archive-' . $post_type . '.php')) {
             return $template_dir . '/archive-' . $post_type . '.php';
+        } elseif (is_home() && file_exists($template_dir . '/blog.php')) {
+            return $template_dir . '/blog.php';
         } elseif ((is_archive() || is_home()) && file_exists($template_dir . '/archive.php')) {
             return $template_dir . '/archive.php';
         } elseif (is_search() && file_exists($template_dir . '/search.php')) {
