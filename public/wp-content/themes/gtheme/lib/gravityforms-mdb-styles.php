@@ -37,13 +37,22 @@ add_action('wp_head', function(){
                     'form.bootstrap.nested-labels .ginput_container_phone input',
                     'form.bootstrap.nested-labels .ginput_container_number input',
                     'form.bootstrap.nested-labels .ginput_container_textarea textarea',
-                    'form.bootstrap.nested-labels .ginput_container_select select',
                 ];
 
                 $(inputs.join(', ')).off('focus.mbdGformStyles').on('focus.mbdGformStyles', function(){
                     $(this).closest('.gfield').find('.gfield_label').addClass('active');
                 }).off('blur.mbdGformStyles').on('blur.mbdGformStyles', function(){
                     if (!$(this).val()){
+                        $(this).closest('.gfield').find('.gfield_label').removeClass('active');
+                    }
+                });
+
+                $('form.bootstrap.nested-labels .ginput_container_select select').off('change.mbdGformStyles').on('change.mbdGformStyles', function(){
+                    if ($(this).find('option:checked')) {
+                        $(this).addClass('is-selected');
+                        $(this).closest('.gfield').find('.gfield_label').addClass('active');
+                    } else {
+                        $(this).removeClass('is-selected');
                         $(this).closest('.gfield').find('.gfield_label').removeClass('active');
                     }
                 });
@@ -64,6 +73,18 @@ add_action('wp_head', function(){
                 }).off('blur.mbdGformStyles').on('blur.mbdGformStyles', function(){
                     $(this).parent().find('.form-check-ripple').remove();
                 });
+
+                $('.custom-file-input').each(function(){
+                    if ($(this).get(0).files.length) {
+                        $(this).parent().find('.gfield_label').addClass('active');
+                    }
+                });
+
+                $('.custom-file-input').on('change', function(){
+                    if ($(this).get(0).files.length) {
+                        $(this).parent().find('.gfield_label').addClass('active');
+                    }
+                });
             }
 
             $(document).on('gform_post_render', function(event, form_id, current_page){
@@ -75,6 +96,77 @@ add_action('wp_head', function(){
 
         
     </script>
+    <style>
+
+        .embedded .nested-label input,
+        .embedded .nested-label select,
+        .embedded .nested-label .custom-file-label {
+           height: 50px;
+           padding-top: 1.3rem !important;
+        }
+        .embedded .nested-label .custom-file-label::after {
+            height: 100%;
+            padding-top: 0.8rem;
+        }
+        .field_sublabel_below .ginput_container_name.nested-label input,
+        .field_sublabel_below .ginput_container_address.nested-label input,
+        .field_sublabel_below .ginput_container_name.nested-label select,
+        .field_sublabel_below .ginput_container_address.nested-label select {
+           padding-top: 0 !important;
+           padding-bottom: 1.1rem !important;
+        }
+        .nested-label label {
+            transform: translate(11px, 14px);
+            min-height: 24px !important;
+            position: absolute !important;
+            left: 0;
+            transition: all .3s ease-in-out;
+            pointer-events: none;
+            opacity: .6;
+            z-index: 1;
+        }
+        .nested-label label.active,
+        .embedded .nested-label.ginput_container_multiselect label.gfield_label {
+            font-size: 0.8rem !important;
+            transform: none;
+            opacity: 1;
+            pointer-events: all;
+        }
+        .embedded .nested-label label.active,
+        .embedded .nested-label.ginput_container_multiselect label.gfield_label {
+            opacity: .6 !important;
+            transform: translate(11px, 4px);
+        }
+        .field_sublabel_below .ginput_container_name.nested-label label.active,
+        .field_sublabel_below .ginput_container_address.nested-label label.active { 
+            transform: translate(11px, 28px);
+            font-size: .8rem;
+            font-weight: 300;
+        }
+
+        .ginput_container_fileupload .custom-file-label {
+            transform: none;
+            opacity: 1;
+        }
+
+        .ginput_container_fileupload .gfield_label {
+            z-index: 4;
+        }
+
+        form.bootstrap.nested-labels .ginput_container_select select {
+            color: transparent;
+        }
+        form.bootstrap.nested-labels .ginput_container_select select.is-selected {
+            color: inherit;
+        }
+        .embedded .nested-label.ginput_container_textarea .gfield_label {
+            transform: translate(11px, -25px);
+        }
+        .embedded .nested-label.ginput_container_textarea .gfield_label.active {
+            transform: translate(11px, -29px);
+        }
+
+    </style>
     <?php
 });
 
@@ -83,12 +175,15 @@ if (!is_admin()) {
         if (!empty($form['mdb_form_style'])) {
             $form['cssClass'].= ' '.$form['mdb_form_style'];
         }
-        
         return $form;
     });
     add_filter( 'gform_field_container', function ($field_container, $field, $form, $css_class, $style, $field_content) {
 
         $classes = 'col-12';
+
+        if ($field['type'] === 'fileupload' && !empty($field['allowedExtensions'])) {
+            $classes.= ' show-extensions mt-3';
+        }
 
         if (!empty($form['cssClass']) && strpos($form['cssClass'], 'md-form') !== false) {
             $classes.= ' form-group';
@@ -109,11 +204,21 @@ if (!is_admin()) {
         $id = 'input_'.$form_id.'_'.$field['id'];
         $name = 'input_'.$field['id'];
         $hasMdForm = false;
+        $hasNestedLabels = false;
+        $hasEmbeddedLabels = false;
 
         if (class_exists('GFAPI')) {
             $form = GFAPI::get_form( $form_id );
-            if (!empty($form['cssClass']) && strpos($form['cssClass'], 'md-form') !== false) {
-                $hasMdForm = true;
+            if (!empty($form['mdb_form_style'])) { 
+                if (strpos($form['mdb_form_style'], 'md-form') !== false) {
+                    $hasMdForm = true;
+                }
+                if (strpos($form['mdb_form_style'], 'nested-labels') !== false) {
+                    $hasNestedLabels = true;
+                }
+                if (strpos($form['mdb_form_style'], 'embedded') !== false) {
+                    $hasEmbeddedLabels = true;
+                }
             }
         }
 
@@ -138,6 +243,10 @@ if (!is_admin()) {
         }
 
         if (in_array($field['type'], ['multiselect', 'select'])) {
+            if ($hasNestedLabels) {
+                $content = str_replace($label, '', $content);
+                $content = str_replace('<select', $label.'<select', $content);
+            }
             $content = str_replace('gfield_select', 'custom-select gfield_select', $content);
             if (count($field['choices']) > 12) {
                 $content = str_replace('<select', '<select searchable="Search..."', $content);
@@ -165,10 +274,10 @@ if (!is_admin()) {
                         </div>
                     </div>';
                 } else {
-                    $content = $label.'
+                    $content = ($hasEmbeddedLabels ? '' : $label).'
                     <div class="input-group">
                         <div class="custom-file">
-                            '.str_replace([$label, "type='file' class='"], ['', "type='file' class='custom-file-input "], str_replace("<span", "<label class='custom-file-label' for='".$id."'>Choose file</label><span", $content)).'
+                            '.str_replace('<label', ($hasEmbeddedLabels ? str_replace('gfield_label', 'gfield_label', $label) : '').'<label', str_replace([$label, "type='file' class='"], ['', "type='file' class='custom-file-input "], str_replace("<span", "<label class='custom-file-label' for='".$id."'>".($hasEmbeddedLabels ? '' : 'Choose file')."</label><span", $content))).'
                         </div>
                     </div>';
                 }
@@ -178,17 +287,23 @@ if (!is_admin()) {
         }
 
         if ($field['type'] === 'textarea') {
-            if ($hasMdForm) {
+            if ($hasMdForm || $hasNestedLabels) {
                 $content = str_replace($label, '', $content);
                 $content = str_replace('<textarea', $label.'<textarea', $content);
+            }
+
+            if ($hasMdForm) {
                 $content = str_replace("class='textarea", "class='textarea md-textarea", $content);
             } else {
-                $content = str_replace("class='textarea", "class='textarea form-control md-textarea", $content);
+                $content = str_replace("class='textarea", "class='textarea form-control", $content);
             }
             $content = str_replace("rows='10", "rows='0", $content);
         }
 
         if (in_array($field['type'], ['name', 'address', 'list'])) {
+            if (empty($field['label'])) {
+                $content = str_replace($label, '', $content);
+            }
             $content = str_replace("<select", "<select class='custom-select'", $content);
             if (!$hasMdForm) {
                 $content = str_replace("type='text'", "type='text' class='form-control", $content);
@@ -201,7 +316,9 @@ if (!is_admin()) {
             $content = str_replace("type='radio'", "type='radio' class='form-check-input'", $content);
         }
 
-        
+        if ($hasNestedLabels && in_array($field['type'], ['name', 'address', 'text', 'email', 'phone', 'number', 'website', 'textarea', 'multiselect', 'select', 'fileupload'])) {
+            $content = str_replace('ginput_container ', 'ginput_container nested-label ', $content);
+        }
 
         return  $content;
         
@@ -232,6 +349,7 @@ function mdb_style_gform_form_settings($settings, $form)
             <td><select name="mdb_form_style">
                 <option value="md-form" '.selected(rgar($form, 'mdb_form_style'), 'md-form').'>Material Design Bootstrap</option>
                 <option value="bootstrap nested-labels" '.selected(rgar($form, 'mdb_form_style'), 'bootstrap nested-labels').'>Bootstrap with Nested Labels</option>
+                <option value="bootstrap embedded nested-labels" '.selected(rgar($form, 'mdb_form_style'), 'bootstrap embedded nested-labels').'>Bootstrap with Embedded Nested Labels</option>
                 <option value="bootstrap" '.selected(rgar($form, 'mdb_form_style'), 'bootstrap').'>Bootstrap</option>
             </select></td>
         </tr>';

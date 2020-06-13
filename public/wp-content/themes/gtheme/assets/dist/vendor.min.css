@@ -30243,7 +30243,9 @@ table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorti
 .gform_wrapper .ginput_counter {
   font-size: 12px;
 }
-.gform_wrapper .top_label li.gfield {
+.gform_wrapper form.nested-labels .ginput_container_name > span,
+.gform_wrapper form.nested-labels .ginput_container_address > span,
+.gform_wrapper .top_label li:not(.gfield-type-name):not(.gfield-type-address).gfield {
   margin: 0 0 1rem;
 }
 .gform_wrapper table.gfield_list_container,
@@ -30254,20 +30256,37 @@ table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorti
 .gform_wrapper ul.gfield_radio {
   width: 100%;
 }
+.gform_wrapper .gfield_list_container tr,
+.gform_wrapper .gfield_list_container tr {
+  display: flex;
+}
+.gform_wrapper .gfield_list_container tr th,
+.gform_wrapper .gfield_list_container tr td,
+.gform_wrapper .gfield_list_container tr th,
+.gform_wrapper .gfield_list_container tr td {
+  flex: auto;
+}
+.gform_wrapper .gfield_list_container tr th.gfield_list_cell,
+.gform_wrapper .gfield_list_container tr td.gfield_list_cell,
+.gform_wrapper .gfield_list_container tr th.gfield_list_cell,
+.gform_wrapper .gfield_list_container tr td.gfield_list_cell {
+  padding-right: 20px;
+}
 .gform_wrapper .ginput_container_textarea textarea {
   min-height: 80px;
   max-height: 300px;
   height: auto;
 }
-.gform_wrapper .gfield_list_icons {
+.gform_wrapper .gfield_list_icons,
+.gform_wrapper .gfield_list_container thead td:last-child {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
-  width: 50px;
-  padding-left: 10px;
+  min-width: 50px;
+  max-width: 50px;
 }
-.gform_wrapper .gfield_list_icons .add_list_item {
+.gform_wrapper .gfield_list_icons .add_list_item,
+.gform_wrapper .gfield_list_container thead td:last-child .add_list_item {
   margin-right: 0.5rem;
 }
 @media only screen and (min-width: 576px) {
@@ -30325,49 +30344,6 @@ table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorti
   color: #7a7a76;
   height: auto;
 }
-.gform_wrapper form.bootstrap.nested-labels .gfield-type-text .gfield_label,
-.gform_wrapper form.bootstrap.nested-labels .gfield-type-email .gfield_label,
-.gform_wrapper form.bootstrap.nested-labels .gfield-type-phone .gfield_label,
-.gform_wrapper form.bootstrap.nested-labels .gfield-type-number .gfield_label,
-.gform_wrapper form.bootstrap.nested-labels .gfield-type-website .gfield_label,
-.gform_wrapper form.bootstrap.nested-labels .gfield-type-select .gfield_label,
-.gform_wrapper form.bootstrap.nested-labels .gfield-type-textarea .gfield_label,
-.gform_wrapper form.bootstrap.nested-labels .field_sublabel_above .ginput_container_name label,
-.gform_wrapper form.bootstrap.nested-labels .field_sublabel_above .ginput_container_address label,
-.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_name label,
-.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_address label {
-  height: 24px;
-  opacity: 0.6;
-  position: relative;
-  z-index: 1;
-  transform: translate(11px, 31px);
-  transition: all 0.3s ease-in-out;
-  pointer-events: none;
-}
-.gform_wrapper form.bootstrap.nested-labels .gfield-type-text .gfield_label.active,
-.gform_wrapper form.bootstrap.nested-labels .gfield-type-email .gfield_label.active,
-.gform_wrapper form.bootstrap.nested-labels .gfield-type-phone .gfield_label.active,
-.gform_wrapper form.bootstrap.nested-labels .gfield-type-number .gfield_label.active,
-.gform_wrapper form.bootstrap.nested-labels .gfield-type-website .gfield_label.active,
-.gform_wrapper form.bootstrap.nested-labels .gfield-type-select .gfield_label.active,
-.gform_wrapper form.bootstrap.nested-labels .gfield-type-textarea .gfield_label.active,
-.gform_wrapper form.bootstrap.nested-labels .field_sublabel_above .ginput_container_name label.active,
-.gform_wrapper form.bootstrap.nested-labels .field_sublabel_above .ginput_container_address label.active,
-.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_name label.active,
-.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_address label.active {
-  transform: none !important;
-  opacity: 1;
-  pointer-events: all;
-}
-.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_name label,
-.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_address label {
-  transform: translate(11px, -31px);
-}
-.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_name label.active,
-.gform_wrapper form.bootstrap.nested-labels .field_sublabel_below .ginput_container_address label.active {
-  font-size: 0.8rem;
-  font-weight: 300;
-}
 .gform_wrapper .hidden_sub_label {
   display: none;
 }
@@ -30375,7 +30351,7 @@ table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorti
 .gform_wrapper ul.gfield_checkbox,
 .gform_wrapper .ginput_container_consent {
   padding-left: 0;
-  margin-top: 0.8rem;
+  margin-top: 0.6rem;
   margin-bottom: 0.2rem;
 }
 .gform_wrapper ul.gfield_radio .gfield_consent_label,
@@ -30486,6 +30462,9 @@ table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorti
   top: 38px;
   left: 0;
   width: 100%;
+}
+.gform_wrapper .gfield-type-fileupload .custom-file {
+  height: auto;
 }
 .gform_wrapper .gfield-type-fileupload .ginput_container_fileupload [id^=extensions_message] {
   position: absolute;

@@ -16,11 +16,13 @@ input[type="url"],
 input[type="number"],
 .custom-file-label,
 textarea,
+.nested-label.ginput_container_textarea,
+.nested-label .custom-file-label::after,
 select {
 	form.bootstrap & {
-		background-color: rgba(250, 250, 250, .6) !important;
+		background-color: rgba(250, 250, 250, .6);
 		.text-light & {
-			background-color: rgba(255, 255, 255, .05) !important;
+			background-color: rgba(255, 255, 255, .05);
 		}
 	}
 	border-color: rgba(0, 0, 0, .2) !important;
@@ -28,7 +30,15 @@ select {
 		border-color: rgba(255, 255, 255, .3) !important;
 		color: darken($text-light, 10%) !important;
 	}
-
+}
+.nested-label.ginput_container_textarea {
+	border: 1px solid;
+	padding-top: 2rem;
+	border-radius: 3px;
+	textarea {
+		border: 0;
+		background-color: transparent !important;
+	}
 }
 
 .form-check-input[type=radio] + label:before, 
@@ -37,28 +47,6 @@ label.btn input[type=radio] + label:before,
 label.btn input[type=radio] + label:after {
 	left: -3px;
 }
-
-// form.bootstrap.nested-labels {
-// 	.gfield-type-text,
-// 	.gfield-type-email,
-// 	.gfield-type-phone,
-// 	.gfield-type-number,
-// 	.gfield-type-website,
-// 	.gfield-type-select,
-// 	.gfield-type-textarea {
-// 		.gfield_label {
-// 			opacity: 0.6;
-// 			position: relative;
-// 			z-index: 1;
-// 			transform: translate(11px, 31px);
-// 			transition: all .3s ease-in-out;
-// 			&.active {
-// 				transform: none !important;
-// 				opacity: 1;
-// 			}
-// 		}
-// 	}
-// }
 
 form.md-form {
 	label {

@@ -622,6 +622,8 @@ input[type=url],
 input[type=number],
 .custom-file-label,
 textarea,
+.nested-label.ginput_container_textarea,
+.nested-label .custom-file-label::after,
 select {
   border-color: rgba(0, 0, 0, 0.2) !important;
 }
@@ -634,8 +636,10 @@ form.bootstrap input[type=url],
 form.bootstrap input[type=number],
 form.bootstrap .custom-file-label,
 form.bootstrap textarea,
+form.bootstrap .nested-label.ginput_container_textarea,
+form.bootstrap .nested-label .custom-file-label::after,
 form.bootstrap select {
-  background-color: rgba(250, 250, 250, 0.6) !important;
+  background-color: rgba(250, 250, 250, 0.6);
 }
 .text-light form.bootstrap input[type=text],
 .text-light form.bootstrap input[type=email],
@@ -646,8 +650,10 @@ form.bootstrap select {
 .text-light form.bootstrap input[type=number],
 .text-light form.bootstrap .custom-file-label,
 .text-light form.bootstrap textarea,
+.text-light form.bootstrap .nested-label.ginput_container_textarea,
+.text-light form.bootstrap .nested-label .custom-file-label::after,
 .text-light form.bootstrap select {
-  background-color: rgba(255, 255, 255, 0.05) !important;
+  background-color: rgba(255, 255, 255, 0.05);
 }
 .text-light input[type=text],
 .text-light input[type=email],
@@ -658,9 +664,21 @@ form.bootstrap select {
 .text-light input[type=number],
 .text-light .custom-file-label,
 .text-light textarea,
+.text-light .nested-label.ginput_container_textarea,
+.text-light .nested-label .custom-file-label::after,
 .text-light select {
   border-color: rgba(255, 255, 255, 0.3) !important;
   color: #d6d6d6 !important;
+}
+
+.nested-label.ginput_container_textarea {
+  border: 1px solid;
+  padding-top: 2rem;
+  border-radius: 3px;
+}
+.nested-label.ginput_container_textarea textarea {
+  border: 0;
+  background-color: transparent !important;
 }
 
 .form-check-input[type=radio] + label:before,
