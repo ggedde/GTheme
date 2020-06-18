@@ -38,8 +38,8 @@ img {
   margin-right: auto;
 }
 @media only screen and (max-width: 768px) {
-  .row [class*=col-]:not(:first-child),
-.row .col:not(:first-child) {
+  .row > [class*=col-]:not(:first-child),
+.row > .col:not(:first-child) {
     margin-top: 1.2rem;
   }
 }
