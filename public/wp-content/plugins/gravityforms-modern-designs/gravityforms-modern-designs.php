@@ -40,6 +40,7 @@ class MDFGF {
         'multiselect', 
         'select', 
         'number', 
+        'date', 
         'website'
     ];
 
@@ -50,25 +51,6 @@ class MDFGF {
     private static $complexFields = [
         'name', 
         'address', 
-    ];
-
-
-
-    /**
-     * Array of Single Text Inputs for Gravity Forms
-     */
-    private static $singleTextInputs = [
-        'input[type="text"]', 
-        'input[type="email"]', 
-        'input[type="tel"]', 
-        'input[type="number"]', 
-        'input[type="date"]', 
-        'input[type="time"]', 
-        'input[type="password"]', 
-        'input[type="url"]', 
-        'input[type="month"]', 
-        'input[type="week"]', 
-        'input[type="text"]', 
     ];
 
 
@@ -110,311 +92,136 @@ class MDFGF {
      * @return void
      */
     public static function wp_head() {
+
+        $mainColor = '#21759b';
+
         ?>
-        <script>
-            jQuery(document).ready(function($){
-                function gFormsMdbformsRender(){
+<script>
+    jQuery(document).ready(function($){
+        function gFormsMdfgformsRender(){
 
-                    var mdForm = $('.md-form');
-                    if (mdForm.length) {
-                        mdForm.find('.custom-select').each(function(){
-                            $(this).removeClass('custom-select').addClass('mdb-select').materialSelect();
-                        });
-                        mdForm.find('input, select, textarea').trigger('change');
-                    }
+            // var mdForm = $('.md-form');
+            // if (mdForm.length) {
+            //     mdForm.find('.custom-select').each(function(){
+            //         $(this).removeClass('custom-select').addClass('mdb-select').materialSelect();
+            //     });
+            //     mdForm.find('input, select, textarea').trigger('change');
+            // }
 
-                    $('.ginput_container_name input, .ginput_container_address input').each(function(){
-                        if ($(this).val()) {
-                            $(this).closest('li.gfield').find('label').addClass('active');
-                        }
-                    })
-                    $('.ginput_container_name input, .ginput_container_address input').on('focus', function(){
-                        $(this).closest('li.gfield').find('label').addClass('active');
-                    });
+            // $('.ginput_container_name input, .ginput_container_address input').each(function(){
+            //     if ($(this).val()) {
+            //         $(this).closest('li.gfield').find('label').addClass('active');
+            //     }
+            // })
+            // $('.ginput_container_name input, .ginput_container_address input').on('focus', function(){
+            //     $(this).closest('li.gfield').find('label').addClass('active');
+            // });
 
-                    if (typeof bsCustomFileInput !== 'undefined') {
-                        bsCustomFileInput.init();
-                    }
-            
-                    var inputs = [
-                        'form.bootstrap.nested-labels .ginput_container_text input',
-                        'form.bootstrap.nested-labels .ginput_container_email input',
-                        'form.bootstrap.nested-labels .ginput_container_phone input',
-                        'form.bootstrap.nested-labels .ginput_container_number input',
-                        'form.bootstrap.nested-labels .ginput_container_textarea textarea',
-                    ];
+            // if (typeof bsCustomFileInput !== 'undefined') {
+            //     bsCustomFileInput.init();
+            // }
+    
+            // var inputs = [
+            //     'form.bootstrap.nested-labels .ginput_container_text input',
+            //     'form.bootstrap.nested-labels .ginput_container_email input',
+            //     'form.bootstrap.nested-labels .ginput_container_phone input',
+            //     'form.bootstrap.nested-labels .ginput_container_number input',
+            //     'form.bootstrap.nested-labels .ginput_container_textarea textarea',
+            // ];
 
-                    $(inputs.join(', ')).off('focus.mbdGformStyles').on('focus.mbdGformStyles', function(){
-                        $(this).closest('.gfield').find('.gfield_label').addClass('active');
-                    }).off('blur.mbdGformStyles').on('blur.mbdGformStyles', function(){
-                        if (!$(this).val()){
-                            $(this).closest('.gfield').find('.gfield_label').removeClass('active');
-                        }
-                    });
+            // $(inputs.join(', ')).off('focus.mbdGformStyles').on('focus.mbdGformStyles', function(){
+            //     $(this).closest('.gfield').find('.gfield_label').addClass('active');
+            // }).off('blur.mbdGformStyles').on('blur.mbdGformStyles', function(){
+            //     if (!$(this).val()){
+            //         $(this).closest('.gfield').find('.gfield_label').removeClass('active');
+            //     }
+            // });
 
-                    $('form.bootstrap.nested-labels .ginput_container_select select').off('change.mbdGformStyles').on('change.mbdGformStyles', function(){
-                        if ($(this).find('option:checked')) {
-                            $(this).addClass('is-selected');
-                            $(this).closest('.gfield').find('.gfield_label').addClass('active');
-                        } else {
-                            $(this).removeClass('is-selected');
-                            $(this).closest('.gfield').find('.gfield_label').removeClass('active');
-                        }
-                    });
+            // $('form.bootstrap.nested-labels .ginput_container_select select').off('change.mbdGformStyles').on('change.mbdGformStyles', function(){
+            //     if ($(this).find('option:checked')) {
+            //         $(this).addClass('is-selected');
+            //         $(this).closest('.gfield').find('.gfield_label').addClass('active');
+            //     } else {
+            //         $(this).removeClass('is-selected');
+            //         $(this).closest('.gfield').find('.gfield_label').removeClass('active');
+            //     }
+            // });
 
-                    $('.ginput_container_address input, .ginput_container_name input, .ginput_container_address select, .ginput_container_name select').off('focus').on('focus.mbdGformStyles', function(){
-                        $(this).closest('span').find('label').addClass('active');
-                    }).off('blur').on('blur.mbdGformStyles', function(){
-                        if (!$(this).val()){
-                            $(this).closest('span').find('label').removeClass('active');
-                        }
-                    });
+            // $('.ginput_container_address input, .ginput_container_name input, .ginput_container_address select, .ginput_container_name select').off('focus').on('focus.mbdGformStyles', function(){
+            //     $(this).closest('span').find('label').addClass('active');
+            // }).off('blur').on('blur.mbdGformStyles', function(){
+            //     if (!$(this).val()){
+            //         $(this).closest('span').find('label').removeClass('active');
+            //     }
+            // });
 
-                    $('.form-check-input').off('focus.mbdGformStyles').on('focus.mbdGformStyles', function(){
-                        $(this).before('<div class="form-check-ripple"></div>');
-                        setTimeout(function(){
-                            $('.form-check-ripple').addClass('show');
-                        }, 1);
-                    }).off('blur.mbdGformStyles').on('blur.mbdGformStyles', function(){
-                        $(this).parent().find('.form-check-ripple').remove();
-                    });
+            // $('.form-check-input').off('focus.mbdGformStyles').on('focus.mbdGformStyles', function(){
+            //     $(this).before('<div class="form-check-ripple"></div>');
+            //     setTimeout(function(){
+            //         $('.form-check-ripple').addClass('show');
+            //     }, 1);
+            // }).off('blur.mbdGformStyles').on('blur.mbdGformStyles', function(){
+            //     $(this).parent().find('.form-check-ripple').remove();
+            // });
 
-                    $('.custom-file-input').each(function(){
-                        if ($(this).get(0).files.length) {
-                            $(this).parent().find('.gfield_label').addClass('active');
-                        }
-                    });
+            // $('.custom-file-input').each(function(){
+            //     if ($(this).get(0).files.length) {
+            //         $(this).parent().find('.gfield_label').addClass('active');
+            //     }
+            // });
 
-                    $('.custom-file-input').on('change', function(){
-                        if ($(this).get(0).files.length) {
-                            $(this).parent().find('.gfield_label').addClass('active');
-                        }
-                    });
-                }
-
-                $(document).on('gform_post_render', function(event, form_id, current_page){
-                    gFormsMdbformsRender();
-                });
-
-                gFormsMdbformsRender();
+            // $('.custom-file-input').on('change', function(){
+            //     if ($(this).get(0).files.length) {
+            //         $(this).parent().find('.gfield_label').addClass('active');
+            //     }
+            // });
+            $('.gfield_error input, .gfield_error select, .gfield_error textarea').on('change', function(){
+                $(this).closest('.gfield_error').removeClass('gfield_error').find('.validation_message').hide();
+                
             });
+        }
 
-            
-        </script>
-        <style>
-        ul.gform_fields,
-        ul.gfield_checkbox,
-        ul.gfield_radio,
-        .mdfgf-row {
-            width: 100%;
-            display: flex;
-            flex-wrap: wrap;
-            list-style: none;
-            justify-content: space-between;
-            margin: 0;
-            padding: 0;
-        }
-        ul.gfield_checkbox,
-        ul.gfield_radio {
-            justify-content: flex-start;
-        }
-        ul.gfield_checkbox li,
-        ul.gfield_radio li {
-            flex: 0 0 calc(100% - 15px);
-            margin-top: 1rem;
-            margin-left: 5px;
-            padding-right: 10px;
-        }
-        @media only screen and (min-width: 680px) {
-            ul.gfield_checkbox li,
-            ul.gfield_radio li {
-                flex: 0 0 calc(25% - 15px);
-            }
-        }
-        li.gfield,
-        .mdfgf-field {
-            flex: 0 0 100%;
-            margin-bottom: 1.5rem;
-            box-sizing: border-box;
-        }
-        li.gfield.mdfgf-field-type-name,
-        li.gfield.mdfgf-field-type-address {
-            margin-bottom: 0;
-        }
-        .gfield_list_cell {
-            padding-right: 20px;
-        }
-        .gfield_list_cell:nth-last-child(2) {
-            padding-right: 0;
-        }
-        .gfield_list {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .gfield_list_icons {
-            width: 30px;
-        }
-        @media only screen and (min-width: 800px) {
-            .mdfgf-field.mdfgfcol-4 {
-                flex: 0 0 calc(33% - 10px);
-            }
-        }
-        @media only screen and (min-width: 640px) {
-            .mdfgf-field.mdfgfcol-6,
-            .ginput_complex .mdfgf-field {
-                flex: 0 0 calc(50% - 10px);
-            }
-        }
-        label.gfield_label {
-            font-weight: 500;
-        }
-        .gfield_required {
-            padding-left: 4px;
-            opacity: .4;
-        }
-        .ginput_complex label,
-        .gfield_list th {
-            font-size: 14px;
-            font-weight: 100;
-            opacity: .8;
-        }
-        .gfield_list th,
-        .gfield_list_group + .gfield_list_group td {
-            padding-top: .5rem;
-        }
-        body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_list_icons img {
-            background-color: rgba(255,255,255,0.5) !important;
-            border-radius: 50%;
-        }
-        <?php foreach (self::$singleTextInputs as $singleTextInputs) { ?>
-        .mdfgf-field <?=$singleTextInputs;?>,
-        <?php } ?>
-        .mdfgf-field select,
-        .mdfgf-field textarea,
-        .ginput_container_fileupload {
-            width: 100%;
-            border: 1px solid rgba(0,0,0,0.2);
-            background-color: rgba(240,240,240,0.1);
-            border-radius: 4px;
-            min-height: 40px;
-            padding: 0 10px;
-            appearance: none;
-            -webkit-appearance: none;
-            box-sizing: border-box;
-            transition: border .1s ease-in-out;
-        }
-        .text-light label.gfield_label,
-        .text-light li.gfield,
-        .text-light .gf_progressbar,
-        .text-light .gf_progressbar_title,
-        .text-light .mdfgf-field,
-        .text-light .gfield_list th,
-        .text-light .ginput_complex label {
-            color: #eee;
-        }
-        <?php foreach (self::$singleTextInputs as $singleTextInputs) { ?>
-        .text-light .mdfgf-field <?=$singleTextInputs;?>,
-        <?php } ?>
-        .text-light .mdfgf-field select,
-        .text-light .mdfgf-field textarea,
-        .text-light .ginput_container_fileupload {
-            border-color: rgba(255,255,255,0.2);
-            background-color: rgba(255,255,255,0.05);
-            color: #eee;
-        }
-        <?php foreach (self::$singleTextInputs as $singleTextInputs) { ?>
-        .gfield_error.mdfgf-field <?=$singleTextInputs;?>,
-        <?php } ?>
-        .gfield_error.mdfgf-field select,
-        .gfield_error.mdfgf-field textarea,
-        .gfield_error.ginput_container_fileupload {
-            border-color: rgba(250,0,0,0.9);
-        }
-        .ginput_container_fileupload {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .ginput_container_fileupload input[type="file"] {
-            padding-left: 32px;
-        }
-        .ginput_container_fileupload input[type="file"]::-webkit-file-upload-button {
-            visibility: hidden;
+        $(document).on('gform_post_render', function(event, form_id, current_page){
+            gFormsMdfgformsRender();
+        });
 
-        }
-        .ginput_container_fileupload input[type="file"]:before {
-            content: 'Choose File';
-            position: absolute;
-            left: 10px;
-            top: 7px;
-        }
-        .ginput_container_fileupload .validation_message,
-        .ginput_container_fileupload span[id^="extensions_"] {
-            position: absolute;
-            text-align: right;
-            top: 30px;
-            right: 0;
-            width: 100%;
-            font-size: 14px;
-        }
-        .ginput_container_fileupload span[id^="extensions_"] {
-            top: -20px;
-        }
-        <?php foreach (self::$singleTextInputs as $singleTextInputs) { ?>
-        .mdfgf-field <?=$singleTextInputs;?>:focus,
-        <?php } ?>
-        .mdfgf-field select:focus,
-        .mdfgf-field textarea:focus {
-            border-color: #007bff;
-        }
-        .mdfgf-field label {
-            margin: 0;
-        }
-        .gform_wrapper .button,
-        .ginput_container_fileupload input[type="file"]:before {
-            cursor: pointer;
-            border: 1px solid #007bff;
-            border-radius: 4px;
-            appearance: none;
-            -webkit-appearance: none;
-            padding: 0 1rem;
-            height: 40px;
-            line-height: 40px;
-            min-width: 140px;
-            text-align: center;
-            background-color: #007bff;
-            color: white;
-            font-size: 1rem;
-            font-weight: 400;
-            text-transform: uppercase;
-            margin: auto;
-            display: inline-block;
-            transition: background-color .2s ease-in-out;
-        }
-        .gform_wrapper .ginput_container_fileupload input[type="file"]:before {
-            height: 22px;
-            font-size: 12px;
-            padding: 0 .4rem;
-            line-height: 22px;
-            min-width: 100px;
-        }
-        .gform_wrapper .button:hover,
-        .ginput_container_fileupload input[type="file"]:hover:before {
-            background-color: #108bff;
-        }
-        .gform_wrapper .button:active,
-        .ginput_container_fileupload input[type="file"]:active:before {
-            background-color: #006bef;
-            line-height: 41px;
-        }
-        .ginput_container_fileupload input[type="file"]:active:before {
-            line-height: 25px;
-        }
-            
+        gFormsMdfgformsRender();
+    });
 
-        </style>
+    
+</script>
+<style>
+/* Modern Designs for Gravity Forms css */
+:root {
+  --mdfgf-main-color: <?= $mainColor;?>;
+  --mdfgf-main-color-hover: <?= self::adjustBrightness($mainColor, .2);?>;
+}
+<?php echo str_replace(array("\n", "\t", "    "), '', file_get_contents(dirname(__FILE__).'/gravityforms-modern-designs.css'));?>
+</style>
         <?php
+    }
+
+
+    /**
+     * Change hex color
+     * 
+     * @param string $hexCode
+     * @param int    $adjustPercent
+     * 
+     * @return string
+     */
+    public static function adjustBrightness($hexCode, $adjustPercent) {
+        $hexCode = ltrim($hexCode, '#');
+        if (strlen($hexCode) == 3) {
+            $hexCode = $hexCode[0] . $hexCode[0] . $hexCode[1] . $hexCode[1] . $hexCode[2] . $hexCode[2];
+        }
+        $hexCode = array_map('hexdec', str_split($hexCode, 2));
+        foreach ($hexCode as & $color) {
+            $adjustableLimit = $adjustPercent < 0 ? $color : 255 - $color;
+            $adjustAmount = ceil($adjustableLimit * $adjustPercent);
+            $color = str_pad(dechex($color + $adjustAmount), 2, '0', STR_PAD_LEFT);
+        }
+        return '#' . implode($hexCode);
     }
 
 
@@ -446,7 +253,9 @@ class MDFGF {
      */
     public static function fieldClasses($classes, $field, $form) {
 
-        $classes.= ' mdfgf-field-type-'.$field->type;
+        if ($field->type !== 'honeypot') {
+            $classes.= ' mdfgf-field-type-'.$field->type;
+        }
 
         if ($field->type === 'fileupload' && !empty($field['allowedExtensions'])) {
             $classes.= ' mdfgf-show-extensions';
