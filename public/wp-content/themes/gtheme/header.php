@@ -61,61 +61,6 @@
 				</div>
 			</div>
 
-			<!-- <div class="row global-header-row">
-
-				<div class="columns small-5 medium-4 global-header-logo-column">
-					<div class="global-header-logo-container">
-						<a href="<?php echo site_url(); ?>" title="<?php echo bloginfo('name'); ?>">
-			<div class="global-header-logo">
-				<?php if ($logo = (function_exists('get_field') ? get_field('theme_options_logo', 'option') : '')) {
-                    ?>
-				<img src="<?php echo $logo['sizes']['large']; ?>"
-					alt="<?php echo $logo['alt']; ?>">
-				<?php }?>
-			</div>
-			</a>
-			</div>
-			</div>
-
-			<div class="columns small-7 medium-8 global-header-nav-column">
-
-				<div class="global-header-main-nav-container show-for-large">
-					<?php get_template_part('parts/social-links');?>
-				</div>
-
-				<div class="row auto text-right show-for-large global-header-main-menu-container collapse">
-					<div class="columns small-12">
-						<nav class="global-header-main-menu">
-							<?php FUNC::menu('main-menu');?>
-						</nav>
-					</div>
-				</div>
-
-				<button class="button-mobile-menu hide-for-large">
-					<span></span>
-				</button>
-
-				<div class="columns small-12 text-center global-header-mobile-nav-container hide-for-large">
-
-					<nav class="global-header-mobile-menu">
-						<?php FUNC::menu('main-menu');?>
-					</nav>
-
-					<div class="columns small-12 text-center global-header-callout">
-						<?php FUNC::menu('main-links');?>
-					</div>
-
-				</div>
-
-			</div>
-			<div class="columns small-12 language-selector">
-				<a class="<?php echo (strpos($_SERVER['REQUEST_URI'], '/es/') === false ? 'current' : ''); ?>"
-					href="/">English</a> |
-				<a class="<?php echo (strpos($_SERVER['REQUEST_URI'], '/es/') !== false ? 'current' : ''); ?>"
-					href="/es">Español</a>
-			</div>
-			</div> -->
-
 		</header>
 
 		<main class="global-content">

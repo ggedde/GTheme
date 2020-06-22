@@ -69,11 +69,12 @@ class MDFGF {
         add_filter('gform_tooltips', [__CLASS__, 'formTooltips']);
         add_filter('gform_pre_form_settings_save', [__CLASS__, 'formSettingsSave']);
         add_filter('gform_form_settings', [__CLASS__, 'formSettings'], 10, 2);
-        add_action('wp_head', [__CLASS__, 'wp_head']);
+        // add_action('wp_head', [__CLASS__, 'wpHead']);
         add_action('gform_editor_js', [__CLASS__, 'editorJs']);
         add_action('gform_pre_render', [__CLASS__, 'preRenderForm'], 10, 6);
         add_action('gform_field_css_class', [__CLASS__, 'fieldClasses'], 10, 3);
         add_action('gform_field_content', [__CLASS__, 'fieldContent'], 10, 5);
+        add_filter('gform_form_tag', [__CLASS__, 'formTag'], 10, 2 );
 
         add_action( 'gform_enqueue_scripts', function ( $form, $is_ajax ) {
             wp_deregister_style('gforms_reset_css');
@@ -91,114 +92,115 @@ class MDFGF {
      * 
      * @return void
      */
-    public static function wp_head() {
+    public static function formTag($formTag, $form) {
 
-        $mainColor = '#21759b';
+        $mainColor = strtolower(rgar($form, 'mdfgf_form_color'));
 
-        ?>
+        $preTag = "
 <script>
-    jQuery(document).ready(function($){
-        function gFormsMdfgformsRender(){
+    if(typeof window.jQuery !== 'undefined') {
+        jQuery(function($){
+            function gFormsMdfgformsRender(){
 
-            // var mdForm = $('.md-form');
-            // if (mdForm.length) {
-            //     mdForm.find('.custom-select').each(function(){
-            //         $(this).removeClass('custom-select').addClass('mdb-select').materialSelect();
-            //     });
-            //     mdForm.find('input, select, textarea').trigger('change');
-            // }
+                // var mdForm = $('.md-form');
+                // if (mdForm.length) {
+                //     mdForm.find('.custom-select').each(function(){
+                //         $(this).removeClass('custom-select').addClass('mdb-select').materialSelect();
+                //     });
+                //     mdForm.find('input, select, textarea').trigger('change');
+                // }
 
-            // $('.ginput_container_name input, .ginput_container_address input').each(function(){
-            //     if ($(this).val()) {
-            //         $(this).closest('li.gfield').find('label').addClass('active');
-            //     }
-            // })
-            // $('.ginput_container_name input, .ginput_container_address input').on('focus', function(){
-            //     $(this).closest('li.gfield').find('label').addClass('active');
-            // });
+                // $('.ginput_container_name input, .ginput_container_address input').each(function(){
+                //     if ($(this).val()) {
+                //         $(this).closest('li.gfield').find('label').addClass('active');
+                //     }
+                // })
+                // $('.ginput_container_name input, .ginput_container_address input').on('focus', function(){
+                //     $(this).closest('li.gfield').find('label').addClass('active');
+                // });
 
-            // if (typeof bsCustomFileInput !== 'undefined') {
-            //     bsCustomFileInput.init();
-            // }
-    
-            // var inputs = [
-            //     'form.bootstrap.nested-labels .ginput_container_text input',
-            //     'form.bootstrap.nested-labels .ginput_container_email input',
-            //     'form.bootstrap.nested-labels .ginput_container_phone input',
-            //     'form.bootstrap.nested-labels .ginput_container_number input',
-            //     'form.bootstrap.nested-labels .ginput_container_textarea textarea',
-            // ];
+                // if (typeof bsCustomFileInput !== 'undefined') {
+                //     bsCustomFileInput.init();
+                // }
+        
+                // var inputs = [
+                //     'form.bootstrap.nested-labels .ginput_container_text input',
+                //     'form.bootstrap.nested-labels .ginput_container_email input',
+                //     'form.bootstrap.nested-labels .ginput_container_phone input',
+                //     'form.bootstrap.nested-labels .ginput_container_number input',
+                //     'form.bootstrap.nested-labels .ginput_container_textarea textarea',
+                // ];
 
-            // $(inputs.join(', ')).off('focus.mbdGformStyles').on('focus.mbdGformStyles', function(){
-            //     $(this).closest('.gfield').find('.gfield_label').addClass('active');
-            // }).off('blur.mbdGformStyles').on('blur.mbdGformStyles', function(){
-            //     if (!$(this).val()){
-            //         $(this).closest('.gfield').find('.gfield_label').removeClass('active');
-            //     }
-            // });
+                // $(inputs.join(', ')).off('focus.mbdGformStyles').on('focus.mbdGformStyles', function(){
+                //     $(this).closest('.gfield').find('.gfield_label').addClass('active');
+                // }).off('blur.mbdGformStyles').on('blur.mbdGformStyles', function(){
+                //     if (!$(this).val()){
+                //         $(this).closest('.gfield').find('.gfield_label').removeClass('active');
+                //     }
+                // });
 
-            // $('form.bootstrap.nested-labels .ginput_container_select select').off('change.mbdGformStyles').on('change.mbdGformStyles', function(){
-            //     if ($(this).find('option:checked')) {
-            //         $(this).addClass('is-selected');
-            //         $(this).closest('.gfield').find('.gfield_label').addClass('active');
-            //     } else {
-            //         $(this).removeClass('is-selected');
-            //         $(this).closest('.gfield').find('.gfield_label').removeClass('active');
-            //     }
-            // });
+                // $('form.bootstrap.nested-labels .ginput_container_select select').off('change.mbdGformStyles').on('change.mbdGformStyles', function(){
+                //     if ($(this).find('option:checked')) {
+                //         $(this).addClass('is-selected');
+                //         $(this).closest('.gfield').find('.gfield_label').addClass('active');
+                //     } else {
+                //         $(this).removeClass('is-selected');
+                //         $(this).closest('.gfield').find('.gfield_label').removeClass('active');
+                //     }
+                // });
 
-            // $('.ginput_container_address input, .ginput_container_name input, .ginput_container_address select, .ginput_container_name select').off('focus').on('focus.mbdGformStyles', function(){
-            //     $(this).closest('span').find('label').addClass('active');
-            // }).off('blur').on('blur.mbdGformStyles', function(){
-            //     if (!$(this).val()){
-            //         $(this).closest('span').find('label').removeClass('active');
-            //     }
-            // });
+                // $('.ginput_container_address input, .ginput_container_name input, .ginput_container_address select, .ginput_container_name select').off('focus').on('focus.mbdGformStyles', function(){
+                //     $(this).closest('span').find('label').addClass('active');
+                // }).off('blur').on('blur.mbdGformStyles', function(){
+                //     if (!$(this).val()){
+                //         $(this).closest('span').find('label').removeClass('active');
+                //     }
+                // });
 
-            // $('.form-check-input').off('focus.mbdGformStyles').on('focus.mbdGformStyles', function(){
-            //     $(this).before('<div class="form-check-ripple"></div>');
-            //     setTimeout(function(){
-            //         $('.form-check-ripple').addClass('show');
-            //     }, 1);
-            // }).off('blur.mbdGformStyles').on('blur.mbdGformStyles', function(){
-            //     $(this).parent().find('.form-check-ripple').remove();
-            // });
+                // $('.form-check-input').off('focus.mbdGformStyles').on('focus.mbdGformStyles', function(){
+                //     $(this).before('<div class=\"form-check-ripple\"></div>');
+                //     setTimeout(function(){
+                //         $('.form-check-ripple').addClass('show');
+                //     }, 1);
+                // }).off('blur.mbdGformStyles').on('blur.mbdGformStyles', function(){
+                //     $(this).parent().find('.form-check-ripple').remove();
+                // });
 
-            // $('.custom-file-input').each(function(){
-            //     if ($(this).get(0).files.length) {
-            //         $(this).parent().find('.gfield_label').addClass('active');
-            //     }
-            // });
+                // $('.custom-file-input').each(function(){
+                //     if ($(this).get(0).files.length) {
+                //         $(this).parent().find('.gfield_label').addClass('active');
+                //     }
+                // });
 
-            // $('.custom-file-input').on('change', function(){
-            //     if ($(this).get(0).files.length) {
-            //         $(this).parent().find('.gfield_label').addClass('active');
-            //     }
-            // });
-            $('.gfield_error input, .gfield_error select, .gfield_error textarea').on('change', function(){
-                $(this).closest('.gfield_error').removeClass('gfield_error').find('.validation_message').hide();
-                
+                // $('.custom-file-input').on('change', function(){
+                //     if ($(this).get(0).files.length) {
+                //         $(this).parent().find('.gfield_label').addClass('active');
+                //     }
+                // });
+                $('.gfield_error input, .gfield_error select, .gfield_error textarea').on('change', function(){
+                    $(this).closest('.gfield_error').removeClass('gfield_error');
+                });
+            }
+
+            $(document).on('gform_post_render', function(event, form_id, current_page){
+                gFormsMdfgformsRender();
             });
-        }
 
-        $(document).on('gform_post_render', function(event, form_id, current_page){
             gFormsMdfgformsRender();
         });
-
-        gFormsMdfgformsRender();
-    });
-
+    }
     
 </script>
 <style>
 /* Modern Designs for Gravity Forms css */
 :root {
-  --mdfgf-main-color: <?= $mainColor;?>;
-  --mdfgf-main-color-hover: <?= self::adjustBrightness($mainColor, .2);?>;
+  --mdfgf-main-color: ".$mainColor.";
+  --mdfgf-main-color-hover: ". self::adjustBrightness($mainColor, .2).";
 }
-<?php echo str_replace(array("\n", "\t", "    "), '', file_get_contents(dirname(__FILE__).'/gravityforms-modern-designs.css'));?>
-</style>
-        <?php
+".file_get_contents(dirname(__FILE__).'/gravityforms-modern-designs.min.css')."
+</style>";
+
+        return $preTag.$formTag;
     }
 
 
@@ -280,7 +282,6 @@ class MDFGF {
      * @return string
      */
     public static function fieldContent($content, $field, $value, $lead_id, $form_id){
-
         if (in_array($field['type'], ['name'])) {
             $content = str_replace('name_prefix', 'mdfgf-field name_prefix', $content);
             $content = str_replace('name_first', 'mdfgf-field name_first', $content);
@@ -317,6 +318,7 @@ class MDFGF {
     public static function formTooltips($tooltips)
     {
         $tooltips["mdfgf_form_style_tooltip"] = "<h6>Custom API Calls</h6>If you want this form to be associated with a custom API Call then you need to specify the 'Name' of your Api Call. Leave blank to not associate this form. You can use commas to separate multiple calls.";
+        $tooltips["mdfgf_form_add_bootstrap_classes"] = "Enable this if you wish to add the Bootstrap 4 classes to your fields. This feature allows you to use your own css when setting Form Style to None.";
         return $tooltips;
     }
 
@@ -332,22 +334,32 @@ class MDFGF {
      */
     public static function formSettings($settings, $form)
     {
-        ob_start();
-        gform_tooltip("mdfgf_form_style_tooltip");
-        $tooltip = ob_get_contents();
-        ob_end_clean();
-
-        $settings['Form Layout']['mdfgf_form_style'] = '
+        $settings['Moder Designs for Gravity Forms']['mdfgf_form_style'] = '
             <tr>
-                <th><label for="mdfgf_form_style">Form Style '.$tooltip.'</label></th>
+                <th><label for="mdfgf_form_style">Form Style '.gform_tooltip("mdfgf_form_style_tooltip", '', true).'</label></th>
                 <td><select name="mdfgf_form_style">
+                    <option value="" '.selected(rgar($form, 'mdfgf_form_style'), '').'>None</option>
+                    <option value="mdfgf-form" '.selected(rgar($form, 'mdfgf_form_style'), 'mdfgf-form').'>Modern Designs Default</option>
                     <option value="mdfgf-form mdfgf-md" '.selected(rgar($form, 'mdfgf_form_style'), 'mdfgf-form mdfgf-md').'>Material Design</option>
                     <option value="mdfgf-form mdfgf-bootstrap mdfgf-nested-labels" '.selected(rgar($form, 'mdfgf_form_style'), 'mdfgf-form mdfgf-bootstrap mdfgf-nested-labels').'>Bootstrap with Nested Labels</option>
                     <option value="mdfgf-form mdfgf-bootstrap mdfgf-contained mdfgf-nested-labels" '.selected(rgar($form, 'mdfgf_form_style'), 'mdfgf-form mdfgf-bootstrap mdfgf-contained mdfgf-nested-labels').'>Bootstrap with Contained Nested Labels</option>
                     <option value="mdfgf-form mdfgf-bootstrap mdfgf-outlined mdfgf-nested-labels" '.selected(rgar($form, 'mdfgf_form_style'), 'mdfgf-form mdfgf-bootstrap mdfgf-outlined mdfgf-nested-labels').'>Bootstrap with Outlined Nested Labels</option>
                     <option value="mdfgf-form mdfgf-bootstrap" '.selected(rgar($form, 'mdfgf_form_style'), 'mdfgf-form mdfgf-bootstrap').'>Bootstrap</option>
                 </select></td>
-            </tr>';
+            </tr>
+            <tr>
+                <th><label for="mdfgf_form_color">Primary Color</label></th>
+                <td>
+                    <input type="text" id="mdfgf_form_color" name="mdfgf_form_color" value="'.(rgar($form, 'mdfgf_form_color') ? rgar($form, 'mdfgf_form_color') : '#21759b').'">
+                </td>
+            </tr>
+            <tr>
+                <th><label for="mdfgf_form_add_bootstrap_classes">Add Bootstrap Classes '.gform_tooltip("mdfgf_form_add_bootstrap_classes", '', true).'</label></th>
+                <td>
+                    <input type="checkbox" id="mdfgf_form_add_bootstrap_classes" name="mdfgf_form_add_bootstrap_classes" value="1" '.checked(rgar($form, 'mdfgf_form_add_bootstrap_classes'), '1').'>
+                </td>
+            </tr>
+            ';
 
         return $settings;
     }
@@ -364,6 +376,8 @@ class MDFGF {
     public static function formSettingsSave($form)
     {
         $form['mdfgf_form_style'] = rgpost('mdfgf_form_style');
+        $form['mdfgf_form_add_bootstrap_classes'] = rgpost('mdfgf_form_add_bootstrap_classes') ? 1 : 0;
+        $form['mdfgf_form_color'] = rgpost('mdfgf_form_color') ? strtolower(rgpost('mdfgf_form_color')) : '#21759b';
         return $form;
     }
 
