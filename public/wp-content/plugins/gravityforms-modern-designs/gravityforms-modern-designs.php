@@ -96,6 +96,8 @@ class MDFGF {
 
         $mainColor = strtolower(rgar($form, 'mdfgf_form_color'));
 
+        $hoverColor = self::adjustBrightness($mainColor, .2);
+
         $preTag = "
 <script>
     if(typeof window.jQuery !== 'undefined') {
@@ -198,6 +200,29 @@ class MDFGF {
   --mdfgf-main-color-hover: ". self::adjustBrightness($mainColor, .2).";
 }
 ".file_get_contents(dirname(__FILE__).'/gravityforms-modern-designs.min.css')."
+
+
+#gform_wrapper_".$form['id']." .button,
+#gform_wrapper_".$form['id']." .button:active,
+#gform_wrapper_".$form['id']." .gf_progressbar_percentage,
+#gform_wrapper_".$form['id']." .ginput_container input[type=\"checkbox\"]:checked:after,
+#gform_wrapper_".$form['id']." .ginput_container input[type=\"radio\"]:checked:after,
+#gform_wrapper_".$form['id']." .ginput_container_fileupload input[type=\"file\"]:active:before,
+#gform_wrapper_".$form['id']." .ginput_container_fileupload input[type=\"file\"]:before {
+    background-color: ".$mainColor.";
+}
+#gform_wrapper_".$form['id']." .ginput_container input:focus,
+#gform_wrapper_".$form['id']." .ginput_container input:checked,
+#gform_wrapper_".$form['id']." .ginput_container select:focus,
+#gform_wrapper_".$form['id']." .ginput_container textarea:focus {
+    border-color: ".$mainColor.";
+}
+#gform_wrapper_".$form['id']." .gform_wrapper .button:hover,
+#gform_wrapper_".$form['id']." .ginput_container_fileupload input[type=\"file\"]:hover:before,
+#gform_wrapper_".$form['id']." .gform_wrapper .button:focus,
+#gform_wrapper_".$form['id']." .ginput_container_fileupload input[type=\"file\"]:focus:before {
+    background-color: ".$hoverColor.";
+}
 </style>";
 
         return $preTag.$formTag;
@@ -317,7 +342,7 @@ class MDFGF {
      */
     public static function formTooltips($tooltips)
     {
-        $tooltips["mdfgf_form_style_tooltip"] = "<h6>Custom API Calls</h6>If you want this form to be associated with a custom API Call then you need to specify the 'Name' of your Api Call. Leave blank to not associate this form. You can use commas to separate multiple calls.";
+        $tooltips["mdfgf_form_style_tooltip"] = "Select which CSS Styles you would like to Add. When using somthing other than Gravity Forms";
         $tooltips["mdfgf_form_add_bootstrap_classes"] = "Enable this if you wish to add the Bootstrap 4 classes to your fields. This feature allows you to use your own css when setting Form Style to None.";
         return $tooltips;
     }
@@ -336,10 +361,11 @@ class MDFGF {
     {
         $settings['Moder Designs for Gravity Forms']['mdfgf_form_style'] = '
             <tr>
-                <th><label for="mdfgf_form_style">Form Style '.gform_tooltip("mdfgf_form_style_tooltip", '', true).'</label></th>
+                <th><label for="mdfgf_form_style">Css Form Styles '.gform_tooltip("mdfgf_form_style_tooltip", '', true).'</label></th>
                 <td><select name="mdfgf_form_style">
                     <option value="" '.selected(rgar($form, 'mdfgf_form_style'), '').'>None</option>
-                    <option value="mdfgf-form" '.selected(rgar($form, 'mdfgf_form_style'), 'mdfgf-form').'>Modern Designs Default</option>
+                    <option value="mdfgf-gf" '.selected(rgar($form, 'mdfgf_form_style'), '').'>Gravity Forms Default</option>
+                    <option value="mdfgf-form" '.selected(rgar($form, 'mdfgf_form_style'), 'mdfgf-form').'>Modern Designs Standard</option>
                     <option value="mdfgf-form mdfgf-md" '.selected(rgar($form, 'mdfgf_form_style'), 'mdfgf-form mdfgf-md').'>Material Design</option>
                     <option value="mdfgf-form mdfgf-bootstrap mdfgf-nested-labels" '.selected(rgar($form, 'mdfgf_form_style'), 'mdfgf-form mdfgf-bootstrap mdfgf-nested-labels').'>Bootstrap with Nested Labels</option>
                     <option value="mdfgf-form mdfgf-bootstrap mdfgf-contained mdfgf-nested-labels" '.selected(rgar($form, 'mdfgf_form_style'), 'mdfgf-form mdfgf-bootstrap mdfgf-contained mdfgf-nested-labels').'>Bootstrap with Contained Nested Labels</option>

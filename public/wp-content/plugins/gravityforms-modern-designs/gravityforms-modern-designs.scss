@@ -35,7 +35,7 @@ ul.gfield_radio li,
 li.gfield,
 .mdfgf-field {
     flex: 0 0 100%;
-    margin-bottom: 1.5rem;
+    margin: 0 0 1.5rem 0;
     box-sizing: border-box;
 }
 
@@ -115,6 +115,8 @@ body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_
     width: 100%;
     border: 1px solid rgba(0,0,0,0.3);
     background-color: rgba(240,240,240,0.1);
+    color: inherit;
+    outline: none;
     border-radius: 4px;
     min-height: 40px;
     padding: 0 10px;
@@ -131,8 +133,8 @@ body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_
         background-color: rgba(255,255,255,0.05);
         color: #eee;
     }
-    &:focus {
-        border-color: var(--mdfgf-main-color);
+    &:focus,
+    &:checked {
         box-shadow: 0 0 0 2px rgba(150,150,150, .1);
     }
     .gfield_error & {
@@ -180,7 +182,7 @@ body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_
 .gform_wrapper .button,
 .ginput_container_fileupload input[type="file"]:before {
     cursor: pointer;
-    border: 1px solid var(--mdfgf-main-color);
+    border: 0;
     border-radius: 4px;
     appearance: none;
     -webkit-appearance: none;
@@ -189,7 +191,6 @@ body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_
     line-height: 40px;
     min-width: 140px;
     text-align: center;
-    background-color: var(--mdfgf-main-color);
     color: white;
     font-size: .8em;
     font-weight: 400;
@@ -233,16 +234,8 @@ body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_
         width: 100%;
     }
 }
-
-.gform_wrapper .button:hover,
-.ginput_container_fileupload input[type="file"]:hover:before,
-.gform_wrapper .button:focus,
-.ginput_container_fileupload input[type="file"]:focus:before {
-    background-color: var(--mdfgf-main-color-hover);
-}
 .gform_wrapper .button:active,
 .ginput_container_fileupload input[type="file"]:active:before {
-    background-color: var(--mdfgf-main-color);
     line-height: 41px;
 }
 .ginput_container_fileupload input[type="file"]:active:before {
@@ -255,7 +248,6 @@ body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_
     overflow: hidden;
 }
 .gf_progressbar_percentage {
-    background-color: var(--mdfgf-main-color);
     position: relative;
     color: #eee;
     font-size: .8em;
@@ -298,6 +290,7 @@ body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_
         height: 34px;
         border-radius: 50%;
         transition: background-color .1s ease-in-out;
+        margin: 0;
     }
     &:focus::before {
         background-color: rgba(150,150,150, 0.1);
@@ -311,12 +304,6 @@ body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_
         border-radius: 2px;
         border-color: transparent;
         transition: background-color .1s ease-in-out;
-    }
-    &:checked {
-        border-color: var(--mdfgf-main-color);
-        &:after {
-            background-color: var(--mdfgf-main-color);
-        }
     }
 }
 
