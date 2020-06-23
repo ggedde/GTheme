@@ -128,6 +128,10 @@ body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_
     &:-webkit-autofill::first-line {
         font: 300 16px sans-serif;
     }
+    .mdfgf-bg-light {
+        border: 1px solid rgba(0,0,0,0.4);
+        background-color: rgba(255,255,255,0.7);
+    }
     .text-light & {
         border-color: rgba(255,255,255,0.3);
         background-color: rgba(255,255,255,0.05);
