@@ -19,7 +19,7 @@ add_action( 'wp_enqueue_scripts', function () {
     wp_register_script( 'jquery', get_template_directory_uri() . '/assets/dist/jquery.min.js', array(), '3.4.1' );
 });
 
-FUNC::enqueue_file('vendor_css', get_template_directory_uri() . '/assets/dist/vendor.min.css');
+// FUNC::enqueue_file('vendor_css', get_template_directory_uri() . '/assets/dist/vendor.min.css');
 FUNC::enqueue_file('master_css', get_template_directory_uri() . '/assets/dist/main.min.css');
 
 add_action( 'get_footer', function() {

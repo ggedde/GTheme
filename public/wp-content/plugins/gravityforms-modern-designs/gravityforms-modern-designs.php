@@ -33,7 +33,7 @@ class MDFGF {
     /**
      * Array of Single Text Types for Gravity Forms
      */
-    private static $singleTextFields = [
+    private static $singleTextFields = array(
         'text', 
         'email', 
         'phone', 
@@ -43,16 +43,8 @@ class MDFGF {
         'number', 
         'date', 
         'website'
-    ];
+    );
 
-
-    /**
-     * Array of Complex Fields for Gravity Forms
-     */
-    private static $complexFields = [
-        'name', 
-        'address', 
-    ];
 
 
     /**
@@ -67,15 +59,16 @@ class MDFGF {
             return false;
         }
 
-        add_filter('gform_tooltips', [__CLASS__, 'formTooltips']);
-        add_filter('gform_pre_form_settings_save', [__CLASS__, 'formSettingsSave']);
-        add_filter('gform_form_settings', [__CLASS__, 'formSettings'], 10, 2);
-        add_action('wp_head', [__CLASS__, 'wpHead']);
-        add_action('gform_editor_js', [__CLASS__, 'editorJs']);
-        add_action('gform_pre_render', [__CLASS__, 'preRenderForm'], 10, 6);
-        add_action('gform_field_css_class', [__CLASS__, 'fieldClasses'], 10, 3);
-        add_action('gform_field_content', [__CLASS__, 'fieldContent'], 10, 5);
-        add_filter('admin_footer', [__CLASS__, 'adminFooter']);
+        add_filter('gform_tooltips', array(__CLASS__, 'formTooltips'));
+        add_filter('gform_pre_form_settings_save', array(__CLASS__, 'formSettingsSave'));
+        add_filter('gform_form_settings', array(__CLASS__, 'formSettings'), 10, 2);
+        add_action('wp_head', array(__CLASS__, 'wpHead'));
+        add_action('gform_editor_js', array(__CLASS__, 'editorJs'));
+        add_action('gform_pre_render', array(__CLASS__, 'preRenderForm'), 10, 6);
+        add_action('gform_shortcode_form', array(__CLASS__, 'shortcodeForm'), 10, 3);
+        add_action('gform_field_css_class', array(__CLASS__, 'fieldClasses'), 10, 3);
+        add_action('gform_field_content', array(__CLASS__, 'fieldContent'), 10, 5);
+        add_filter('admin_footer', array(__CLASS__, 'adminFooter'));
 
         add_action( 'gform_enqueue_scripts', function ( $form, $is_ajax ) {
             wp_deregister_style('gforms_reset_css');
@@ -84,86 +77,7 @@ class MDFGF {
             wp_deregister_style('gforms_ready_class_css');
             wp_deregister_style('gforms_browsers_css');
         }, 10, 2);
-       
-        // add_filter( 'gform_shortcode_builder_actions', function($actions) {
-        //     $actions[] = array(
-        //         'mdfgf' => array(
-        //             'label' => 'Modern Designs for Gravity Forms', 
-        //             'attrs' => array(
-        //                 array(
-        //                     'label' => 'Style', 
-        //                     'attr' => 'style', 
-        //                     'type' => 'select', 
-        //                     'default' => 'green', 
-        //                     'options' => array(
-        //                         'green' => 'Green', 
-        //                         'red' => 'Red', 
-        //                         'orange' => 'Orange', 
-        //                         'blue' => 'Blue'
-        //                     ), 
-        //                     'tooltip' => 'asfasfsaff sa saasas '
-        //                 ), 
-        //             )
-        //         )    
-        //     );
-        //     return $actions;
-        // });
 
-        add_filter( 'gform_shortcode_form', function ( $string, $attributes, $content ) {
-            
-            $classes = 'mdfgf-container';
-            $mainColor = '#21759b';
-            $themeClass = 'mdfgf-bg-light';
-            
-            if (class_exists('GFAPI') && function_exists('rgar')) {
-                if ($form = GFAPI::get_form( $attributes['id'])) {
-                    $mainColor = strtolower(rgar($form, 'mdfgf_color'));
-                    $themeClass = strtolower(rgar($form, 'mdfgf_theme'));
-                }
-            }
-
-            if ($attributes['mdfgf_color']) {
-                $mainColor = $attributes['mdfgf_color'];
-            }
-            if ($attributes['mdfgf_theme']) {
-                $themeClass = $attributes['mdfgf_theme'];
-            }
-            
-            $classes.= ' '.$themeClass;
-
-            $hoverColor = self::adjustBrightness($mainColor, .2);
-
-            $colorString = '
-            <style>
-/* Modern Designs for Gravity Forms css */
-#gform_wrapper_'.$attributes['id'].' .button,
-#gform_wrapper_'.$attributes['id'].' .button:active,
-#gform_wrapper_'.$attributes['id'].' .gf_progressbar_percentage,
-#gform_wrapper_'.$attributes['id'].' .ginput_container input[type="checkbox"]:checked:after,
-#gform_wrapper_'.$attributes['id'].' .ginput_container input[type="radio"]:checked:after,
-#gform_wrapper_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:active:before,
-#gform_wrapper_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:before {
-    background-color: '.$mainColor.';
-}
-#gform_wrapper_'.$attributes['id'].' .ginput_container input:focus,
-#gform_wrapper_'.$attributes['id'].' .ginput_container input:checked,
-#gform_wrapper_'.$attributes['id'].' .ginput_container select:focus,
-#gform_wrapper_'.$attributes['id'].' .ginput_container textarea:focus {
-    border-color: '.$mainColor.';
-}
-#gform_wrapper_'.$attributes['id'].' .gform_wrapper .button:hover,
-#gform_wrapper_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:hover:before,
-#gform_wrapper_'.$attributes['id'].' .gform_wrapper .button:focus,
-#gform_wrapper_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:focus:before {
-    background-color: '.$hoverColor.';
-}
-</style>';
-            
-            return $colorString.'<div class="'.$classes.'">'.$string.'</div>';
-        }, 10, 3);
-
-        
-        
     }
 
 
@@ -358,28 +272,137 @@ class MDFGF {
      * @return string
      */
     public static function fieldContent($content, $field, $value, $lead_id, $form_id){
-        if (in_array($field['type'], ['name'])) {
-            $content = str_replace('name_prefix', 'mdfgf-field name_prefix', $content);
-            $content = str_replace('name_first', 'mdfgf-field name_first', $content);
-            $content = str_replace('name_last', 'mdfgf-field name_last', $content);
-            $content = str_replace('name_middle', 'mdfgf-field name_middle', $content);
-            $content = str_replace('name_suffix', 'mdfgf-field name_suffix', $content);
-            $content = str_replace('ginput_container_name', 'mdfgf-row ginput_container_name', $content);
+
+        $complexFieldsClasses = array(
+            'name_prefix',
+            'name_first',
+            'name_last',
+            'name_middle',
+            'name_suffix',
+            'address_line_1',
+            'address_line_2',
+            'address_city',
+            'address_state',
+            'address_zip',
+            'address_country',
+        );
+
+        if (in_array($field['type'], array('address', 'name'))) {
+            // $content = preg_replace('/\<(select|input) /m', '<$1 class="mdfgf-input" ', $content);
+            $content = preg_replace('/(ginput_container_address|ginput_container_name)/m', 'mdfgf-row $1', $content);
+            $content = preg_replace('/('.implode('|',$complexFieldsClasses).')/m', 'mdfgf-field $1', $content);
         }
-        if (in_array($field['type'], ['address'])) {
-            $content = str_replace('address_line_1', 'mdfgf-field address_line_1', $content);
-            $content = str_replace('address_line_2', 'mdfgf-field address_line_2', $content);
-            $content = str_replace('address_city', 'mdfgf-field address_city', $content);
-            $content = str_replace('address_state', 'mdfgf-field address_state', $content);
-            $content = str_replace('address_zip', 'mdfgf-field address_zip', $content);
-            $content = str_replace('address_country', 'mdfgf-field address_country', $content);
-            $content = str_replace('ginput_container_address', 'mdfgf-row ginput_container_address', $content);
+
+        if (preg_match_all('/\<(input|select|textarea) [^\>]+\>/m', $content, $matches)) {
+            if (!empty($matches[0])) {
+                foreach ($matches[0] as $tag) {
+                    $newTag = '';
+
+                    if (stripos($tag, "type='hidden")) {
+                        continue;
+                    }
+
+                    if (preg_match("/class=\'([^\']*)\'/m", $tag, $classMatches)) {
+                        $newTag = str_replace($classMatches[0], "class='mdfgf-input".($classMatches[1] ? ' '.$classMatches[1] : '')."'", $tag);
+                    } else {
+                        $newTag = preg_replace('/\<(select|input|textarea) /m', '<$1 class="mdfgf-input" ', $tag);
+                    }
+
+                    if ($newTag) {
+                        $content = str_replace($tag, $newTag, $content);
+                    }
+                }
+            }
         }
-        // if (in_array($field['type'], ['list'])) {
-        //     $content = str_replace('ginput_container_address', 'mdfgf-row ginput_container_address', $content);
-        // }
+
+        if (preg_match_all('/\<(label)[^\>]+\>/m', $content, $matches)) {
+            if (!empty($matches[0])) {
+                foreach ($matches[0] as $tag) {
+                    $newTag = '';
+
+                    if (preg_match("/class=\'([^\']*)\'/m", $tag, $classMatches)) {
+                        $newTag = str_replace($classMatches[0], "class='mdfgf-label".($classMatches[1] ? ' '.$classMatches[1] : '')."'", $tag);
+                    } else if (!in_array($field['type'], array('radio', 'checkbox', 'consent'))) {
+                        $newTag = preg_replace('/\<(label)/m', '<$1 class="mdfgf-label"', $tag);
+                    }
+
+                    if ($newTag) {
+                        $content = str_replace($tag, $newTag, $content);
+                    }
+                }
+            }
+        }
+
         return $content;
 
+    }
+
+
+    /**
+     * Filter the Shortcode settings and return content
+     * 
+     * @param string $string
+     * @param array $attributes
+     * @param string $content
+     * 
+     * @return string
+     */
+    public static function shortcodeForm($string, $attributes, $content) {
+            
+        $classes = 'mdfgf-container';
+        $mainColor = '#21759b';
+        $themeClass = 'mdfgf-theme-default';
+        $design = 'mdfgf-mdfgf';
+        
+        if (class_exists('GFAPI') && function_exists('rgar')) {
+            if ($form = GFAPI::get_form( $attributes['id'])) {
+                if(rgar($form, 'mdfgf_color')) {
+                    $mainColor = strtolower(rgar($form, 'mdfgf_color'));
+                }
+                if (isset($form['mdfgf_design'])) {
+                    $design = $form['mdfgf_design'];
+                }
+                if (rgar($form, 'mdfgf_theme') && in_array($design, array('mdfgf-mdfgf', 'mdfgf-md', 'mdfgf-bootstrap'))) {
+                    $themeClass = strtolower(rgar($form, 'mdfgf_theme'));
+                }
+            }
+        }
+
+        if ($attributes['mdfgf_color']) {
+            $mainColor = $attributes['mdfgf_color'];
+        }
+        if ($attributes['mdfgf_theme']) {
+            $themeClass = $attributes['mdfgf_theme'];
+        }
+        
+        $classes.= ' '.$themeClass;
+
+        $hoverColor = self::adjustBrightness($mainColor, .2);
+
+        $colorString = '
+        <style>
+/* Modern Designs for Gravity Forms Custom css for Single Form */
+#gform_wrapper_'.$attributes['id'].' .button,
+#gform_wrapper_'.$attributes['id'].' .button:active,
+#gform_wrapper_'.$attributes['id'].' .gf_progressbar_percentage,
+#gform_wrapper_'.$attributes['id'].' .ginput_container input[type="checkbox"]:checked:after,
+#gform_wrapper_'.$attributes['id'].' .ginput_container input[type="radio"]:checked:after,
+#gform_wrapper_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:active:before,
+#gform_wrapper_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:before {
+    background-color: '.$mainColor.';
+}
+#gform_wrapper_'.$attributes['id'].' .mdfgf-input:focus {
+    border-color: '.$mainColor.';
+}
+#gform_wrapper_'.$attributes['id'].' .button:hover,
+#gform_wrapper_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:hover:before,
+#gform_wrapper_'.$attributes['id'].' .button:focus,
+#gform_wrapper_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:focus:before {
+    background-color: '.$hoverColor.';
+}
+</style>';
+        
+        return $colorString.'<div class="'.$classes.'">'.$string.'</div>';
     }
     
 
@@ -395,7 +418,7 @@ class MDFGF {
     {
         $tooltips["mdfgf_design_tooltip"] = "Select which Design Style you would like to use. When using somthing other than Gravity Forms Default, Gravity forms Styles will be de-registered for faster page loads. If you are already using a css framework like Bootstrap or MDB, then it is best to set this to None and 'Add Additional Classes' for your Framework.";
         $tooltips["mdfgf_add_classes_tooltip"] = "Alternatively, if you are already including a css framework like bootstrap or mdb then you can add the classes to the form markup. Currently Supports Bootstrap 4 and MDB (mdbootstrap.com)";
-        $tooltips["mdfgf_shortcode_overrides_tooltip"] = "You can Override these values within the shortcode attributes. This is useful when needing to change colors or themes when embedding the form in different locations.<br>Examples:<br>mdfgf_theme=\"mdfgf-bg-white\"<br>mdfgf_theme=\"mdfgf-bg-light\"<br>mdfgf_theme=\"mdfgf-bg-dark\"<br>mdfgf_color=\"#21759b\"";
+        $tooltips["mdfgf_shortcode_overrides_tooltip"] = "You can Override these values within the shortcode attributes. This is useful when needing to change colors or themes when embedding the form in different locations.<br>Examples:<br>mdfgf_theme=\"mdfgf-theme-default\"<br>mdfgf_theme=\"mdfgf-theme-greyish\"<br>mdfgf_theme=\"mdfgf-theme-dark\"<br>mdfgf_color=\"#21759b\"";
         return $tooltips;
     }
 
@@ -418,7 +441,7 @@ class MDFGF {
                 <th><label for="mdfgf_design">Design Style '.gform_tooltip("mdfgf_design_tooltip", '', true).'</label></th>
                 <td><select id="mdfgf_design" name="mdfgf_design">
                     <option value="mdfgf-gf" '.selected($formDesign, 'mdfgf-gf').'>Gravity Forms Default</option>
-                    <option value="mdfgf-mdfgf" '.selected($formDesign, 'mdfgf-standard').'>Modern Designs for Gravity Forms</option>
+                    <option value="mdfgf-mdfgf" '.selected($formDesign, 'mdfgf-mdfgf').'>Modern Designs for Gravity Forms</option>
                     <option value="mdfgf-md" '.selected($formDesign, 'mdfgf-form mdfgf-md').'>Material Design</option>
                     <option value="mdfgf-bootstrap" '.selected($formDesign, 'mdfgf-bootstrap').'>Bootstrap</option>
                     <option value="" '.selected($formDesign, '').'>None</option>
@@ -426,12 +449,14 @@ class MDFGF {
             </tr>
             <tr id="mdfgf-theme-options"'.(!$formDesign || $formDesign === 'mdfgf-gf' ? ' style="display:none;"' : '').'>
                 <th><label for="mdfgf_theme">Theme '.gform_tooltip("mdfgf_theme_tooltip", '', true).'</label></th>
-                <td><select name="mdfgf_theme">
-                    <option value="mdfgf-bg-white" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-bg-white').'>Light Grey (Best on White Backgrounds)</option>
-                    <option value="mdfgf-bg-light" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-bg-light').'>Light White (Best on Light colored Backgrounds)</option>
-                    <option value="mdfgf-bg-dark text-light" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-bg-dark text-light').'>Darkmode (Best on Dark Backgrounds)</option>
-                    
-                </select></td>
+                <td>
+                    <select name="mdfgf_theme">
+                        <option value="mdfgf-theme-default" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-theme-default').'>Default</option>
+                        <option value="mdfgf-theme-greyish" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-theme-greyish').'>Greyish</option>
+                        <option value="mdfgf-theme-vivid" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-theme-vivid').'>Vivid</option>
+                        <option value="mdfgf-theme-dark text-light" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-theme-dark text-light').'>Dark (Best on Dark Backgrounds)</option>
+                    </select>
+                </td>
             </tr>
             <tr id="mdfgf-color-options" '.(!$formDesign || $formDesign === 'mdfgf-gf' ? ' style="display:none;"' : '').'>
                 <th><label for="mdfgf_color">Primary Color</label></th>

@@ -19,7 +19,13 @@ ul.gfield_radio {
     li {
         flex: 0 0 calc(100% - 15px);
         padding-right: 10px;
-        @media only screen and (min-width: 680px) {
+        @media only screen and (min-width: 600px) {
+            flex: 0 0 calc(50% - 15px);
+        }
+        @media only screen and (min-width: 700px) {
+            flex: 0 0 calc(33% - 15px);
+        }
+        @media only screen and (min-width: 1000px) {
             flex: 0 0 calc(25% - 15px);
         }
     }
@@ -37,11 +43,25 @@ li.gfield,
     flex: 0 0 100%;
     margin: 0 0 1.5rem 0;
     box-sizing: border-box;
+    max-width: 100%;
+    @media only screen and (min-width: 800px) {
+        &.mdfgfcol-4 {
+            flex: 0 0 calc(33% - 10px);
+            max-width: calc(33% - 10px);
+        }
+    }
+    @media only screen and (min-width: 640px) {
+        &.mdfgfcol-6,
+        .ginput_complex .mdfgf-field {
+            flex: 0 0 calc(50% - 10px);
+            max-width: calc(50% - 10px);
+        }
+    }
 }
 
-.gfield_label,
-.mdfgf-field label {
-    margin: 0;
+.mdfgf-label {
+    margin: .2rem 0;
+    display: block;
     &.gfield_label {
         font-weight: 500;
     }
@@ -70,18 +90,6 @@ li.gfield.mdfgf-field-type-address {
         }
     }
 }
-
-@media only screen and (min-width: 800px) {
-    .mdfgf-field.mdfgfcol-4 {
-        flex: 0 0 calc(33% - 10px);
-    }
-}
-@media only screen and (min-width: 640px) {
-    .mdfgf-field.mdfgfcol-6,
-    .ginput_complex .mdfgf-field {
-        flex: 0 0 calc(50% - 10px);
-    }
-}
 .gfield_required {
     padding-left: 4px;
     opacity: .4;
@@ -98,26 +106,21 @@ li.gfield.mdfgf-field-type-address {
 .gfield_list_group + .gfield_list_group td {
     padding-top: .5rem;
 }
-body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_list_icons img {
-    width: 14px !important;
-    height: 14px !important;
+.gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_list_icons img {
     margin: 2px auto;
     opacity: .3;
+    .text-light &,
+    .mdfgf-bg-dark & {
+        filter: invert(1);
+    }
 }
-.text-light .ginput_container_list table.gfield_list tbody tr td.gfield_list_icons img {
-    filter: invert(1);
-}
-.ginput_container input,
-.ginput_container select,
-.ginput_container textarea,
+.mdfgf-input,
 .gf_progressbar,
 .ginput_container_fileupload {
     width: 100%;
-    border: 1px solid rgba(0,0,0,0.3);
-    background-color: rgba(240,240,240,0.1);
     color: inherit;
     outline: none;
-    border-radius: 4px;
+    border-radius: 3px;
     min-height: 40px;
     padding: 0 10px;
     appearance: none;
@@ -128,38 +131,60 @@ body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_
     &:-webkit-autofill::first-line {
         font: 300 16px sans-serif;
     }
-    .mdfgf-bg-light {
-        border: 1px solid rgba(0,0,0,0.4);
-        background-color: rgba(255,255,255,0.7);
+}
+
+.mdfgf-container {
+    &.mdfgf-theme-greyish {
+        color: #555;
     }
-    .text-light & {
+    &.mdfgf-theme-vivid {
+        color: #121212;
+    }
+    &.mdfgf-theme-dark {
+        color: #eee;
+    }
+}
+
+.mdfgf-input,
+.gf_progressbar,
+.ginput_container_fileupload {
+    border: 1px solid rgba(0,0,0,0.3);
+    background-color: rgba(252,252,252,0.8);
+    .mdfgf-theme-greyish & {
+        border: 1px solid rgba(0,0,0,0.1);
+        background-color: rgba(242,242,243,0.8);
+    }
+    .mdfgf-theme-vivid & {
+        border: 1px solid rgba(0,0,0,0.6);
+        background-color: rgba(255,255,255,0.9);
+    }
+    .mdfgf-theme-dark & {
         border-color: rgba(255,255,255,0.3);
         background-color: rgba(255,255,255,0.05);
-        color: #eee;
     }
     &:focus,
     &:checked {
-        box-shadow: 0 0 0 2px rgba(150,150,150, .1);
+        box-shadow: inset 0 0 0 3px rgba(150,150,150, .1);
+        .text-light &,
+        .mdfgf-theme-dark & {
+            box-shadow: inset 0 0 0 3px rgba(255,255,255, .1);
+        }
     }
     .gfield_error & {
         &:not([type="radio"]):not([type="checkbox"]) {
             border-color: rgba(250,0,0,0.9);
-            .text-light & {
+            .text-light &,
+            .mdfgf-bg-dark & {
                 border-color: rgba(250,50,50,0.9);
             }
         }
     }
 }
-.text-light {
-    label.gfield_label,
-    li.gfield,
-    .gf_progressbar,
-    .gf_progressbar_title,
-    .mdfgf-field,
-    .gfield_list th,
-    .ginput_complex label {
-        color: #eee;
-    }
+
+textarea.mdfgf-input,
+select.mdfgf-input {
+    display: block;
+    max-width: 100%;
 }
 
 .validation_message,
@@ -167,7 +192,8 @@ body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_
     opacity: 1;
     color: rgba(250,10,20, .8);
     margin-top: 2px;
-    .text-light & {
+    .text-light &,
+    .mdfgf-bg-dark & {
         opacity: 1;
         color: rgba(250,50,50, .8);
     }
@@ -221,7 +247,6 @@ body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_
             content: 'Choose File';
             position: absolute;
             left: 10px;
-            top: 7px;
             height: 22px;
             font-size: .8em;
             padding: 0 .4rem;
@@ -283,6 +308,7 @@ body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_
     vertical-align: middle;
     margin: -2px 6px 0 0;
     position: relative;
+    pointer-events: all;
     &::before {
         content: '';
         position: absolute;
@@ -308,6 +334,10 @@ body .gform_wrapper .ginput_container_list table.gfield_list tbody tr td.gfield_
         border-radius: 2px;
         border-color: transparent;
         transition: background-color .1s ease-in-out;
+    }
+    + label {
+        vertical-align: top;
+        width: calc(100% - 30px);
     }
 }
 
