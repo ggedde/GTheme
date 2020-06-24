@@ -8,7 +8,7 @@ if (have_posts()) { while (have_posts()) { the_post();
 		get_template_part('parts/default-banner');
 	}
 	
-  the_content();
+    the_content();
   
 }}
 
