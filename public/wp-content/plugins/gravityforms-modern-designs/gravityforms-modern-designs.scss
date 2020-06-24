@@ -132,7 +132,8 @@
         }
     }
 
-    .mdfgf-input:not([type="file"]) ,
+    .mdfgf-input,
+    .mdfgf-input:-webkit-autofill::first-line, 
     .mdfgf-input option,
     .ginput_container input[type="checkbox"] + label,
     .ginput_container input[type="radio"] + label {
@@ -153,10 +154,6 @@
         -webkit-appearance: none;
         box-sizing: border-box;
         transition: border .1s ease-in-out;
-        &:-webkit-autofill::first-line {
-            font-weight: 300;
-            font-family: sans-serif;
-        }
         &:focus,
         &:checked {
             box-shadow: inset 0 0 0 3px rgba(150,150,150, .1);
@@ -263,7 +260,8 @@
         justify-content: space-between;
         input[type="file"] {
             padding-left: 32px;
-            padding-top: 8px;
+            padding-top: 0;
+            line-height: 32px;
             &::-webkit-file-upload-button {
                 visibility: hidden;
             }
@@ -274,7 +272,7 @@
                 top: 0;
                 bottom: 0;
                 height: 22px;
-                font-size: .8em;
+                font-size: .7em;
                 padding: 0 .3rem;
                 line-height: 22px;
                 min-width: 100px;
