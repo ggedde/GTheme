@@ -185,6 +185,13 @@ class MDFGF {
                         }
                     }
                 });
+
+                $('select').each(function(){
+                    var select = $('<div class="mdfgf-custom-select" style="display:none;"></div>').insertAfter($(this));
+                    $(this).find('option').hide().each(function(){
+                        select.append('<div data-value="'+$(this).val()+'">'+$(this).html()+'</div>');
+                    });
+                });
             }
 
             $(document).on('gform_post_render', function(event, form_id, current_page){
@@ -455,6 +462,17 @@ class MDFGF {
 </style>';
 
         }
+
+        // if(preg_match_all("/\<ul[^\>]*class=\'([^\']*[gform\_fields|gfield\_checkbox|gfield\_radio][^\']*)\'[^\>]*\>/m", $string, $matches))
+        // {
+        //     // echo '<pre>';print_r($matches);echo '</pre>';
+        //     // exit;
+        //     if (!empty($matches[0])) {
+        //         foreach ($matches[0] as $key => $match) {
+        //             $string = str_replace($match, str_replace($matches[1][$key], $matches[1][$key].' mdfgf-row', $match), $string);
+        //         }
+        //     }
+        // }
         
         return $colorString.'<div class="'.implode(' ', $classes).'">'.$string.'</div>';
     }
