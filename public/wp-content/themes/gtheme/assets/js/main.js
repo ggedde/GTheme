@@ -25,61 +25,6 @@ jQuery(function ($) {
 		}
 	}
 
-	function autoGrow(element) {
-		if (element && typeof element.scrollHeight !== 'undefined') {
-			if (element.scrollHeight > 90) {
-				element.style.height = "5px";
-				element.style.height = element.scrollHeight+"px";
-			}
-		}
-	}
-
-	// function MdbformsRender() {
-
-	// 	var mdForm = $('.md-form');
-	// 	if (mdForm.length) {
-	// 		mdForm.find('.custom-select').each(function(){
-	// 			$(this).removeClass('custom-select').addClass('mdb-select').materialSelect();
-	// 		});
-	// 		mdForm.find('input, select, textarea').trigger('change');
-	// 	}
-
-	// 	$('.ginput_container_name input, .ginput_container_address input').each(function(){
-	// 		if ($(this).val()) {
-	// 			$(this).closest('li.gfield').find('label').addClass('active');
-	// 		}
-	// 	})
-	// 	$('.ginput_container_name input, .ginput_container_address input').on('focus', function(){
-	// 		$(this).closest('li.gfield').find('label').addClass('active');
-	// 	});
-
-	// 	if (typeof bsCustomFileInput !== 'undefined') {
-	// 		bsCustomFileInput.init();
-	// 	}
-
-	// 	var inputs = [
-	// 		'form.bootstrap.nested-labels .ginput_container_text input',
-	// 		'form.bootstrap.nested-labels .ginput_container_email input',
-	// 		'form.bootstrap.nested-labels .ginput_container_phone input',
-	// 		'form.bootstrap.nested-labels .ginput_container_number input',
-	// 		'form.bootstrap.nested-labels .ginput_container_textarea textarea',
-	// 		'form.bootstrap.nested-labels .ginput_container_select select',
-	// 	];
-
-	// 	$(inputs.join(', ')).on('focus', function(){
-	// 		$(this).closest('.gfield').find('.gfield_label').addClass('active');
-			
-	// 	}).on('blur', function(){
-	// 		if (!$(this).val()){
-	// 			$(this).closest('.gfield').find('.gfield_label').removeClass('active');
-	// 		}
-	// 	});
-	// }
-
-	// $(document).on('gform_post_render', function(event, form_id, current_page){
-	// 	MdbformsRender();
-	// });
-
 
 	/*
 	*
@@ -102,12 +47,6 @@ jQuery(function ($) {
 		g.removeTelLinksForNonMobile();
 
 		updateScrollTopPosition();
-
-		$('textarea').on('input', function(){
-			$(this).attr('rows', 0);
-			autoGrow($(this)[0]);
-			
-		});
 	});
 
 	/*

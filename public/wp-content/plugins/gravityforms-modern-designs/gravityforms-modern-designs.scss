@@ -120,8 +120,9 @@
     }
     .ginput_container_list table.gfield_list tbody tr td.gfield_list_icons img {
         margin: 2px auto;
-        opacity: .3;
-        .mdfgf-theme-dark & {
+        opacity: .4;
+        .mdfgf-theme-dark &,
+        .mdfgf-text-light & {
             filter: invert(1);
         }
     }
@@ -140,6 +141,12 @@
         font-weight: 300;
         font-family: sans-serif;
         font-size: 15px;
+    }
+
+    textarea.mdfgf-input,
+    select.mdfgf-input {
+        display: block;
+        max-width: 100%;
     }
 
     .mdfgf-input,
@@ -164,52 +171,127 @@
             border-color: rgba(250,0,0,0.9);
         }
     }
-    .mdfgf-theme-greyish & {
+
+    .mdfgf-text-dark & {
+        color: #333;
+    }
+
+    .mdfgf-theme-vivid & .mdfgf-input,
+    .mdfgf-text-dark & {
+        color: #222;
+    }
+
+    .mdfgf-theme-greyish & .mdfgf-input,
+    .mdfgf-text-dark & {
         color: #555;
     }
-    .mdfgf-theme-vivid & {
-        color: #121212;
+    .mdfgf-text-light & {
+        color: rgba(255,255,255,0.9);
+        .mdfgf-input::placeholder,
+        .mdfgf-input::-webkit-input-placeholder {
+            color: rgba(255,255,255,0.5);
+        }
     }
-    .mdfgf-theme-dark & {
-        color: #eee;
+    .mdfgf-text-light.mdfgf-theme-ash & {
+        color: rgba(255,255,255,0.7);
+        .mdfgf-input::placeholder,
+        .mdfgf-input::-webkit-input-placeholder {
+            color: rgba(255,255,255,0.4);
+        }
     }
 
     .mdfgf-input,
+    .ginput_container_select::after,
     .gf_progressbar {
         .mdfgf-container & {
             border: 1px solid rgba(0,0,0,0.3);
             background-color: rgba(252,252,252,0.8);
+            &:checked {
+                background-color: transparent;
+                box-shadow: inset 0 0 0 2px rgba(252,252,252,0.8);
+                &::after {
+                    background-color: rgba(40,40,40,.5);
+                }
+            }
         }
-        .mdfgf-container.mdfgf-theme-greyish & {
+        .mdfgf-theme-greyish & {
             border: 1px solid rgba(0,0,0,0.1);
             background-color: rgba(242,242,243,0.8);
+            &:checked {
+                background-color: transparent;
+                box-shadow: inset 0 0 0 2px rgba(242,242,243,0.8);
+            }
         }
-        .mdfgf-container.mdfgf-theme-vivid & {
+        .mdfgf-theme-vivid & {
             border: 1px solid rgba(0,0,0,0.6);
             background-color: rgba(255,255,255,0.9);
+            &:checked {
+                background-color: transparent;
+                box-shadow: inset 0 0 0 2px rgba(255,255,255,0.9);
+            }
         }
-        .mdfgf-container.mdfgf-theme-dark & {
+        .mdfgf-theme-dark & {
             border-color: rgba(255,255,255,0.3);
             background-color: rgba(255,255,255,0.05);
+            &:checked {
+                background-color: transparent;
+                box-shadow: inset 0 0 0 2px rgba(255,255,255,0.05);
+                &::after {
+                    background-color: rgba(255,255,255,0.7);
+                }
+            }
         }
-        &:focus,
-        &:checked {
-            .mdfgf-container.mdfgf-theme-dark & {
+        .mdfgf-theme-ash & {
+            border-color: rgba(0,0,0,0.7);
+            background-color: rgba(255,255,255,0.03);
+            &:checked {
+                background-color: transparent;
+                box-shadow: inset 0 0 0 2px rgba(255,255,255,0.03);
+                &::after {
+                    background-color: rgba(255,255,255,0.7);
+                }
+            }
+        }
+        &:focus {
+            border-color: rgba(0,0,0,0.8);
+            .mdfgf-theme-dark &,
+            .mdfgf-theme-ash & {
                 box-shadow: inset 0 0 0 3px rgba(255,255,255, .1);
+            }
+            .mdfgf-theme-dark & {
+                border-color: rgba(255,255,255,0.6);
             }
         }
     }
 
     .gfield_error .mdfgf-input:not([type="radio"]):not([type="checkbox"]) {
-        .mdfgf-container.mdfgf-theme-dark & {
-            border-color: rgba(250,50,50,0.9);
+        .mdfgf-theme-dark & {
+            border-color: rgba(252,90,73,.8);
+        }
+        .mdfgf-theme-ash & {
+            border-color: rgba(252,182,93,.8);
         }
     }
 
-    textarea.mdfgf-input,
-    select.mdfgf-input {
-        display: block;
-        max-width: 100%;
+    .mdfgf-container & .ginput_container_select { 
+        position: relative;
+        &::after {
+            content: '';
+            position: absolute;
+            top: calc(50% - 3px);
+            right: 12px;
+            width: 10px;
+            height: 10px;
+            transform: translateY(-50%) rotate(45deg);
+            background-color: transparent;
+            border-top: 0;
+            border-left: 0;
+        }
+        select {
+            padding-right: 30px;
+            text-overflow: ellipsis;
+            display: inline-block;
+        }
     }
 
     .validation_message,
@@ -217,9 +299,11 @@
         opacity: 1;
         color: rgba(250,10,20, .8);
         margin-top: 2px;
-        .mdfgf-theme-dark & {
-            opacity: 1;
-            color: rgba(250,50,50, .8);
+        .mdfgf-container.mdfgf-theme-dark & {
+            color: rgba(252,90,73,.8);
+        }
+        .mdfgf-container.mdfgf-theme-ash & {
+            color: rgba(252,182,93,.8);
         }
     }
     .validation_message {
@@ -252,6 +336,7 @@
         margin: auto;
         display: inline-block;
         transition: background-color .2s ease-in-out;
+        background-color: rgba(40,40,40,.6);
     }
     .ginput_container_fileupload {
         position: relative;
@@ -309,17 +394,25 @@
             .mdfgf-container.mdfgf-theme-vivid & {
                 background-color: rgba(255,255,255,1);
             }
-            .mdfgf-container.mdfgf-theme-dark & {
-                border-color: rgba(255,255,255,0.3);
+            .mdfgf-container.mdfgf-theme-dark &,
+            .mdfgf-container.mdfgf-theme-ash & {
                 background-color: rgba(50,50,50,1);
             }
         }
     }
     .button:active {
         line-height: 41px;
+        background-color: rgba(40,40,40,.6);
     }
     .ginput_container_fileupload input[type="file"]:active:before {
         line-height: 24px;
+        background-color: rgba(40,40,40,.6);
+    }
+    .button:hover,
+    .ginput_container_fileupload input[type="file"]:hover:before,
+    .button:focus,
+    .ginput_container_fileupload input[type="file"]:focus:before {
+        background-color: rgba(40,40,40,.8);
     }
     .gf_progressbar { 
         min-height: 0;
@@ -333,6 +426,7 @@
             padding: 0;
             text-align: right;
             border-radius: 3px;
+            background-color: rgba(40,40,40,.5);
             &:before {
                 content: '';
                 position: absolute;
@@ -341,7 +435,7 @@
                 right: 0;
                 left: 0;
                 background: repeating-linear-gradient(135deg, #fff, #fff 10px, transparent 10px, transparent 20px);
-                opacity: 0.1;
+                opacity: 0.2;
             }
             span {
                 padding: 0 10px;
@@ -379,9 +473,10 @@
         &::after {
             content: '';
             display: block;
-            margin: 2px;
-            height: 12px;
-            width: 12px;
+            margin: auto;
+            height: 100%;
+            width: 100%;
+            transform: scale(0.7);
             border-radius: 2px;
             border-color: transparent;
             transition: background-color .1s ease-in-out;
@@ -400,22 +495,6 @@
         margin-right: 10px;
         &::after { 
             border-radius: 50%;
-        }
-    }
-
-    .button {
-        position: relative;
-        &::before {
-            content: '';
-            display: block;
-            border-radius: 50%;
-            width: 10px;
-            height: 10px;
-            border: 2px solid red;
-            border-top: 0;
-            position: relative;
-            z-index: 100;
-            top: 0;
         }
     }
 

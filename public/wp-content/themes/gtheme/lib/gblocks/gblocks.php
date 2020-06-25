@@ -2714,15 +2714,22 @@ class GBLOCKS {
 	 */
 	public static function filter_content($content)
 	{
-
 		ob_start();
-
 		self::display();
-
 		$blocks = ob_get_contents();
 		ob_end_clean();
 
-		return $content . $blocks;
+		$output = '';
+
+		if ($content && !GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'hide_content')) {
+			$output = '<section class="block-container block-bg-none block-index-0"><div class="row"><div class="col">'.$content.'</div></div></section>';
+		}
+
+		if (GBLOCKS_PLUGIN_SETTINGS::is_setting_checked('advanced_options', 'after_title')) {
+			return $blocks.$output;
+		} 
+
+		return $output.$blocks;
 
 	}
 
