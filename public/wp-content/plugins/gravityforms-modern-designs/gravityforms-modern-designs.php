@@ -297,11 +297,14 @@ class MDFGF {
             'address_state',
             'address_zip',
             'address_country',
+            'gfield_time_hour',
+            'gfield_time_minute',
+            'gfield_time_ampm',
         );
 
-        if (in_array($field['type'], array('address', 'name'))) {
+        if (in_array($field['type'], array('address', 'name', 'time'))) {
             // $content = preg_replace('/\<(select|input) /m', '<$1 class="mdfgf-input" ', $content);
-            $content = preg_replace('/(ginput_container_address|ginput_container_name)/m', 'mdfgf-row $1', $content);
+            $content = preg_replace('/(ginput_container_address|ginput_container_name|clear-multi)/m', 'mdfgf-row $1', $content);
             $content = preg_replace('/('.implode('|',$complexFieldsClasses).')/m', 'mdfgf-field $1', $content);
         }
 
