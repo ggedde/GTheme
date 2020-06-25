@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:color';
 
 $themes: (
     'default': (
@@ -419,6 +420,7 @@ select.mdfgf-input {
 }
 
 .mdfgf-input,
+.mdfgf-custom-select,
 .mdfgf-container .gf_progressbar {
     width: 100%;
     color: inherit;
@@ -433,6 +435,31 @@ select.mdfgf-input {
     &:focus,
     &:checked {
         box-shadow: inset 0 0 0 3px rgba(150,150,150, .1);
+    }
+}
+
+select {
+    option {
+        display: none;
+    }        
+}
+
+.mdfgf-custom-select {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 0;
+    display: none;
+    opacity: 0;
+    transition: opacity .1s ease-in-out;
+    z-index: 10;
+    div {
+        cursor: pointer;
+        padding: .4rem 1rem;
+    }
+    &.open {
+        opacity: 1;
     }
 }
 
@@ -481,7 +508,8 @@ select.mdfgf-input {
     }
 }
 
-.mdfgf-input {
+.mdfgf-input,
+.mdfgf-custom-select {
     border: 1px solid map.get(map.get($themes, 'default'), 'border-color');
     background-color: map.get(map.get($themes, 'default'), 'background-color');
     &:focus {
@@ -506,13 +534,17 @@ select.mdfgf-input {
 .mdfgf-container .gfield_error .gfield_time_ampm:after {
     border-color: map.get(map.get($themes, 'default'), 'error-color');
 }
+.mdfgf-custom-select {
+    background-color: color.adjust(map.get(map.get($themes, 'default'), 'background-color'), $alpha: 1);
+}
 .validation_message,
 .validation_error {
     color: map.get(map.get($themes, 'default'), 'error-color');
 }
 @each $theme-name, $theme in $themes {
     @if $theme-name != 'default' {
-        .mdfgf-theme-#{$theme-name} .mdfgf-input {
+        .mdfgf-theme-#{$theme-name} .mdfgf-input,
+        .mdfgf-theme-#{$theme-name} .mdfgf-custom-select {
             @if map.get($theme, 'input-text-color') {
                 color: map.get($theme, 'input-text-color');
             }
@@ -534,14 +566,19 @@ select.mdfgf-input {
         }
         .mdfgf-theme-#{$theme-name} .gfield_error .mdfgf-input,
         .mdfgf-theme-#{$theme-name} .gfield_error .ginput_container_select:after,
-        .mdfgf-theme-#{$theme-name} .gfield_error .gfield_time_ampm:after {
+        .mdfgf-theme-#{$theme-name} .gfield_error .gfield_time_ampm:after,
+        .mdfgf-theme-#{$theme-name} .gfield_error .mdfgf-custom-select {
             border-color: map.get($theme, 'error-color');
         }
         .mdfgf-theme-#{$theme-name} .validation_message,
         .mdfgf-theme-#{$theme-name} .validation_error {
             color: map.get($theme, 'error-color');
         }
+        .mdfgf-theme-#{$theme-name} .mdfgf-custom-select {
+            background-color: color.adjust(map.get($theme, 'background-color'), $alpha: 1)
+        }
     }
+    
 }
 
 .mdfgf-container .ginput_container_select,

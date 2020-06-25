@@ -187,10 +187,25 @@ class MDFGF {
                 });
 
                 $('select').each(function(){
-                    var select = $('<div class="mdfgf-custom-select" style="display:none;"></div>').insertAfter($(this));
-                    $(this).find('option').hide().each(function(){
-                        select.append('<div data-value="'+$(this).val()+'">'+$(this).html()+'</div>');
-                    });
+                    if (!$(this).siblings('.mdfgf-custom-select').length) {
+                        var select = $('<div class="mdfgf-custom-select"></div>');
+                        $(this).after(select);
+                        $(this).parent().css('position', 'relative');
+                        $(this).find('option').each(function(){
+                            select.append('<div data-value="'+$(this).val()+'">'+$(this).html()+'</div>');
+                        });
+                    }
+                });
+
+                $('.mdfgf-custom-select div').on('click keydown tap touchstart', function(e){
+                    $(this).parent().siblings('select').val($(this).attr('data-value'));
+                    $(this).parent().removeClass('open').hide();
+                });
+
+                $('select').on('click keydown tap touchstart', function(e){
+                    if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32 || parseInt(e.keyCode) === 38 || parseInt(e.keyCode) === 40))){
+                        $(this).siblings('.mdfgf-custom-select').show().addClass('open');
+                    }
                 });
             }
 
