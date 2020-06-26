@@ -485,6 +485,10 @@ select.mdfgf-input {
     font-size: 1.2em;
 }
 
+.ginput_complex + .validation_message {
+    transform: translateY(-1rem);
+}
+
 .mdfgf-text-dark {
     color: #333;
 }
