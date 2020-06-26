@@ -114,6 +114,7 @@ class MDFGF {
                 });
             }
             function mdfgfOpenCustomSelect(select){
+                mdfgfCloseCustomSelects();
                 var customSelect = select.siblings('.mdfgf-custom-select');
                 customSelect.parent().addClass('mdfgf-custom-select-open');
                 customSelect.show();
@@ -125,12 +126,13 @@ class MDFGF {
                 } else {
                     customSelect.find('button:first-child').focus();
                 }
-                customSelect.find('button').off().on('click keydown tap', function(e){
-
-                    if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32))){
-                        $(this).parent().siblings('select').val($(this).attr('data-value'));
-                        $(this).siblings().removeClass('active');
-                        $(this).addClass('active');
+                customSelect.find('button').off().on('click keydown tap', function(e){                    
+                    if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32 || parseInt(e.keyCode) === 27))){
+                        if (e.type !== 'keydown' || parseInt(e.keyCode) !== 27) {
+                            $(this).parent().siblings('select').val($(this).attr('data-value'));
+                            $(this).siblings().removeClass('active');
+                            $(this).addClass('active');
+                        }
                         if(!isMobile()) {
                             $(this).parent().siblings('select').focus();
                         }
@@ -248,7 +250,7 @@ class MDFGF {
                     }
                 });
 
-                $('select').each(function(){
+                $('.mdfgf-use-custom-selects select').each(function(){
                     if (!$(this).siblings('.mdfgf-custom-select').length) {
                         var select = $('<div class="mdfgf-custom-select"></div>');
                         $(this).after(select);
@@ -258,7 +260,7 @@ class MDFGF {
                     }
                 });
 
-                $('select').on('click keydown tap', function(e){
+                $('.mdfgf-use-custom-selects select').on('click keydown tap', function(e){
                     if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32 || parseInt(e.keyCode) === 38 || parseInt(e.keyCode) === 40))){
                         mdfgfOpenCustomSelect($(this));
                         e.preventDefault();
@@ -450,6 +452,7 @@ class MDFGF {
         $design = 'mdfgf-mdfgf';
         $textColorClass = '';
         $autoGrowTextareas = false;
+        $useCustomSelects = false;
         $colorString = '';
         
         if (class_exists('GFAPI') && function_exists('rgar')) {
@@ -469,6 +472,9 @@ class MDFGF {
                     if (!empty($form['mdfgf_auto_grow_textareas'])) {
                         $autoGrowTextareas = true;
                     }
+                    if (!empty($form['mdfgf_use_custom_selects'])) {
+                        $useCustomSelects = true;
+                    }
                 }
             }
         }
@@ -485,6 +491,9 @@ class MDFGF {
         if (isset($attributes['mdfgf_auto_grow_textareas'])) {
             $autoGrowTextareas = !empty($attributes['mdfgf_auto_grow_textareas']);
         }
+        if (isset($attributes['mdfgf_use_custom_selects'])) {
+            $useCustomSelects = !empty($attributes['mdfgf_use_custom_selects']);
+        }
 
         if ($textColorClass) {
             $classes[] = $textColorClass;
@@ -496,6 +505,10 @@ class MDFGF {
 
         if ($autoGrowTextareas) {
             $classes[] = 'mdfgf-auto-grow-textareas';
+        }
+
+        if ($useCustomSelects) {
+            $classes[] = 'mdfgf-use-custom-selects';
         }
 
         if ($mainColor) {
@@ -568,6 +581,7 @@ class MDFGF {
         $tooltips["mdfgf_shortcode_overrides_tooltip"] = "You can Override these values within the shortcode attributes. This is useful when needing to change colors or themes when embedding the form in different locations.<br>Examples:<br>mdfgf_theme=\"mdfgf-theme-default\"<br>mdfgf_theme=\"mdfgf-theme-greyish\"<br>mdfgf_theme=\"mdfgf-theme-ash\"<br>mdfgf_theme=\"mdfgf-theme-dark\"<br>mdfgf_text_class=\"mdfgf-text-light\"<br>mdfgf_color=\"#21759b\"";
         $tooltips["mdfgf_color_tooltip"] = "This will override the Highlight color used for Buttons, Radios and Checkboxes when filled and Focus events. Use Hexadecimal value.<br>Ex #21759b";
         $tooltips["mdfgf_auto_grow_textareas_tooltip"] = "This will collapse all textarea fields in the form to 80px and will auto grow the height when the user types content into the box. The Max height is 300px and will show a scrollbar once they enter that much data.";
+        $tooltips["mdfgf_use_custom_selects_tooltip"] = "This will add custom styles and functionality to the Dropdown fields (select fields). Their may be issues when using this with other frameworks, plugins, or older devices.";
         return $tooltips;
     }
 
@@ -637,6 +651,12 @@ class MDFGF {
                 </td>
             </tr>
             <tr class="mdfgf-theme-options"'.(!$formDesign || $formDesign === 'mdfgf-gf' ? ' style="display:none;"' : '').'>
+                <th><label for="mdfgf_use_custom_selects">Use Custom Dropdowns '.gform_tooltip("mdfgf_use_custom_selects_tooltip", '', true).'</label></th>
+                <td>
+                    <input type="checkbox" id="mdfgf_use_custom_selects" name="mdfgf_use_custom_selects" value="1" '.checked(rgar($form, 'mdfgf_use_custom_selects'), 1, false).'>
+                </td>
+            </tr>
+            <tr class="mdfgf-theme-options"'.(!$formDesign || $formDesign === 'mdfgf-gf' ? ' style="display:none;"' : '').'>
                 <th><label for="mdfgf_auto_grow_textareas">Auto Grow Textareas '.gform_tooltip("mdfgf_auto_grow_textareas_tooltip", '', true).'</label></th>
                 <td>
                     <input type="checkbox" id="mdfgf_auto_grow_textareas" name="mdfgf_auto_grow_textareas" value="1" '.checked(rgar($form, 'mdfgf_auto_grow_textareas'), 1, false).'>
@@ -668,6 +688,7 @@ class MDFGF {
         $form['mdfgf_text_class'] = rgpost('mdfgf_text_class') ? rgpost('mdfgf_text_class') : '';
         $form['mdfgf_color'] = rgpost('mdfgf_color') ? strtolower(rgpost('mdfgf_color')) : '';
         $form['mdfgf_auto_grow_textareas'] = rgpost('mdfgf_auto_grow_textareas') ? 1 : 0;
+        $form['mdfgf_use_custom_selects'] = rgpost('mdfgf_use_custom_selects') ? 1 : 0;
         return $form;
     }
 
