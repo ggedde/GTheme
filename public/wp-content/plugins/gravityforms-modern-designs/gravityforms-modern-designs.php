@@ -96,6 +96,12 @@ class MDFGF {
 <script>
     if(typeof window.jQuery !== 'undefined') {
         jQuery(function($){
+            function isMobile() {
+                if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+                    return true;
+                }
+                return false;
+            }
             function mdfgfCloseCustomSelects(){
                 $('.mdfgf-custom-select.open').each(function(){
                     var customSelect = $(this);
@@ -119,7 +125,9 @@ class MDFGF {
 
                     if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32))){
                         $(this).parent().siblings('select').val($(this).attr('data-value'));
-                        $(this).parent().siblings('select').focus();
+                        if(!isMobile()) {
+                            $(this).parent().siblings('select').focus();
+                        }
                         mdfgfCloseCustomSelects();
                         e.preventDefault();
                         return false;
