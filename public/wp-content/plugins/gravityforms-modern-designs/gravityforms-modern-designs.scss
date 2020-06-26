@@ -237,8 +237,7 @@ li.gfield.mdfgf-field-type-address {
                 content: 'Choose File';
                 position: absolute;
                 left: 10px;
-                top: 0;
-                bottom: 0;
+                top: 9px;
                 height: 22px;
                 font-size: .7em;
                 padding: 0 .3rem;
@@ -444,25 +443,6 @@ select {
     }        
 }
 
-.mdfgf-custom-select {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding: 0;
-    display: none;
-    opacity: 0;
-    transition: opacity .1s ease-in-out;
-    z-index: 10;
-    div {
-        cursor: pointer;
-        padding: .4rem 1rem;
-    }
-    &.open {
-        opacity: 1;
-    }
-}
-
 .validation_message,
 .validation_error {
     opacity: 1;
@@ -535,7 +515,7 @@ select {
     border-color: map.get(map.get($themes, 'default'), 'error-color');
 }
 .mdfgf-custom-select {
-    background-color: color.adjust(map.get(map.get($themes, 'default'), 'background-color'), $alpha: 1);
+    // background-color: color.adjust(map.get(map.get($themes, 'default'), 'background-color'), $alpha: 1);
 }
 .validation_message,
 .validation_error {
@@ -575,7 +555,7 @@ select {
             color: map.get($theme, 'error-color');
         }
         .mdfgf-theme-#{$theme-name} .mdfgf-custom-select {
-            background-color: color.adjust(map.get($theme, 'background-color'), $alpha: 1)
+            // background-color: color.adjust(map.get($theme, 'background-color'), $alpha: 1)
         }
     }
     
@@ -600,5 +580,62 @@ select {
         padding-right: 30px;
         text-overflow: ellipsis;
         display: inline-block;
+    }
+}
+
+.mdfgf-container .mdfgf-custom-select {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 0;
+    display: none;
+    opacity: 0;
+    transition: opacity .1s ease-in-out;
+    background-color: #eee;
+    z-index: 10;
+    max-height: 300px;
+    overflow-y: auto;
+    button {
+        display: block;
+        width: 100%;
+        text-align: left;
+        background-color: transparent;
+        border: none;
+        appearance: none;
+        user-select: none;
+        cursor: pointer;
+        padding: 0 30px 0 10px;
+        min-height: 40px;
+        line-height: 40px;
+        color: #333;
+        &:focus,
+        &:hover {
+            background-color: rgba(0,0,0,0.05);
+            color: #333;
+        }
+        &:active {
+            background-color: rgba(0,0,0,0.1);
+            color: #333;
+        }
+    }
+    &.open {
+        opacity: 1;
+    }
+    @media (prefers-color-scheme: dark) {
+        background-color: #333;
+        button {
+            color: #eee;
+            &:focus,
+            &:hover {
+                background-color: rgba(255,255,255,0.1);
+                color: #eee;
+            }
+            &:active {
+                background-color: rgba(255,255,255,0.2);
+                color: #eee;
+            }
+        }
+        
     }
 }

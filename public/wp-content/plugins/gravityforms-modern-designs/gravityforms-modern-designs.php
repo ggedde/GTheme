@@ -96,7 +96,52 @@ class MDFGF {
 <script>
     if(typeof window.jQuery !== 'undefined') {
         jQuery(function($){
-            function gFormsMdfgformsRender(){
+            function mdfgfCloseCustomSelects(){
+                $('.mdfgf-custom-select.open').each(function(){
+                    var customSelect = $(this);
+                    customSelect.removeClass('open');
+                    setTimeout(function(){
+                        customSelect.hide();
+                    }, 200);
+                    customSelect.find('button').off();
+                });
+            }
+            function mdfgfOpenCustomSelect(select){
+                var customSelect = select.siblings('.mdfgf-custom-select');
+                customSelect.show();
+                setTimeout(function(){
+                    customSelect.addClass('open');
+                },1);
+                customSelect.find('button:first-child').focus();
+                customSelect.find('button').off().on('click keydown tap touchstart', function(e){
+                    if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32))){
+                        $(this).parent().siblings('select').val($(this).attr('data-value'));
+                        $(this).parent().siblings('select').focus();
+                        mdfgfCloseCustomSelects();
+                    }
+                    if(e.type === 'keydown'){
+                        console.log('Keydown '+e.keyCode);
+                        
+                        if (parseInt(e.keyCode) === 38 && $(this).prev()) {
+                            console.log('Up');
+                            e.preventDefault();
+                            $(this).prev().focus();
+                        }
+                        if (parseInt(e.keyCode) === 40 && $(this).next()) {
+                            console.log('Down');
+                            e.preventDefault();
+                            $(this).next().focus();
+                        }
+                    }
+                });
+                $(document).on('click', function(e) { 
+                    $target = $(e.target);
+                    if(!$target.closest('.mdfgf-custom-select').length && $('.mdfgf-custom-select').is(":visible")) {
+                        mdfgfCloseCustomSelects();
+                    }        
+                });
+            }
+            function mdfgfRenderForms(){
 
                 // var mdForm = $('.md-form');
                 // if (mdForm.length) {
@@ -192,28 +237,23 @@ class MDFGF {
                         $(this).after(select);
                         $(this).parent().css('position', 'relative');
                         $(this).find('option').each(function(){
-                            select.append('<div data-value="'+$(this).val()+'">'+$(this).html()+'</div>');
+                            select.append('<button type="button" data-value="'+$(this).val()+'">'+$(this).html()+'</button>');
                         });
                     }
                 });
 
-                $('.mdfgf-custom-select div').on('click keydown tap touchstart', function(e){
-                    $(this).parent().siblings('select').val($(this).attr('data-value'));
-                    $(this).parent().removeClass('open').hide();
-                });
-
                 $('select').on('click keydown tap touchstart', function(e){
                     if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32 || parseInt(e.keyCode) === 38 || parseInt(e.keyCode) === 40))){
-                        $(this).siblings('.mdfgf-custom-select').show().addClass('open');
+                        mdfgfOpenCustomSelect($(this));
                     }
                 });
             }
 
             $(document).on('gform_post_render', function(event, form_id, current_page){
-                gFormsMdfgformsRender();
+                mdfgfRenderForms();
             });
 
-            gFormsMdfgformsRender();
+            mdfgfRenderForms();
         });
     }
     
@@ -322,11 +362,12 @@ class MDFGF {
             'gfield_time_hour',
             'gfield_time_minute',
             'gfield_time_ampm',
+            'ginput_full',
         );
 
-        if (in_array($field['type'], array('address', 'name', 'time'))) {
+        if (in_array($field['type'], array('address', 'name', 'time', 'post_image'))) {
             // $content = preg_replace('/\<(select|input) /m', '<$1 class="mdfgf-input" ', $content);
-            $content = preg_replace('/(ginput_container_address|ginput_container_name|clear-multi)/m', 'mdfgf-row $1', $content);
+            $content = preg_replace('/(ginput_container_address|ginput_container_name|ginput_container_post_image|clear-multi)/m', 'mdfgf-row $1', $content);
             $content = preg_replace('/('.implode('|',$complexFieldsClasses).')/m', 'mdfgf-field $1', $content);
         }
 
