@@ -113,7 +113,7 @@ class MDFGF {
                     customSelect.addClass('open');
                 },1);
                 customSelect.find('button:first-child').focus();
-                customSelect.find('button').off().on('click keydown tap touchstart', function(e){
+                customSelect.find('button').off().on('click keydown tap', function(e){
                     if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32))){
                         $(this).parent().siblings('select').val($(this).attr('data-value'));
                         $(this).parent().siblings('select').focus();
@@ -242,7 +242,7 @@ class MDFGF {
                     }
                 });
 
-                $('select').on('click keydown tap touchstart', function(e){
+                $('select').on('click keydown tap', function(e){
                     if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32 || parseInt(e.keyCode) === 38 || parseInt(e.keyCode) === 40))){
                         mdfgfOpenCustomSelect($(this));
                     }

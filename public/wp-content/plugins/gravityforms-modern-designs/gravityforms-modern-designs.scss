@@ -8,6 +8,7 @@ $themes: (
         'background-color': rgba(250,250,250,0.8),
         'checkbox-checked-background-color': rgba(40,40,40,.5),
         'error-color': rgba(250,10,20,.8),
+        'input-text-color': rgba(0,0,0,.8),
     ),
     'greyish': (
         'border-color': rgba(0,0,0,0.1),
@@ -492,6 +493,9 @@ select {
 .mdfgf-custom-select {
     border: 1px solid map.get(map.get($themes, 'default'), 'border-color');
     background-color: map.get(map.get($themes, 'default'), 'background-color');
+    @if map.get(map.get($themes, 'default'), 'input-text-color') {
+        color: map.get(map.get($themes, 'default'), 'input-text-color');
+    }
     &:focus {
         border-color: map.get(map.get($themes, 'default'), 'border-color-focus');
     }
@@ -513,9 +517,6 @@ select {
 .mdfgf-container .gfield_error .ginput_container_select:after,
 .mdfgf-container .gfield_error .gfield_time_ampm:after {
     border-color: map.get(map.get($themes, 'default'), 'error-color');
-}
-.mdfgf-custom-select {
-    // background-color: color.adjust(map.get(map.get($themes, 'default'), 'background-color'), $alpha: 1);
 }
 .validation_message,
 .validation_error {
