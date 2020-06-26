@@ -248,7 +248,9 @@ class MDFGF {
                 //         $(this).parent().find('.gfield_label').addClass('active');
                 //     }
                 // });
-                $('.mdfgf-use-custom-selects .mdfgf-render select').wrap('<div class="mdfgf-select"></div>');
+                $('.mdfgf-render select').each(function(){
+                    $(this).wrap('<div class="mdfgf-select'+($(this).prop('multiple') ? ' multiple' : '')+'"></div>');
+                })
 
                 $('.mdfgf-render .gfield_error .mdfgf-input').on('change', function(){
                     $(this).closest('.gfield_error').removeClass('gfield_error');

@@ -626,6 +626,10 @@ select.mdfgf-input {
         border: 0;
     }
 }
+.mdfgf-container:not(.mdfgf-use-custom-selects) .mdfgf-select.multiple:after {
+    display: none;
+}
+
 
 .mdfgf-container.mdfgf-use-custom-selects .mdfgf-custom-select {
     position: absolute;
