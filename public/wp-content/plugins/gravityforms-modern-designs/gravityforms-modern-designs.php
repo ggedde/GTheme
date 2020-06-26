@@ -242,6 +242,8 @@ class MDFGF {
                 $('select').on('click keydown tap', function(e){
                     if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32 || parseInt(e.keyCode) === 38 || parseInt(e.keyCode) === 40))){
                         mdfgfOpenCustomSelect($(this));
+                        e.preventDefault();
+                        return false;
                     }
                 });
             }
