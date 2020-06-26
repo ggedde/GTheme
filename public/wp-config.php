@@ -73,6 +73,8 @@ define( 'WP_CACHE_KEY_SALT', 'v&SPLrM6NX)ReASCDMKdI_>n,IxH2,k2(dxiz7M$H%zM]~e+h5
  */
 $table_prefix = 'wp_tst_';
 
+define( 'WP_DEBUG', true );
+
 
 
 
