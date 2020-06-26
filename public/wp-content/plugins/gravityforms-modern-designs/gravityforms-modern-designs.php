@@ -120,11 +120,17 @@ class MDFGF {
                 setTimeout(function(){
                     customSelect.addClass('open');
                 },1);
-                customSelect.find('button:first-child').focus();
+                if (customSelect.find('button.active').length) {
+                    customSelect.find('button.active').focus();
+                } else {
+                    customSelect.find('button:first-child').focus();
+                }
                 customSelect.find('button').off().on('click keydown tap', function(e){
 
                     if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32))){
                         $(this).parent().siblings('select').val($(this).attr('data-value'));
+                        $(this).siblings().removeClass('active');
+                        $(this).addClass('active');
                         if(!isMobile()) {
                             $(this).parent().siblings('select').focus();
                         }
