@@ -9,6 +9,7 @@ $themes: (
         'checkbox-checked-background-color': rgba(40,40,40,.5),
         'error-color': rgba(250,10,20,.8),
         'input-text-color': rgba(0,0,0,.8),
+        'arrow-color': rgba(0,0,0,0.6),
     ),
     'greyish': (
         'border-color': rgba(0,0,0,0.1),
@@ -17,6 +18,7 @@ $themes: (
         'checkbox-checked-background-color': rgba(40,40,40,.5),
         'error-color': rgba(250,10,20,.8),
         'input-text-color': rgba(0,0,0,.6),
+        'arrow-color': rgba(0,0,0,0.5),
     ),
     'vivid': (
         'border-color': rgba(0,0,0,0.6),
@@ -25,6 +27,7 @@ $themes: (
         'checkbox-checked-background-color': rgba(0,0,0,0.7),
         'error-color': rgba(250,10,20,.8),
         'input-text-color': rgba(0,0,0,.9),
+        'arrow-color': rgba(0,0,0,0.8),
     ),
     'ash': (
         'border-color': rgba(0,0,0,0.7),
@@ -32,6 +35,7 @@ $themes: (
         'background-color': rgba(255,255,255,0.03),
         'checkbox-checked-background-color': rgba(255,255,255,0.7),
         'error-color': rgba(252,182,93,.8),
+        'arrow-color': rgba(0,0,0,1),
     ),
     'dark': (
         'border-color': rgba(255,255,255,0.3),
@@ -40,6 +44,7 @@ $themes: (
         'checkbox-checked-background-color': rgba(255,255,255,0.7),
         'error-color': rgba(252,90,73,.8),
         'input-text-color': rgba(255,255,255,.7),
+        'arrow-color': rgba(255,255,255,0.6),
     )
 );
 
@@ -512,7 +517,7 @@ select {
 }
 .mdfgf-container .ginput_container_select:after,
 .mdfgf-container .gfield_time_ampm:after {
-    border: 1px solid map.get(map.get($themes, 'default'), 'border-color');
+    border: 1px solid map.get(map.get($themes, 'default'), 'arrow-color');
 }
 .mdfgf-container .gfield_error .ginput_container_select:after,
 .mdfgf-container .gfield_error .gfield_time_ampm:after {
@@ -543,7 +548,7 @@ select {
         }
         .mdfgf-theme-#{$theme-name} .ginput_container_select:after,
         .mdfgf-theme-#{$theme-name} .gfield_time_ampm:after {
-            border-color: map.get($theme, 'border-color');
+            border-color: map.get($theme, 'arrow-color');
         }
         .mdfgf-theme-#{$theme-name} .gfield_error .mdfgf-input,
         .mdfgf-theme-#{$theme-name} .gfield_error .ginput_container_select:after,
@@ -555,9 +560,6 @@ select {
         .mdfgf-theme-#{$theme-name} .validation_error {
             color: map.get($theme, 'error-color');
         }
-        .mdfgf-theme-#{$theme-name} .mdfgf-custom-select {
-            // background-color: color.adjust(map.get($theme, 'background-color'), $alpha: 1)
-        }
     }
     
 }
@@ -565,22 +567,26 @@ select {
 .mdfgf-container .ginput_container_select,
 .mdfgf-container .gfield_time_ampm { 
     position: relative;
-    &::after {
-        content: '';
-        position: absolute;
-        top: calc(50% - 3px);
-        right: 12px;
-        width: 10px;
-        height: 10px;
-        transform: translateY(-50%) rotate(45deg);
-        background-color: transparent;
-        border-top: 0;
-        border-left: 0;
-    }
     select {
         padding-right: 30px;
         text-overflow: ellipsis;
         display: inline-block;
+    }
+}
+
+.mdfgf-container .ginput_container_select,
+.mdfgf-container .gfield_time_ampm { 
+    &::after {
+        content: '';
+        position: absolute;
+        top: 12px;
+        right: 15px;
+        width: 10px;
+        height: 10px;
+        transform: rotate(45deg);
+        background-color: transparent;
+        border-top: 0;
+        border-left: 0;
     }
 }
 
@@ -593,8 +599,7 @@ select {
     display: none;
     opacity: 0;
     transition: opacity .1s ease-in-out;
-    background-color: #eee;
-    z-index: 10;
+    background-color: #f4f4f4;
     max-height: 300px;
     overflow-y: auto;
     button {
@@ -607,9 +612,12 @@ select {
         user-select: none;
         cursor: pointer;
         padding: 0 30px 0 10px;
-        min-height: 40px;
-        line-height: 40px;
+        min-height: 38px;
+        line-height: 38px;
         color: #333;
+        font-weight: 300;
+        font-size: 15px;
+        font-family: sans-serif;
         &:focus,
         &:hover {
             background-color: rgba(0,0,0,0.05);
@@ -625,6 +633,9 @@ select {
     }
     @media (prefers-color-scheme: dark) {
         background-color: #333;
+        &::after {
+            border-color: #eee;
+        }
         button {
             color: #eee;
             &:focus,
@@ -636,7 +647,17 @@ select {
                 background-color: rgba(255,255,255,0.2);
                 color: #eee;
             }
-        }
-        
+        }    
     }
 }
+
+.mdfgf-container .mdfgf-custom-select-open {
+    position: relative;
+    z-index: 1;
+    @media (prefers-color-scheme: dark) {
+        &::after {
+            border-color: #ccc;
+        }
+    }
+}
+

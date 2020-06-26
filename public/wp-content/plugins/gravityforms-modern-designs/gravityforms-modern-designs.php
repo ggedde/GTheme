@@ -102,12 +102,14 @@ class MDFGF {
                     customSelect.removeClass('open');
                     setTimeout(function(){
                         customSelect.hide();
+                        customSelect.parent().removeClass('mdfgf-custom-select-open');
                     }, 200);
                     customSelect.find('button').off();
                 });
             }
             function mdfgfOpenCustomSelect(select){
                 var customSelect = select.siblings('.mdfgf-custom-select');
+                customSelect.parent().addClass('mdfgf-custom-select-open');
                 customSelect.show();
                 setTimeout(function(){
                     customSelect.addClass('open');
@@ -120,15 +122,11 @@ class MDFGF {
                         mdfgfCloseCustomSelects();
                     }
                     if(e.type === 'keydown'){
-                        console.log('Keydown '+e.keyCode);
-                        
                         if (parseInt(e.keyCode) === 38 && $(this).prev()) {
-                            console.log('Up');
                             e.preventDefault();
                             $(this).prev().focus();
                         }
                         if (parseInt(e.keyCode) === 40 && $(this).next()) {
-                            console.log('Down');
                             e.preventDefault();
                             $(this).next().focus();
                         }
@@ -235,7 +233,6 @@ class MDFGF {
                     if (!$(this).siblings('.mdfgf-custom-select').length) {
                         var select = $('<div class="mdfgf-custom-select"></div>');
                         $(this).after(select);
-                        $(this).parent().css('position', 'relative');
                         $(this).find('option').each(function(){
                             select.append('<button type="button" data-value="'+$(this).val()+'">'+$(this).html()+'</button>');
                         });
