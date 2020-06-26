@@ -116,19 +116,24 @@ class MDFGF {
                 },1);
                 customSelect.find('button:first-child').focus();
                 customSelect.find('button').off().on('click keydown tap', function(e){
+
                     if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32))){
                         $(this).parent().siblings('select').val($(this).attr('data-value'));
                         $(this).parent().siblings('select').focus();
                         mdfgfCloseCustomSelects();
+                        e.preventDefault();
+                        return false;
                     }
                     if(e.type === 'keydown'){
                         if (parseInt(e.keyCode) === 38 && $(this).prev()) {
-                            e.preventDefault();
                             $(this).prev().focus();
-                        }
-                        if (parseInt(e.keyCode) === 40 && $(this).next()) {
                             e.preventDefault();
+                            return false;
+                        }
+                        if ((parseInt(e.keyCode) === 40 && parseInt(e.keyCode) === 40) && $(this).next()) {
                             $(this).next().focus();
+                            e.preventDefault();
+                            return false;
                         }
                     }
                 });
