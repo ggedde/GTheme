@@ -593,10 +593,12 @@ select.mdfgf-input {
     padding: 0;
     display: none;
     opacity: 0;
-    transition: opacity .1s ease-in-out;
+    transition: opacity .1s ease-in-out, transform .1s ease-in-out;
+    transform-origin: top;
     background-color: #f4f4f4;
     max-height: 300px;
     overflow-y: auto;
+    transform: scaleY(0.8);
     button {
         display: block;
         width: 100%;
@@ -630,6 +632,7 @@ select.mdfgf-input {
     }
     &.open {
         opacity: 1;
+        transform: scaleY(1);
     }
     @media (prefers-color-scheme: dark) {
         background-color: #333;
