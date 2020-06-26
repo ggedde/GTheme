@@ -432,6 +432,7 @@ class MDFGF {
         $design = 'mdfgf-mdfgf';
         $textColorClass = '';
         $autoGrowTextareas = false;
+        $colorString = '';
         
         if (class_exists('GFAPI') && function_exists('rgar')) {
             if ($form = GFAPI::get_form( $attributes['id'])) {
@@ -454,10 +455,10 @@ class MDFGF {
             }
         }
 
-        if ($attributes['mdfgf_color']) {
+        if (isset($attributes['mdfgf_color'])) {
             $mainColor = esc_attr($attributes['mdfgf_color']);
         }
-        if ($attributes['mdfgf_theme']) {
+        if (isset($attributes['mdfgf_theme'])) {
             $themeClass = esc_attr($attributes['mdfgf_theme']);
         }
         if (isset($attributes['mdfgf_text_class'])) {
