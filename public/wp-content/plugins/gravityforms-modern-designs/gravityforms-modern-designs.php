@@ -102,24 +102,18 @@ class MDFGF {
                 }
                 return false;
             }
-            function mdfgfCloseCustomSelects(){
-                $('.mdfgf-custom-select.open').each(function(){
-                    var customSelect = $(this);
-                    customSelect.removeClass('open');
-                    setTimeout(function(){
-                        customSelect.hide();
-                        customSelect.parent().removeClass('mdfgf-custom-select-open');
-                    }, 200);
-                    customSelect.find('button').off();
+            function mdfgfCloseCustomSelects(force){
+                $('.mdfgf-select-open').each(function(){
+                    $(this).removeClass('mdfgf-select-open');
+                    $(this).find('.mdfgf-custom-select').hide().find('button').off();
                 });
             }
             function mdfgfOpenCustomSelect(select){
-                mdfgfCloseCustomSelects();
+                mdfgfCloseCustomSelects(true);
                 var customSelect = select.siblings('.mdfgf-custom-select');
-                customSelect.parent().addClass('mdfgf-custom-select-open');
                 customSelect.show();
                 setTimeout(function(){
-                    customSelect.addClass('open');
+                    customSelect.parent().addClass('mdfgf-select-open');
                 },1);
                 if (customSelect.find('button.active').length) {
                     customSelect.find('button.active').focus();
@@ -129,14 +123,31 @@ class MDFGF {
                 customSelect.find('button').off().on('click keydown tap', function(e){                    
                     if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32 || parseInt(e.keyCode) === 27))){
                         if (e.type !== 'keydown' || parseInt(e.keyCode) !== 27) {
-                            $(this).parent().siblings('select').val($(this).attr('data-value'));
-                            $(this).siblings().removeClass('active');
-                            $(this).addClass('active');
+                            if (customSelect.hasClass('multiple')) {
+                                if ($(this).hasClass('active')) {
+                                    $(this).removeClass('active');
+                                    customSelect.siblings('select').find("option:nth-child("+($(this).index() + 1)+")").prop("selected", false);
+                                } else {
+                                    $(this).addClass('active');
+                                    customSelect.siblings('select').find("option:nth-child("+($(this).index() + 1)+")").prop("selected", true);
+                                }
+                                customSelect.siblings('.mdfgf-multi-text').html(customSelect.siblings('select').val().join(', '));
+                                select.trigger('change');
+                                e.preventDefault();
+                                return false;
+                            } else {
+                                $(this).parent().siblings('select').val($(this).attr('data-value'));
+                                select.trigger('change');
+                                $(this).siblings().removeClass('active');
+                                $(this).addClass('active');
+                            }
                         }
                         if(!isMobile()) {
                             $(this).parent().siblings('select').focus();
                         }
-                        mdfgfCloseCustomSelects();
+                        if (!customSelect.hasClass('multiple') || (customSelect.hasClass('multiple') && e.type === 'keydown' && parseInt(e.keyCode) === 27)) {
+                            mdfgfCloseCustomSelects();
+                        }
                         e.preventDefault();
                         return false;
                     }
@@ -237,11 +248,13 @@ class MDFGF {
                 //         $(this).parent().find('.gfield_label').addClass('active');
                 //     }
                 // });
-                $('.mdfgf-container .gfield_error input, .mdfgf-container .gfield_error select, .mdfgf-container .gfield_error textarea').on('change', function(){
+                $('.mdfgf-use-custom-selects .mdfgf-render select').wrap('<div class="mdfgf-select"></div>');
+
+                $('.mdfgf-render .gfield_error .mdfgf-input').on('change', function(){
                     $(this).closest('.gfield_error').removeClass('gfield_error');
                 });
 
-                $('.mdfgf-auto-grow-textareas textarea').attr('rows', 0).css({'min-height': '80px', 'max-height': '300px', 'overflow': 'auto'}).on('input', function(){
+                $('.mdfgf-auto-grow-textareas .mdfgf-render textarea').attr('rows', 0).css({'min-height': '80px', 'max-height': '300px', 'overflow': 'auto'}).on('input', function(){
                     var element = $(this)[0];
                     if (element && typeof element.scrollHeight !== 'undefined') {
                         if (element.scrollHeight > 80) {
@@ -250,23 +263,28 @@ class MDFGF {
                     }
                 });
 
-                $('.mdfgf-use-custom-selects select').each(function(){
-                    if (!$(this).siblings('.mdfgf-custom-select').length) {
-                        var select = $('<div class="mdfgf-custom-select"></div>');
-                        $(this).after(select);
+                $('.mdfgf-use-custom-selects .mdfgf-render .mdfgf-select').each(function(){
+                    if (!$(this).find('.mdfgf-custom-select').length) {
+                        var select = $('<div class="mdfgf-custom-select'+($(this).find('select').prop('multiple') ? ' multiple' : '')+'"></div>');
+                        if ($(this).find('select').prop('multiple')) {
+                            $(this).append('<div class="mdfgf-multi-text mdfgf-input"></div>');
+                        }
+                        $(this).append(select);
                         $(this).find('option').each(function(){
-                            select.append('<button type="button" data-value="'+$(this).val()+'">'+$(this).html()+'</button>');
+                            select.append('<button type="button" data-value="'+$(this).val()+'"'+($(this).prop('disabled') ? ' disabled' : '')+($(this).prop('selected') ? ' class="active"' : '')+'>'+$(this).html()+'</button>');
                         });
                     }
                 });
 
-                $('.mdfgf-use-custom-selects select').on('click keydown tap', function(e){
+                $('.mdfgf-use-custom-selects .mdfgf-render select').on('click keydown tap', function(e){
                     if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32 || parseInt(e.keyCode) === 38 || parseInt(e.keyCode) === 40))){
                         mdfgfOpenCustomSelect($(this));
                         e.preventDefault();
                         return false;
                     }
                 });
+
+                $('.mdfgf-render').removeClass('mdfgf-render');
             }
 
             $(document).on('gform_post_render', function(event, form_id, current_page){
@@ -321,7 +339,7 @@ class MDFGF {
         // echo '<pre>';print_r($form);echo '</pre>';
         
         if (!empty($form['mdfgf_design'])) {
-            $form['cssClass'].= (empty($form['cssClass']) ? '' : ' ').$form['mdfgf_design'];
+            $form['cssClass'].= (empty($form['cssClass']) ? '' : ' ').$form['mdfgf_design'].' mdfgf-render';
         }
         return $form;
     }
@@ -527,11 +545,17 @@ class MDFGF {
 .gform_wrapper_original_id_'.$attributes['id'].' .ginput_container input[type="checkbox"]:checked:after,
 #gform_wrapper_'.$attributes['id'].' .ginput_container input[type="radio"]:checked:after,
 .gform_wrapper_original_id_'.$attributes['id'].' .ginput_container input[type="radio"]:checked:after,
-#gform_wrapper_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:active:before,
-.gform_wrapper_original_id_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:active:before,
-#gform_wrapper_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:before,
-.gform_wrapper_original_id_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:before {
+#gform_wrapper_'.$attributes['id'].' input[type="file"]:active:before,
+.gform_wrapper_original_id_'.$attributes['id'].' input[type="file"]:active:before,
+#gform_wrapper_'.$attributes['id'].' input[type="file"]:before,
+.gform_wrapper_original_id_'.$attributes['id'].' input[type="file"]:before,
+#gform_wrapper_'.$attributes['id'].' select[multiple="multiple"] option:checked,
+.gform_wrapper_original_id_'.$attributes['id'].' select[multiple="multiple"] option:checked,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-custom-select.multiple button.active:after,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-custom-select.multiple button.active:after {
     background-color: '.$mainColor.';
+    border-color: '.$mainColor.';
+    color: #eee;
 }
 #gform_wrapper_'.$attributes['id'].' .mdfgf-input:focus,
 .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-input:focus {
@@ -539,12 +563,12 @@ class MDFGF {
 }
 #gform_wrapper_'.$attributes['id'].' .button:hover,
 .gform_wrapper_original_id_'.$attributes['id'].' .button:hover,
-#gform_wrapper_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:hover:before,
-.gform_wrapper_original_id_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:hover:before,
+#gform_wrapper_'.$attributes['id'].' input[type="file"]:hover:before,
+.gform_wrapper_original_id_'.$attributes['id'].' input[type="file"]:hover:before,
 #gform_wrapper_'.$attributes['id'].' .button:focus,
 .gform_wrapper_original_id_'.$attributes['id'].' .button:focus,
-#gform_wrapper_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:focus:before, 
-    .gform_wrapper_original_id_'.$attributes['id'].' .ginput_container_fileupload input[type="file"]:focus:before {
+#gform_wrapper_'.$attributes['id'].' input[type="file"]:focus:before, 
+    .gform_wrapper_original_id_'.$attributes['id'].' input[type="file"]:focus:before {
     background-color: '.$hoverColor.';
 }
 </style>';
