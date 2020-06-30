@@ -321,6 +321,9 @@ li.gfield.mdfgf-field-type-address {
         .mdfgf-container.mdfgf-theme-ash & {
             background-color: rgba(50,50,50,1);
         }
+        .gform_delete {
+            cursor: pointer;
+        }
     }
 
     .mdfgf-multifile {
@@ -708,12 +711,18 @@ textarea.mdfgf-input {
         display: none;
     }
 }
+
+.mdfgf-container.mdfgf-theme-ash .ginput_preview .gform_delete,
+.mdfgf-container.mdfgf-theme-dark .ginput_preview .gform_delete {
+    filter: brightness(2);
+}
 @each $theme-name, $theme in $themes {
     @if $theme-name != 'default' {
         .mdfgf-theme-#{$theme-name} .mdfgf-input,
         .mdfgf-theme-#{$theme-name} .gf_progressbar,
         .mdfgf-theme-#{$theme-name} .gf_page_steps .gf_step,
-        .mdfgf-theme-#{$theme-name} .mdfgf-multifile [id^="gform_preview"] {
+        .mdfgf-theme-#{$theme-name} .mdfgf-multifile [id^="gform_preview"],
+        .mdfgf-theme-#{$theme-name} .gform_fileupload_multifile .gform_drop_area {
             @if map.get($theme, 'input-text-color') {
                 color: map.get($theme, 'input-text-color');
             }
@@ -762,9 +771,6 @@ textarea.mdfgf-input {
             .button:focus,
             input[type="file"]:focus:before {
                 background-color: map.get($theme, 'accent-highlight-color');
-            }
-            .gform_fileupload_multifile .gform_drop_area {
-                border: 3px dashed map.get(map.get($themes, 'default'), 'border-color');
             }
         }
     }
