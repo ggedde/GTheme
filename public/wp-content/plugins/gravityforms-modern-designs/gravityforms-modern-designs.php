@@ -328,11 +328,13 @@ class MDFGF {
                 mdfgfUpdateUploadPreviews();
             });
 
-            gform.addFilter( 'gform_file_upload_markup', function( html, file, up, strings, imagesUrl ) {
-                html = html.split('gformDeleteUploadedFile(').join('mdfgfUpdateUploadPreviews();gformDeleteUploadedFile(')
-                mdfgfUpdateUploadPreviews();
-                return html;
-            });
+            if (typeof gform !== 'undefined') {
+                gform.addFilter( 'gform_file_upload_markup', function( html, file, up, strings, imagesUrl ) {
+                    html = html.split('\'gformDeleteUploadedFile(').join('\'mdfgfUpdateUploadPreviews();gformDeleteUploadedFile(')
+                    mdfgfUpdateUploadPreviews();
+                    return html;
+                });
+            }
 
             mdfgfRenderForms();
         });
@@ -495,6 +497,8 @@ class MDFGF {
                 }
             }
         }
+
+        $content = str_replace("'gformDeleteUploadedFile(", "'mdfgfUpdateUploadPreviews();gformDeleteUploadedFile(", $content);
 
         return $content;
 

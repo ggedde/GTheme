@@ -299,7 +299,7 @@ li.gfield.mdfgf-field-type-address {
         height: calc(100% - 2px);
         background-color: #fcfcfc;
         margin: 1px;
-        width: calc(100% - 17px);
+        width: calc(100% - 2px);
         top: 0;
         left: 0;
         border-radius: 2px;
@@ -309,7 +309,6 @@ li.gfield.mdfgf-field-type-address {
         img {
             order: 1;
             margin: 3px;
-
         }
         .mdfgf-container.mdfgf-theme-greyish & {
             background-color: rgba(242,242,243,1);
