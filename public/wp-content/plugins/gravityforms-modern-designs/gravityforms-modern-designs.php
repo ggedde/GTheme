@@ -248,45 +248,67 @@ class MDFGF {
                 //         $(this).parent().find('.gfield_label').addClass('active');
                 //     }
                 // });
-                $('.mdfgf-render select').each(function(){
-                    $(this).wrap('<div class="mdfgf-select'+($(this).prop('multiple') ? ' multiple' : '')+'"></div>');
-                })
 
-                $('.mdfgf-render .gfield_error .mdfgf-input').on('change', function(){
-                    $(this).closest('.gfield_error').removeClass('gfield_error');
-                });
+                $('.mdfgf-render').each(function(){
+                    var form = $(this);
+                    var formId = $(this).attr('id');
+                
+                    if (form.find('.gf_page_steps .gf_step').length) {
+                        form.find('.gf_page_steps .gf_step').after('<div class="mdfgf-step-spacer"></div>');
+                        var steps = form.find('.gf_step').length;
+                        form.find('.mdfgf-step-spacer').css('width', 'calc('+(100 / (steps - 1))+'% - '+(42 * (steps - 1))+'px)');
+                    }
 
-                $('.mdfgf-auto-grow-textareas .mdfgf-render textarea').attr('rows', 0).css({'min-height': '80px', 'max-height': '300px', 'overflow': 'auto'}).on('input', function(){
-                    var element = $(this)[0];
-                    if (element && typeof element.scrollHeight !== 'undefined') {
-                        if (element.scrollHeight > 80) {
-                            element.style.height = element.scrollHeight+"px";
+                    form.find('select').each(function(){
+                        $(this).wrap('<div class="mdfgf-select'+($(this).prop('multiple') ? ' multiple' : '')+'"></div>');
+                    })
+
+                    form.find('.gform_button, .gform_next_button, .gform_previous_button').each(function(){
+                        $(this).wrap('<span class="mdfgf-button'+($(this).hasClass('gform_next_button') ? ' mdfgf-next' : ($(this).hasClass('gform_previous_button') ? ' mdfgf-prev' : ($(this).hasClass('gform_button') ? ' mdfgf-submit' : '')))+'"></span>');
+                    })
+                    form.off('submit.mdfgf').on('submit.mdfgf', function(){
+                        $(this).addClass('mdfgf-submitted');
+                    });
+                    form.find('.gform_page:visible .mdfgf-prev').on('click.mdfgf').on('click.mdfgf', function(e){
+                        $(this).closest('form').addClass('mdfgf-prev-submitted');
+                    });
+
+                    form.find('.gfield_error .mdfgf-input').on('change', function(){
+                        $(this).closest('.gfield_error').removeClass('gfield_error');
+                    });
+
+                    $('.mdfgf-auto-grow-textareas #'+formId+'.mdfgf-render textarea').attr('rows', 0).css({'min-height': '80px', 'max-height': '300px', 'overflow': 'auto'}).on('input', function(){
+                        var element = $(this)[0];
+                        if (element && typeof element.scrollHeight !== 'undefined') {
+                            if (element.scrollHeight > 80) {
+                                element.style.height = element.scrollHeight+"px";
+                            }
                         }
-                    }
-                });
+                    });
 
-                $('.mdfgf-use-custom-selects .mdfgf-render .mdfgf-select').each(function(){
-                    if (!$(this).find('.mdfgf-custom-select').length) {
-                        var select = $('<div class="mdfgf-custom-select'+($(this).find('select').prop('multiple') ? ' multiple' : '')+'"></div>');
-                        if ($(this).find('select').prop('multiple')) {
-                            $(this).append('<div class="mdfgf-multi-text mdfgf-input"></div>');
+                    $('.mdfgf-use-custom-selects #'+formId+'.mdfgf-render .mdfgf-select').each(function(){
+                        if (!$(this).find('.mdfgf-custom-select').length) {
+                            var select = $('<div class="mdfgf-custom-select'+($(this).find('select').prop('multiple') ? ' multiple' : '')+'"></div>');
+                            if ($(this).find('select').prop('multiple')) {
+                                $(this).append('<div class="mdfgf-multi-text mdfgf-input"></div>');
+                            }
+                            $(this).append(select);
+                            $(this).find('option').each(function(){
+                                select.append('<button type="button" data-value="'+$(this).val()+'"'+($(this).prop('disabled') ? ' disabled' : '')+($(this).prop('selected') ? ' class="active"' : '')+'>'+$(this).html()+'</button>');
+                            });
                         }
-                        $(this).append(select);
-                        $(this).find('option').each(function(){
-                            select.append('<button type="button" data-value="'+$(this).val()+'"'+($(this).prop('disabled') ? ' disabled' : '')+($(this).prop('selected') ? ' class="active"' : '')+'>'+$(this).html()+'</button>');
-                        });
-                    }
-                });
+                    });
 
-                $('.mdfgf-use-custom-selects .mdfgf-render select').on('click keydown tap', function(e){
-                    if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32 || parseInt(e.keyCode) === 38 || parseInt(e.keyCode) === 40))){
-                        mdfgfOpenCustomSelect($(this));
-                        e.preventDefault();
-                        return false;
-                    }
-                });
+                    $('.mdfgf-use-custom-selects #'+formId+'.mdfgf-render select').on('click keydown tap', function(e){
+                        if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32 || parseInt(e.keyCode) === 38 || parseInt(e.keyCode) === 40))){
+                            mdfgfOpenCustomSelect($(this));
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
 
-                $('.mdfgf-render').removeClass('mdfgf-render');
+                    $(this).removeClass('mdfgf-render');
+                });
             }
 
             $(document).on('gform_post_render', function(event, form_id, current_page){
@@ -537,39 +559,45 @@ class MDFGF {
             $colorString = '
         <style>
 /* Modern Designs for Gravity Forms Custom css for Single Form */
-#gform_wrapper_'.$attributes['id'].' .button,
-.gform_wrapper_original_id_'.$attributes['id'].' .button,
-#gform_wrapper_'.$attributes['id'].' .button:active,
-.gform_wrapper_original_id_'.$attributes['id'].' .button:active,
-#gform_wrapper_'.$attributes['id'].' .gf_progressbar .gf_progressbar_percentage,
-.gform_wrapper_original_id_'.$attributes['id'].' .gf_progressbar .gf_progressbar_percentage,
-#gform_wrapper_'.$attributes['id'].' .ginput_container input[type="checkbox"]:checked:after,
-.gform_wrapper_original_id_'.$attributes['id'].' .ginput_container input[type="checkbox"]:checked:after,
-#gform_wrapper_'.$attributes['id'].' .ginput_container input[type="radio"]:checked:after,
-.gform_wrapper_original_id_'.$attributes['id'].' .ginput_container input[type="radio"]:checked:after,
-#gform_wrapper_'.$attributes['id'].' input[type="file"]:active:before,
-.gform_wrapper_original_id_'.$attributes['id'].' input[type="file"]:active:before,
-#gform_wrapper_'.$attributes['id'].' input[type="file"]:before,
-.gform_wrapper_original_id_'.$attributes['id'].' input[type="file"]:before,
-#gform_wrapper_'.$attributes['id'].' select[multiple="multiple"] option:checked,
-.gform_wrapper_original_id_'.$attributes['id'].' select[multiple="multiple"] option:checked,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .button,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .button,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .button:active,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .button:active,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .gf_progressbar .gf_progressbar_percentage,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .gf_progressbar .gf_progressbar_percentage,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .ginput_container input[type="checkbox"]:checked:after,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .ginput_container input[type="checkbox"]:checked:after,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .ginput_container input[type="radio"]:checked:after,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .ginput_container input[type="radio"]:checked:after,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' input[type="file"]:active:before,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' input[type="file"]:active:before,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' input[type="file"]:before,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' input[type="file"]:before,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' select[multiple="multiple"] option:checked,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' select[multiple="multiple"] option:checked,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-custom-select.multiple button.active:after,
-.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-custom-select.multiple button.active:after {
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-custom-select.multiple button.active:after,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .gf_page_steps .gf_step_active,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .gf_page_steps .gf_step_active,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .gf_page_steps .gf_step_completed,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .gf_page_steps .gf_step_completed,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .gf_page_steps .gf_step_completed + .mdfgf-step-spacer,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .gf_page_steps .gf_step_completed + .mdfgf-step-spacer {
     background-color: '.$mainColor.';
     border-color: '.$mainColor.';
     color: #eee;
 }
-#gform_wrapper_'.$attributes['id'].' .mdfgf-input:focus,
-.gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-input:focus {
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-input:focus,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-input:focus {
     border-color: '.$mainColor.';
 }
-#gform_wrapper_'.$attributes['id'].' .button:hover,
-.gform_wrapper_original_id_'.$attributes['id'].' .button:hover,
-#gform_wrapper_'.$attributes['id'].' input[type="file"]:hover:before,
-.gform_wrapper_original_id_'.$attributes['id'].' input[type="file"]:hover:before,
-#gform_wrapper_'.$attributes['id'].' .button:focus,
-.gform_wrapper_original_id_'.$attributes['id'].' .button:focus,
-#gform_wrapper_'.$attributes['id'].' input[type="file"]:focus:before, 
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .button:hover,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .button:hover,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' input[type="file"]:hover:before,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' input[type="file"]:hover:before,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .button:focus,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .button:focus,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' input[type="file"]:focus:before, 
     .gform_wrapper_original_id_'.$attributes['id'].' input[type="file"]:focus:before {
     background-color: '.$hoverColor.';
 }

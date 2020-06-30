@@ -10,6 +10,9 @@ $themes: (
         'error-color': rgba(250,10,20,.8),
         'input-text-color': rgba(0,0,0,.8),
         'arrow-color': rgba(0,0,0,0.6),
+        'accent-color': rgba(0,0,0,0.4),
+        'accent-highlight-color': rgba(0,0,0,0.5),
+        'accent-text-color': rgba(255,255,255,0.9),
     ),
     'greyish': (
         'border-color': rgba(0,0,0,0.1),
@@ -19,6 +22,9 @@ $themes: (
         'error-color': rgba(250,10,20,.8),
         'input-text-color': rgba(0,0,0,.6),
         'arrow-color': rgba(0,0,0,0.5),
+        'accent-color': rgba(0,0,0,0.4),
+        'accent-highlight-color': rgba(0,0,0,0.5),
+        'accent-text-color': rgba(255,255,255,0.8),
     ),
     'vivid': (
         'border-color': rgba(0,0,0,0.6),
@@ -28,6 +34,9 @@ $themes: (
         'error-color': rgba(250,10,20,.8),
         'input-text-color': rgba(0,0,0,.9),
         'arrow-color': rgba(0,0,0,0.8),
+        'accent-color': rgba(0,0,0,0.7),
+        'accent-highlight-color': rgba(0,0,0,0.5),
+        'accent-text-color': #fff,
     ),
     'ash': (
         'border-color': rgba(0,0,0,0.7),
@@ -36,6 +45,9 @@ $themes: (
         'checkbox-checked-background-color': rgba(255,255,255,0.7),
         'error-color': rgba(252,182,93,.8),
         'arrow-color': rgba(0,0,0,1),
+        'accent-color': rgba(255,255,255,0.25),
+        'accent-highlight-color': rgba(255,255,255,0.4),
+        'accent-text-color': rgba(255,255,255,0.8),
     ),
     'dark': (
         'border-color': rgba(255,255,255,0.3),
@@ -45,12 +57,16 @@ $themes: (
         'error-color': rgba(252,90,73,.8),
         'input-text-color': rgba(255,255,255,.7),
         'arrow-color': rgba(255,255,255,0.6),
+        'accent-color': rgba(255,255,255,0.4),
+        'accent-highlight-color': rgba(255,255,255,0.6),
+        'accent-text-color': rgba(255,255,255,0.9),
     )
 );
 
 .mdfgf-container ul.gform_fields,
 .mdfgf-container ul.gfield_checkbox,
 .mdfgf-container ul.gfield_radio,
+.mdfgf-container .gf_page_steps,
 .mdfgf-row {
     width: 100%;
     display: flex;
@@ -234,14 +250,12 @@ li.gfield.mdfgf-field-type-address {
         line-height: 40px;
         min-width: 140px;
         text-align: center;
-        color: white;
         font-size: .8em;
         font-weight: 400;
         text-transform: uppercase;
         margin: auto;
         display: inline-block;
-        transition: background-color .2s ease-in-out;
-        background-color: rgba(40,40,40,.6);
+        transition: background-color .2s ease-in-out, color .2s ease-in-out;
     }
     .ginput_container_fileupload, 
     .ginput_container_post_image {
@@ -316,41 +330,6 @@ li.gfield.mdfgf-field-type-address {
         line-height: 24px;
         background-color: rgba(40,40,40,.6);
     }
-    .button:hover,
-    input[type="file"]:hover:before,
-    .button:focus,
-    input[type="file"]:focus:before {
-        background-color: rgba(40,40,40,.8);
-    }
-    .gf_progressbar { 
-        min-height: 0;
-        padding: 4px;
-        margin: 1rem 0 2rem;
-        overflow: hidden;
-        .gf_progressbar_percentage {
-            position: relative;
-            color: #eee;
-            font-size: 12px;
-            padding: 0;
-            text-align: right;
-            border-radius: 3px;
-            background-color: rgba(40,40,40,.5);
-            &:before {
-                content: '';
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                right: 0;
-                left: 0;
-                background: repeating-linear-gradient(135deg, #fff, #fff 10px, transparent 10px, transparent 20px);
-                opacity: 0.2;
-            }
-            span {
-                padding: 0 10px;
-                position: relative;
-            }
-        }
-    }
     .ginput_container input[type="checkbox"],
     .ginput_container input[type="radio"] {
         opacity: 1;
@@ -411,23 +390,68 @@ li.gfield.mdfgf-field-type-address {
     .gform_ajax_spinner,
     .gform_validation_container,
     &.mdfgf-use-custom-selects select option,
+    .gf_step_clear,
     .gf_clear_complex {
         display: none;
+    }
+
+    .gform_footer {
+        text-align: center;
     }
 
     .gform_page_footer {
         display: flex;
     }
 
-    .gform_page_footer .button {
+    .gform_page_footer .mdfgf-button {
         margin: auto;
+        margin-right: 0;
     }
-    .gform_previous_button {
+    .gform_page_footer .mdfgf-prev {
+        margin-right: auto;
         margin-left: 0;
     }
-    .gform_next_button,
-    .gform_button[type="submit"] {
-        margin-right: 0;
+    .mdfgf-button {
+        position: relative;
+        display: inline-block;
+        @keyframes spinner {
+            to {transform: rotate(360deg);}
+        }
+        input, 
+        button {
+            transition: background-color .2s ease-in-out, color .2s ease-in-out;
+        }
+        &:before {
+            content: '';
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: #fff;
+            border-right-color: #fff;
+            animation: spinner .7s ease infinite;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .3s ease-in-out .1s;
+        }
+    }
+    .mdfgf-prev-submitted .mdfgf-prev,
+    .mdfgf-submitted:not(.mdfgf-prev-submitted) .mdfgf-next,
+    .mdfgf-submitted:not(.mdfgf-prev-submitted) .mdfgf-submit {
+        input, 
+        button {
+            color: transparent !important;
+        }
+        &:before {
+            opacity: 1;
+        }
     }
 }
 
@@ -447,8 +471,14 @@ select.mdfgf-input {
     max-width: 100%;
 }
 
+textarea.mdfgf-input {
+    line-height: 1.2;
+    padding: 10px;
+}
+
 .mdfgf-input,
-.mdfgf-container .gf_progressbar {
+.mdfgf-container .gf_progressbar,
+.gf_page_steps .gf_step {
     width: 100%;
     color: inherit;
     outline: none;
@@ -465,6 +495,62 @@ select.mdfgf-input {
     &:focus,
     &:checked {
         box-shadow: inset 0 0 0 3px rgba(150,150,150, .1);
+    }
+}
+
+.mdfgf-container .gf_progressbar { 
+    min-height: 0;
+    height: auto;
+    line-height: 1;
+    padding: 4px;
+    margin: 1rem 0 2rem;
+    overflow: hidden;
+    .gf_progressbar_percentage {
+        position: relative;
+        color: #eee;
+        font-size: 12px;
+        padding: 2px;
+        text-align: right;
+        border-radius: 3px;
+        background-color: rgba(40,40,40,.5);
+        &:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background: repeating-linear-gradient(135deg, #fff, #fff 10px, transparent 10px, transparent 20px);
+            opacity: 0.2;
+        }
+        span {
+            padding: 0 10px;
+            position: relative;
+        }
+    }
+}
+
+.mdfgf-container .gf_page_steps {
+    margin: 1rem 0;
+    .gf_step {
+        position: relative;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        text-align: center;
+        .gf_step_number {
+            display: block;
+            line-height: 34px;
+        }
+    }
+    .mdfgf-step-spacer {
+        height: 1px;
+        width: 100px;
+        position: relative;
+        margin-top: 17px;
+    }
+    .gf_step_last + .mdfgf-step-spacer {
+        display: none;
     }
 }
 
@@ -517,7 +603,9 @@ select.mdfgf-input {
     }
 }
 
-.mdfgf-input {
+.mdfgf-input,
+.mdfgf-container .gf_progressbar,
+.mdfgf-container .gf_page_steps .gf_step {
     border: 1px solid map.get(map.get($themes, 'default'), 'border-color');
     background-color: map.get(map.get($themes, 'default'), 'background-color');
     @if map.get(map.get($themes, 'default'), 'input-text-color') {
@@ -550,9 +638,35 @@ select.mdfgf-input {
 .validation_error {
     color: map.get(map.get($themes, 'default'), 'error-color');
 }
+.mdfgf-step-spacer {
+    background-color: map.get(map.get($themes, 'default'), 'border-color');
+    opacity: 0.5;
+}
+.mdfgf-container .gf_step_completed + .mdfgf-step-spacer {
+    background-color: map.get(map.get($themes, 'default'), 'border-color-focus');
+    opacity: 1;
+}
+
+.mdfgf-container {
+    .button,
+    input[type="file"]:before,
+    .gf_page_steps .gf_step.gf_step_active,
+    .gf_page_steps .gf_step.gf_step_completed {
+        background-color: map.get(map.get($themes, 'default'), 'accent-color');
+        color: map.get(map.get($themes, 'default'), 'accent-text-color');
+    }
+    .button:hover,
+    input[type="file"]:hover:before,
+    .button:focus,
+    input[type="file"]:focus:before {
+        background-color: map.get(map.get($themes, 'default'), 'accent-highlight-color');
+    }
+}
 @each $theme-name, $theme in $themes {
     @if $theme-name != 'default' {
-        .mdfgf-theme-#{$theme-name} .mdfgf-input {
+        .mdfgf-theme-#{$theme-name} .mdfgf-input,
+        .mdfgf-theme-#{$theme-name} .gf_progressbar,
+        .mdfgf-theme-#{$theme-name} .gf_page_steps .gf_step {
             @if map.get($theme, 'input-text-color') {
                 color: map.get($theme, 'input-text-color');
             }
@@ -582,8 +696,28 @@ select.mdfgf-input {
         .mdfgf-theme-#{$theme-name} .validation_error {
             color: map.get($theme, 'error-color');
         }
+        .mdfgf-theme-#{$theme-name} .mdfgf-step-spacer {
+            background-color: map.get($theme, 'border-color');
+        }
+        .mdfgf-theme-#{$theme-name} .gf_step_completed + .mdfgf-step-spacer {
+            background-color: map.get($theme, 'border-color-focus');
+        }
+        .mdfgf-theme-#{$theme-name} {
+            .button,
+            input[type="file"]:before,
+            .gf_page_steps .gf_step.gf_step_active,
+            .gf_page_steps .gf_step.gf_step_completed {
+                background-color: map.get($theme, 'accent-color');
+                color: map.get($theme, 'accent-text-color');
+            }
+            .button:hover,
+            input[type="file"]:hover:before,
+            .button:focus,
+            input[type="file"]:focus:before {
+                background-color: map.get($theme, 'accent-highlight-color');
+            }
+        }
     }
-    
 }
 
 .mdfgf-container:not(.mdfgf-use-custom-selects) select[multiple="multiple"] {
