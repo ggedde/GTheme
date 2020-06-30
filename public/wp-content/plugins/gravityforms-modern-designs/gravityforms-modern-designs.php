@@ -95,6 +95,17 @@ class MDFGF {
         ?>
 <script>
     if(typeof window.jQuery !== 'undefined') {
+        function mdfgfUpdateUploadPreviews() {
+            setTimeout(function(){
+                jQuery('.mdfgf-multifile [id^="gform_preview"]').each(function(){
+                    if (jQuery(this).find('.ginput_preview').length) {
+                        jQuery(this).fadeIn(200);
+                    } else {
+                        jQuery(this).fadeOut(200);
+                    }
+                });
+            }, 100);
+        }
         jQuery(function($){
             function isMobile() {
                 if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
@@ -108,6 +119,7 @@ class MDFGF {
                     $(this).find('.mdfgf-custom-select').hide().find('button').off();
                 });
             }
+            
             function mdfgfOpenCustomSelect(select){
                 mdfgfCloseCustomSelects(true);
                 var customSelect = select.siblings('.mdfgf-custom-select');
@@ -313,6 +325,13 @@ class MDFGF {
 
             $(document).on('gform_post_render', function(event, form_id, current_page){
                 mdfgfRenderForms();
+                mdfgfUpdateUploadPreviews();
+            });
+
+            gform.addFilter( 'gform_file_upload_markup', function( html, file, up, strings, imagesUrl ) {
+                html = html.split('gformDeleteUploadedFile(').join('mdfgfUpdateUploadPreviews();gformDeleteUploadedFile(')
+                mdfgfUpdateUploadPreviews();
+                return html;
             });
 
             mdfgfRenderForms();
@@ -387,6 +406,10 @@ class MDFGF {
 
         if ($field->type === 'fileupload' && !empty($field['allowedExtensions'])) {
             $classes.= ' mdfgf-show-extensions';
+        }
+
+        if ($field->type === 'fileupload' && !empty($field['multipleFiles'])) {
+            $classes.= ' mdfgf-multifile';
         }
 
         if (in_array($field->type, self::$singleTextFields)) {

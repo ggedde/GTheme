@@ -10,8 +10,8 @@ $themes: (
         'error-color': rgba(250,10,20,.8),
         'input-text-color': rgba(0,0,0,.8),
         'arrow-color': rgba(0,0,0,0.6),
-        'accent-color': rgba(0,0,0,0.4),
-        'accent-highlight-color': rgba(0,0,0,0.5),
+        'accent-color': rgba(0,0,0,0.5),
+        'accent-highlight-color': rgba(0,0,0,0.4),
         'accent-text-color': rgba(255,255,255,0.9),
     ),
     'greyish': (
@@ -293,35 +293,57 @@ li.gfield.mdfgf-field-type-address {
             right: 0;
             width: 100%;
         }
-        .ginput_preview {
-            position: absolute;
-            height: calc(100% - 2px);
-            background-color: #fcfcfc;
-            margin: 1px;
-            width: calc(100% - 17px);
-            top: 0;
-            left: 0;
-            border-radius: 2px;
-            display: flex;
-            align-items: center;
-            padding-left: 15px;
-            img {
-                order: 1;
-                margin: 3px;
+    }
+    .ginput_preview {
+        position: absolute;
+        height: calc(100% - 2px);
+        background-color: #fcfcfc;
+        margin: 1px;
+        width: calc(100% - 17px);
+        top: 0;
+        left: 0;
+        border-radius: 2px;
+        display: flex;
+        align-items: center;
+        padding-left: 15px;
+        img {
+            order: 1;
+            margin: 3px;
 
-            }
-            .mdfgf-container.mdfgf-theme-greyish & {
-                background-color: rgba(242,242,243,1);
-            }
-            .mdfgf-container.mdfgf-theme-vivid & {
-                background-color: rgba(255,255,255,1);
-            }
-            .mdfgf-container.mdfgf-theme-dark &,
-            .mdfgf-container.mdfgf-theme-ash & {
-                background-color: rgba(50,50,50,1);
+        }
+        .mdfgf-container.mdfgf-theme-greyish & {
+            background-color: rgba(242,242,243,1);
+        }
+        .mdfgf-container.mdfgf-theme-vivid & {
+            background-color: rgba(255,255,255,1);
+        }
+        .mdfgf-container.mdfgf-theme-dark &,
+        .mdfgf-container.mdfgf-theme-ash & {
+            background-color: rgba(50,50,50,1);
+        }
+    }
+
+    .mdfgf-multifile {
+        .ginput_container_fileupload {
+            display: block;
+        }
+        [id^="gform_preview"] {
+            position: relative;
+            .ginput_preview {
+                position: relative;
+                background-color: transparent;
             }
         }
     }
+
+    .ginput_container_fileupload + [id^="gform_preview"] {
+        position: relative;
+        .ginput_preview {
+            position: relative;
+            background-color: transparent;
+        }
+    }
+
     .button:active {
         line-height: 41px;
         background-color: rgba(40,40,40,.6);
@@ -605,7 +627,8 @@ textarea.mdfgf-input {
 
 .mdfgf-input,
 .mdfgf-container .gf_progressbar,
-.mdfgf-container .gf_page_steps .gf_step {
+.mdfgf-container .gf_page_steps .gf_step,
+.mdfgf-multifile [id^="gform_preview"] {
     border: 1px solid map.get(map.get($themes, 'default'), 'border-color');
     background-color: map.get(map.get($themes, 'default'), 'background-color');
     @if map.get(map.get($themes, 'default'), 'input-text-color') {
@@ -661,12 +684,36 @@ textarea.mdfgf-input {
     input[type="file"]:focus:before {
         background-color: map.get(map.get($themes, 'default'), 'accent-highlight-color');
     }
+    .gform_fileupload_multifile {
+        width: 100%;
+        .gform_drop_area {
+            padding: 1.5rem;
+            text-align: center;
+            width: 100%;
+            background-color: map.get(map.get($themes, 'default'), 'background-color');
+            border: 3px dashed map.get(map.get($themes, 'default'), 'border-color');
+            border-radius: .2rem;
+            .gform_button_select_files {
+                margin: auto;
+                display: block;
+                max-width: 200px;
+                width: 100%;
+            }
+        }
+    }
+    .mdfgf-multifile [id^="gform_preview"] {
+        padding: 10px 0;
+        margin-top: 1rem;
+        border-radius: .2rem;
+        display: none;
+    }
 }
 @each $theme-name, $theme in $themes {
     @if $theme-name != 'default' {
         .mdfgf-theme-#{$theme-name} .mdfgf-input,
         .mdfgf-theme-#{$theme-name} .gf_progressbar,
-        .mdfgf-theme-#{$theme-name} .gf_page_steps .gf_step {
+        .mdfgf-theme-#{$theme-name} .gf_page_steps .gf_step,
+        .mdfgf-theme-#{$theme-name} .mdfgf-multifile [id^="gform_preview"] {
             @if map.get($theme, 'input-text-color') {
                 color: map.get($theme, 'input-text-color');
             }
@@ -716,6 +763,9 @@ textarea.mdfgf-input {
             input[type="file"]:focus:before {
                 background-color: map.get($theme, 'accent-highlight-color');
             }
+            .gform_fileupload_multifile .gform_drop_area {
+                border: 3px dashed map.get(map.get($themes, 'default'), 'border-color');
+            }
         }
     }
 }
@@ -726,7 +776,7 @@ textarea.mdfgf-input {
     option {
         padding: 6px 6px;
         margin: 2px 0;
-        border-radius: .2rem; 
+        border-radius: .2rem;
     }
 }
 
