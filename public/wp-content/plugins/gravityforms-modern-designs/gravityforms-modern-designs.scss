@@ -651,7 +651,8 @@ textarea.mdfgf-input {
         border-color: map.get(map.get($themes, 'default'), 'error-color');
     }
 }
-.mdfgf-use-custom-selects .mdfgf-custom-select {
+.mdfgf-use-custom-selects .mdfgf-custom-select,
+.mdfgf-use-custom-datepicker .ui-datepicker {
     border: 1px solid map.get(map.get($themes, 'default'), 'border-color');
 }
 .mdfgf-select:after {
@@ -830,7 +831,7 @@ textarea.mdfgf-input {
     opacity: 0;
     transition: opacity .1s ease-in-out, transform .1s ease-in-out;
     transform-origin: top;
-    background-color: #f4f4f4;
+    background-color: #fafafa;
     color: #333;
     max-height: 300px;
     overflow-y: auto;
@@ -933,9 +934,12 @@ textarea.mdfgf-input {
     width: 84%;
     padding: 1rem;
     transform: none;
+    transition: none;
     .ui-datepicker-title {
         text-align: center;
         margin-bottom: 1rem;
+        margin-top: -34px;
+        padding-left: 5px;
     }
     .ui-datepicker-calendar {
         width: 100%;
@@ -943,12 +947,20 @@ textarea.mdfgf-input {
             text-align: center;
             padding: 4px 0;
             display: block;
+            color: #555;
+            @media (prefers-color-scheme: dark) {
+                color: #bbb;
+            }
             &:hover,
             &.ui-state-highlight {
                 background-color: rgba(150,150,150,0.15);
             }
             &.ui-state-active {
-                background-color: rgba(150,150,150,0.4);
+                background-color: rgba(150,150,150,0.3);
+                color: #222;
+                @media (prefers-color-scheme: dark) {
+                    color: #fff;
+                }
             }
         }
         thead {
@@ -964,6 +976,15 @@ textarea.mdfgf-input {
     .ui-datepicker-prev {
         color: transparent !important;
         position: relative;
+        width: 20px;
+        display: inline-block;
+        user-select: none;
+        span {
+            display: inline-block;
+            overflow: hidden;
+            text-indent: 200px;
+            width: 20px;
+        }
         &:after {
             content: '';
             position: absolute;
@@ -975,7 +996,7 @@ textarea.mdfgf-input {
             border-right: 0;
             transform: rotate(45deg);
             top: 8px;
-            left: 10px;
+            left: 3px;
             @media (prefers-color-scheme: dark) {
                 border-color: #eee;
             }
@@ -992,7 +1013,7 @@ textarea.mdfgf-input {
         background-color: transparent;
         padding: 6px;
         margin: 0 .4rem;
-        border: 1px solid #777;
+        border: 1px solid transparent;
         border-radius: .2rem;
         width: auto;
         color: #333;
