@@ -324,6 +324,10 @@ class MDFGF {
                         }
                     });
 
+                    if ($('.mdfgf-container').hasClass('mdfgf-use-custom-datepicker')) {
+                        $('body').addClass('mdfgf-use-custom-datepicker');
+                    }
+
                     $(this).removeClass('mdfgf-render');
                 });
             }
@@ -546,6 +550,7 @@ class MDFGF {
         $textColorClass = '';
         $autoGrowTextareas = false;
         $useCustomSelects = false;
+        $useCustomDatepicker = false;
         $colorString = '';
         
         if(!empty($settings['design']) && $settings['design'] !== 'mdfgf-gf') {
@@ -564,6 +569,9 @@ class MDFGF {
             if (!empty($settings['use_custom_selects'])) {
                 $useCustomSelects = true;
             }
+            if (!empty($settings['use_custom_datepicker'])) {
+                $useCustomDatepicker = true;
+            }
         }
 
         if (isset($attributes['mdfgf_color'])) {
@@ -581,6 +589,9 @@ class MDFGF {
         if (isset($attributes['mdfgf_use_custom_selects'])) {
             $useCustomSelects = !empty($attributes['mdfgf_use_custom_selects']);
         }
+        if (isset($attributes['mdfgf_use_custom_datepicker'])) {
+            $useCustomDatepicker = !empty($attributes['mdfgf_use_custom_datepicker']);
+        }
 
         if ($textColorClass) {
             $classes[] = $textColorClass;
@@ -596,6 +607,10 @@ class MDFGF {
 
         if ($useCustomSelects) {
             $classes[] = 'mdfgf-use-custom-selects';
+        }
+
+        if ($useCustomDatepicker) {
+            $classes[] = 'mdfgf-use-custom-datepicker';
         }
 
         if ($mainColor) {
@@ -649,17 +664,6 @@ class MDFGF {
 </style>';
 
         }
-
-        // if(preg_match_all("/\<ul[^\>]*class=\'([^\']*[gform\_fields|gfield\_checkbox|gfield\_radio][^\']*)\'[^\>]*\>/m", $string, $matches))
-        // {
-        //     // echo '<pre>';print_r($matches);echo '</pre>';
-        //     // exit;
-        //     if (!empty($matches[0])) {
-        //         foreach ($matches[0] as $key => $match) {
-        //             $string = str_replace($match, str_replace($matches[1][$key], $matches[1][$key].' mdfgf-row', $match), $string);
-        //         }
-        //     }
-        // }
         
         return $colorString.'<div class="'.implode(' ', $classes).'">'.$string.'</div>';
     }
@@ -681,6 +685,7 @@ class MDFGF {
         $tooltips["mdfgf_color_tooltip"] = "This will override the Highlight color used for Buttons, Radios and Checkboxes when filled and Focus events. Use Hexadecimal value.<br>Ex #21759b";
         $tooltips["mdfgf_auto_grow_textareas_tooltip"] = "This will collapse all textarea fields in the form to 80px and will auto grow the height when the user types content into the box. The Max height is 300px and will show a scrollbar once they enter that much data.";
         $tooltips["mdfgf_use_custom_selects_tooltip"] = "This will add custom styles and functionality to the Dropdown fields (select fields). Their may be issues when using this with other frameworks, plugins, or older devices.";
+        $tooltips["mdfgf_use_custom_datepicker_tooltip"] = "This will add custom styles to the Datepicker.";
         $tooltips["mdfgf_override_globals_tooltip"] = "This will allow you to override the settings from the Global Settings.";
         return $tooltips;
     }
@@ -705,6 +710,7 @@ class MDFGF {
             'add_classes' => '',
             'auto_grow_textareas' => 0,
             'use_custom_selects' => 0,
+            'use_custom_datepicker' => 0,
         ];
     }
 
@@ -815,6 +821,12 @@ class MDFGF {
                 </td>
             </tr>
             <tr class="mdfgf-theme-options mdfgf-override-options">
+                <th><label for="mdfgf_use_custom_selects">Use Custom Datepicker '.gform_tooltip("mdfgf_use_custom_datepicker_tooltip", '', true).'</label></th>
+                <td>
+                    <input type="checkbox" id="mdfgf_use_custom_datepicker" name="mdfgf_use_custom_datepicker" value="1" '.checked(rgar($form, 'mdfgf_use_custom_datepicker'), 1, false).'>
+                </td>
+            </tr>
+            <tr class="mdfgf-theme-options mdfgf-override-options">
                 <th><label for="mdfgf_auto_grow_textareas">Auto Grow Textareas '.gform_tooltip("mdfgf_auto_grow_textareas_tooltip", '', true).'</label></th>
                 <td>
                     <input type="checkbox" id="mdfgf_auto_grow_textareas" name="mdfgf_auto_grow_textareas" value="1" '.checked(rgar($form, 'mdfgf_auto_grow_textareas'), 1, false).'>
@@ -913,6 +925,13 @@ class MDFGF {
                     </td>
                 </tr>
                 <tr class="mdfgf-theme-options"<?= (!$settings['design'] || $settings['design'] === 'mdfgf-gf' ? ' style="display:none;"' : '');?>>
+                    <th><label for="mdfgf_use_custom_datepicker">Use Custom Datepicker <?php gform_tooltip("mdfgf_use_custom_datepicker_tooltip", '');?></label></th>
+                    <td>
+                        <input type="hidden" name="mdfgf[use_custom_datepicker]" value="0" readonly>
+                        <input type="checkbox" id="mdfgf_use_custom_datepicker" name="mdfgf[use_custom_datepicker]" value="1" <?php checked($settings['use_custom_datepicker'], 1);?>>
+                    </td>
+                </tr>
+                <tr class="mdfgf-theme-options"<?= (!$settings['design'] || $settings['design'] === 'mdfgf-gf' ? ' style="display:none;"' : '');?>>
                     <th><label for="mdfgf_auto_grow_textareas">Auto Grow Textareas <?php gform_tooltip("mdfgf_auto_grow_textareas_tooltip", '');?></label></th>
                     <td>
                         <input type="hidden" name="mdfgf[auto_grow_textareas]" value="0" readonly>
@@ -951,6 +970,7 @@ class MDFGF {
         $form['mdfgf_color'] = rgpost('mdfgf_color') ? strtolower(rgpost('mdfgf_color')) : '';
         $form['mdfgf_auto_grow_textareas'] = rgpost('mdfgf_auto_grow_textareas') ? 1 : 0;
         $form['mdfgf_use_custom_selects'] = rgpost('mdfgf_use_custom_selects') ? 1 : 0;
+        $form['mdfgf_use_custom_datepicker'] = rgpost('mdfgf_use_custom_datepicker') ? 1 : 0;
         return $form;
     }
 

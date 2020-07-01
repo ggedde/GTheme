@@ -818,7 +818,8 @@ textarea.mdfgf-input {
 }
 
 
-.mdfgf-container.mdfgf-use-custom-selects .mdfgf-custom-select {
+.mdfgf-container.mdfgf-use-custom-selects .mdfgf-custom-select,
+.mdfgf-use-custom-datepicker .ui-datepicker  {
     position: absolute;
     top: 0;
     left: 0;
@@ -830,6 +831,7 @@ textarea.mdfgf-input {
     transition: opacity .1s ease-in-out, transform .1s ease-in-out;
     transform-origin: top;
     background-color: #f4f4f4;
+    color: #333;
     max-height: 300px;
     overflow-y: auto;
     transform: scaleY(0.8);
@@ -866,6 +868,7 @@ textarea.mdfgf-input {
     }
     @media (prefers-color-scheme: dark) {
         background-color: #333;
+        color: #eee;
         &::after {
             border-color: #eee;
         }
@@ -919,6 +922,82 @@ textarea.mdfgf-input {
                     border-color: #ddd;
                 }
             }
+        }
+    }
+}
+
+.mdfgf-use-custom-datepicker .ui-datepicker {
+    opacity: 1;
+    max-width: 300px;
+    max-height: none;
+    width: 84%;
+    padding: 1rem;
+    transform: none;
+    .ui-datepicker-title {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    .ui-datepicker-calendar {
+        width: 100%;
+        td a {
+            text-align: center;
+            padding: 4px 0;
+            display: block;
+            &:hover,
+            &.ui-state-highlight {
+                background-color: rgba(150,150,150,0.15);
+            }
+            &.ui-state-active {
+                background-color: rgba(150,150,150,0.4);
+            }
+        }
+        thead {
+            background-color: rgba(150,150,150,0.1);
+            th {
+                text-align: center;
+                padding: 4px 0;
+            }
+        }
+        
+    }
+    .ui-datepicker-next,
+    .ui-datepicker-prev {
+        color: transparent !important;
+        position: relative;
+        &:after {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 12px;
+            height: 12px;
+            border: 1px solid #333;
+            border-top: 0;
+            border-right: 0;
+            transform: rotate(45deg);
+            top: 8px;
+            left: 10px;
+            @media (prefers-color-scheme: dark) {
+                border-color: #eee;
+            }
+        }
+        
+    }
+    .ui-datepicker-next {
+        float: right;
+        &:after {
+            transform: rotate(225deg);
+        }
+    }
+    select {
+        background-color: transparent;
+        padding: 6px;
+        margin: 0 .4rem;
+        border: 1px solid #777;
+        border-radius: .2rem;
+        width: auto;
+        color: #333;
+        @media (prefers-color-scheme: dark) {
+            color: #eee;
         }
     }
 }
