@@ -124,7 +124,8 @@ $themes: (
             max-width: calc(50% - 10px);
         }
     }
-    & .ginput_container_time.mdfgf-field {
+    & .ginput_container_time.mdfgf-field,
+    & .ginput_container_date.mdfgf-field {
         flex: 0 0 calc(33% - 10px);
         max-width: calc(33% - 10px);
     }
@@ -736,9 +737,6 @@ textarea.mdfgf-input {
                     background-color: map.get($theme, 'checkbox-checked-background-color');
                 }
             }
-        }
-        .mdfgf-use-custom-selects.mdfgf-theme-#{$theme-name} .mdfgf-custom-select {
-            border-color: map.get($theme, 'border-color');
         }
         .mdfgf-theme-#{$theme-name} .mdfgf-select:after {
             border-color: map.get($theme, 'arrow-color');

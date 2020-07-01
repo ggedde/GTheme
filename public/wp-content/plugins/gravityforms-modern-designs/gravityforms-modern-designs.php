@@ -72,6 +72,12 @@ class MDFGF {
         add_action('gform_field_css_class', array(__CLASS__, 'fieldClasses'), 10, 3);
         add_action('gform_field_content', array(__CLASS__, 'fieldContent'), 10, 5);
         add_filter('admin_footer', array(__CLASS__, 'adminFooter'));
+        add_action( 'gform_settings_mdfgf', array(__CLASS__, 'globalSettings'));
+
+        add_filter( 'gform_settings_menu', function($tabs) {
+            $tabs[] = array( 'name' => 'mdfgf', 'label' => 'Modern Designs' );
+            return $tabs;
+        });
 
         add_action( 'gform_enqueue_scripts', function ( $form, $is_ajax ) {
             wp_deregister_style('gforms_reset_css');
@@ -80,7 +86,6 @@ class MDFGF {
             wp_deregister_style('gforms_ready_class_css');
             wp_deregister_style('gforms_browsers_css');
         }, 10, 2);
-
     }
 
 
@@ -382,9 +387,11 @@ class MDFGF {
      */
     public static function preRenderForm($form){
         // echo '<pre>';print_r($form);echo '</pre>';
+
+        $settings = self::getSettings($form['id']);
         
-        if (!empty($form['mdfgf_design'])) {
-            $form['cssClass'].= (empty($form['cssClass']) ? '' : ' ').$form['mdfgf_design'].' mdfgf-render';
+        if (!empty($settings['design'])) {
+            $form['cssClass'].= (empty($form['cssClass']) ? '' : ' ').$settings['design'].' mdfgf-render';
         }
         return $form;
     }
@@ -402,22 +409,25 @@ class MDFGF {
      */
     public static function fieldClasses($classes, $field, $form) {
 
-        if ($field->type !== 'honeypot') {
-            $classes.= ' mdfgf-field-type-'.$field->type;
-        }
+        $settings = self::getSettings($form['id']);
+        if (!empty($settings['design']) && $settings['design'] !== 'mdfgf-gf') {
+            if ($field->type !== 'honeypot') {
+                $classes.= ' mdfgf-field-type-'.$field->type;
+            }
 
-        if ($field->type === 'fileupload' && !empty($field['allowedExtensions'])) {
-            $classes.= ' mdfgf-show-extensions';
-        }
+            if ($field->type === 'fileupload' && !empty($field['allowedExtensions'])) {
+                $classes.= ' mdfgf-show-extensions';
+            }
 
-        if ($field->type === 'fileupload' && !empty($field['multipleFiles'])) {
-            $classes.= ' mdfgf-multifile';
-        }
+            if ($field->type === 'fileupload' && !empty($field['multipleFiles'])) {
+                $classes.= ' mdfgf-multifile';
+            }
 
-        if (in_array($field->type, self::$singleTextFields)) {
-            $classes.= ' mdfgf-field '.($field->size === 'small' ? ' mdfgfcol-4' : ($field->size === 'large' ? ' mdfgfcol-12' : ' mdfgfcol-6'));
-        } elseif (in_array($field->type, array('radio', 'checkbox', 'list'))) {
-            $classes.= ' mdfgf-field';
+            if (in_array($field->type, self::$singleTextFields)) {
+                $classes.= ' mdfgf-field '.($field->size === 'small' ? ' mdfgfcol-4' : ($field->size === 'large' ? ' mdfgfcol-12' : ' mdfgfcol-6'));
+            } elseif (in_array($field->type, array('radio', 'checkbox', 'list'))) {
+                $classes.= ' mdfgf-field';
+            }
         }
 
         return $classes;
@@ -433,6 +443,12 @@ class MDFGF {
      * @return string
      */
     public static function fieldContent($content, $field, $value, $lead_id, $form_id){
+
+        $settings = self::getSettings($form_id);
+
+        if (empty($settings['design']) || $settings['design'] === 'mdfgf-gf') {
+            return $content;
+        }
 
         $complexFieldsClasses = array(
             'name_prefix',
@@ -450,9 +466,15 @@ class MDFGF {
             'gfield_time_minute',
             'gfield_time_ampm',
             'ginput_full',
+            'gfield_date_dropdown_month',
+            'gfield_date_dropdown_day',
+            'gfield_date_dropdown_year',
+            'gfield_date_month',
+            'gfield_date_day',
+            'gfield_date_year',
         );
 
-        if (in_array($field['type'], array('address', 'name', 'time', 'post_image'))) {
+        if (in_array($field['type'], array('address', 'name', 'time', 'post_image', 'date'))) {
             // $content = preg_replace('/\<(select|input) /m', '<$1 class="mdfgf-input" ', $content);
             $content = preg_replace('/(ginput_container_address|ginput_container_name|ginput_container_post_image|clear-multi)/m', 'mdfgf-row $1', $content);
             $content = preg_replace('/('.implode('|',$complexFieldsClasses).')/m', 'mdfgf-field $1', $content);
@@ -515,36 +537,32 @@ class MDFGF {
      * @return string
      */
     public static function shortcodeForm($string, $attributes, $content) {
+
+        $settings = self::getSettings($attributes['id']);
+
         $classes = array('mdfgf-container');
         $mainColor = '';
-        $themeClass = 'mdfgf-theme-default';
-        $design = 'mdfgf-mdfgf';
+        $themeClass = '';
         $textColorClass = '';
         $autoGrowTextareas = false;
         $useCustomSelects = false;
         $colorString = '';
         
-        if (class_exists('GFAPI') && function_exists('rgar')) {
-            if ($form = GFAPI::get_form( $attributes['id'])) {
-                $design = !empty($form['mdfgf_design']) ? esc_attr($form['mdfgf_design']) : '';
-
-                if($design && $design !== 'mdfgf-gf') {
-                    if(rgar($form, 'mdfgf_color')) {
-                        $mainColor = esc_attr(rgar($form, 'mdfgf_color'));
-                    }
-                    if (rgar($form, 'mdfgf_theme')) {
-                        $themeClass = esc_attr(rgar($form, 'mdfgf_theme'));
-                    }
-                    if (!empty($form['mdfgf_text_class'])) {
-                        $textColorClass = esc_attr($form['mdfgf_text_class']);
-                    }
-                    if (!empty($form['mdfgf_auto_grow_textareas'])) {
-                        $autoGrowTextareas = true;
-                    }
-                    if (!empty($form['mdfgf_use_custom_selects'])) {
-                        $useCustomSelects = true;
-                    }
-                }
+        if(!empty($settings['design']) && $settings['design'] !== 'mdfgf-gf') {
+            if($settings['color']) {
+                $mainColor = esc_attr($settings['color']);
+            }
+            if ($settings['theme']) {
+                $themeClass = esc_attr($settings['theme']);
+            }
+            if (!empty($settings['text_class'])) {
+                $textColorClass = esc_attr($settings['text_class']);
+            }
+            if (!empty($settings['auto_grow_textareas'])) {
+                $autoGrowTextareas = true;
+            }
+            if (!empty($settings['use_custom_selects'])) {
+                $useCustomSelects = true;
             }
         }
 
@@ -663,7 +681,58 @@ class MDFGF {
         $tooltips["mdfgf_color_tooltip"] = "This will override the Highlight color used for Buttons, Radios and Checkboxes when filled and Focus events. Use Hexadecimal value.<br>Ex #21759b";
         $tooltips["mdfgf_auto_grow_textareas_tooltip"] = "This will collapse all textarea fields in the form to 80px and will auto grow the height when the user types content into the box. The Max height is 300px and will show a scrollbar once they enter that much data.";
         $tooltips["mdfgf_use_custom_selects_tooltip"] = "This will add custom styles and functionality to the Dropdown fields (select fields). Their may be issues when using this with other frameworks, plugins, or older devices.";
+        $tooltips["mdfgf_override_globals_tooltip"] = "This will allow you to override the settings from the Global Settings.";
         return $tooltips;
+    }
+
+    private static function getForm($formId) 
+    {
+        if (class_exists('GFAPI')) {
+            if ($form = GFAPI::get_form($formId)) {
+                return $form;
+            }
+        }
+        return null;
+    }
+    
+
+    private static function getDefaultSettings() {
+        return [
+            'design' => 'mdfgf-mdfgf',
+            'theme' => 'mdfgf-theme-default',
+            'text_class' => '',
+            'color' => '',
+            'add_classes' => '',
+            'auto_grow_textareas' => 0,
+            'use_custom_selects' => 0,
+        ];
+    }
+
+
+    private static function getSettings($formId=null) {
+
+        $settings = [];
+        $globalSettings = get_option('mdfgf_settings');
+        if (empty($globalSettings)) {
+            $globalSettings = self::getDefaultSettings();
+        }
+
+        if (empty($formId)) {
+            return $globalSettings;
+        }
+
+        if ($form = self::getForm($formId)) {
+            if (empty($form['mdfgf_override_globals'])) {
+                return $globalSettings;
+            }
+            foreach (self::getDefaultSettings() as $settingKey => $setting) {
+                if (isset($form['mdfgf_'.$settingKey])) {
+                    $settings[$settingKey] = $form['mdfgf_'.$settingKey];
+                }
+            }
+        }
+
+        return $settings;
     }
 
 
@@ -680,8 +749,16 @@ class MDFGF {
     {
         $formDesign = rgar($form, 'mdfgf_design');
 
-        $settings['Moder Designs for Gravity Forms']['mdfgf_design'] = '
+        $settings['Modern Designs for Gravity Forms']['mdfgf_design'] = '
+        '.(!rgar($form, 'mdfgf_override_globals') ? '<style>.mdfgf-override-options { display: none; }</style>' : '').'
+        '.(!$formDesign || $formDesign === 'mdfgf-gf' ? '<style>.mdfgf-theme-options { display: none; }</style>' : '').'
             <tr>
+                <th><label for="mdfgf_use_custom_selects">Override Global Styles '.gform_tooltip("mdfgf_override_globals_tooltip", '', true).'</label></th>
+                <td>
+                    <input type="checkbox" id="mdfgf_override_globals" name="mdfgf_override_globals" value="1" '.checked(rgar($form, 'mdfgf_override_globals'), 1, false).'> &nbsp; &nbsp; <small><a href="/wp-admin/admin.php?page=gf_settings&subview=mdfgf">Edit Global Settings</a></small>
+                </td>
+            </tr>
+            <tr class="mdfgf-override-options">
                 <th><label for="mdfgf_design">Design Style '.gform_tooltip("mdfgf_design_tooltip", '', true).'</label></th>
                 <td>
                     <select id="mdfgf_design" name="mdfgf_design" style="width: 300px;">
@@ -693,7 +770,7 @@ class MDFGF {
                     </select>
                 </td>
             </tr>
-            <tr class="mdfgf-theme-options"'.(!$formDesign || $formDesign === 'mdfgf-gf' ? ' style="display:none;"' : '').'>
+            <tr class="mdfgf-theme-options mdfgf-override-options">
                 <th><label for="mdfgf_theme">Theme '.gform_tooltip("mdfgf_theme_tooltip", '', true).'</label></th>
                 <td>
                     <select id="mdfgf_theme" name="mdfgf_theme" style="width: 300px;">
@@ -705,7 +782,7 @@ class MDFGF {
                     </select>
                 </td>
             </tr>
-            <tr class="mdfgf-theme-options"'.(!$formDesign || $formDesign === 'mdfgf-gf' ? ' style="display:none;"' : '').'>
+            <tr class="mdfgf-theme-options mdfgf-override-options">
                 <th><label for="mdfgf_text_class">Text Color</label></th>
                 <td>
                     <select id="mdfgf_text_class" name="mdfgf_text_class" style="width: 300px;">
@@ -715,13 +792,13 @@ class MDFGF {
                     </select>
                 </td>
             </tr>
-            <tr class="mdfgf-theme-options"'.(!$formDesign || $formDesign === 'mdfgf-gf' ? ' style="display:none;"' : '').'>
+            <tr class="mdfgf-theme-options mdfgf-override-options">
                 <th><label for="mdfgf_color">Primary Color '.gform_tooltip("mdfgf_color_tooltip", '', true).'</label></th>
                 <td>
                     <input type="text" id="mdfgf_color" name="mdfgf_color" value="'.(rgar($form, 'mdfgf_color') ? rgar($form, 'mdfgf_color') : '').'" style="width: 300px;">
                 </td>
             </tr>
-            <tr>
+            <tr class="mdfgf-override-options">
                 <th><label for="mdfgf_add_classes">Add Additional Classes '.gform_tooltip("mdfgf_add_classes_tooltip", '', true).'</label></th>
                 <td>
                     <select name="mdfgf_add_classes" style="width: 300px;">
@@ -731,13 +808,13 @@ class MDFGF {
                     </select>
                 </td>
             </tr>
-            <tr class="mdfgf-theme-options"'.(!$formDesign || $formDesign === 'mdfgf-gf' ? ' style="display:none;"' : '').'>
+            <tr class="mdfgf-theme-options mdfgf-override-options">
                 <th><label for="mdfgf_use_custom_selects">Use Custom Dropdowns '.gform_tooltip("mdfgf_use_custom_selects_tooltip", '', true).'</label></th>
                 <td>
                     <input type="checkbox" id="mdfgf_use_custom_selects" name="mdfgf_use_custom_selects" value="1" '.checked(rgar($form, 'mdfgf_use_custom_selects'), 1, false).'>
                 </td>
             </tr>
-            <tr class="mdfgf-theme-options"'.(!$formDesign || $formDesign === 'mdfgf-gf' ? ' style="display:none;"' : '').'>
+            <tr class="mdfgf-theme-options mdfgf-override-options">
                 <th><label for="mdfgf_auto_grow_textareas">Auto Grow Textareas '.gform_tooltip("mdfgf_auto_grow_textareas_tooltip", '', true).'</label></th>
                 <td>
                     <input type="checkbox" id="mdfgf_auto_grow_textareas" name="mdfgf_auto_grow_textareas" value="1" '.checked(rgar($form, 'mdfgf_auto_grow_textareas'), 1, false).'>
@@ -752,7 +829,110 @@ class MDFGF {
         return $settings;
     }
 
+    public static function globalSettings() 
+    {
+        $saved = false;
 
+        if (!empty($_POST['mdfgf'])) {
+            update_option('mdfgf_settings', $_POST['mdfgf']);
+            $saved = true;
+        }
+
+        $settings = get_option('mdfgf_settings');
+        
+        if (empty($settings)) {
+            $settings = self::getDefaultSettings();
+        }
+
+        ?>
+        <?php if ($saved) {?>
+        <div class="hidden">
+            <div class="updated fade">
+				<p>Settings Updated.</p>
+			</div>
+		</div>
+        <?php } ?>
+        <h3><span><i class="fa fa-cogs"></i> Modern Designs Global Settings</span></h3>
+        <form method="post" action="">
+            <table class="form-table">
+                <tr>
+                    <th><label for="mdfgf_design">Design Style <?php gform_tooltip("mdfgf_design_tooltip", '');?></label></th>
+                    <td>
+                        <select id="mdfgf_design" name="mdfgf[design]" style="width: 300px;">
+                            <option value="mdfgf-gf" <?php selected($settings['design'], 'mdfgf-gf');?>>Gravity Forms Default</option>
+                            <option value="mdfgf-mdfgf" <?php selected($settings['design'], 'mdfgf-mdfgf');?>>Modern Designs for Gravity Forms</option>
+                            <option value="mdfgf-md" <?php selected($settings['design'], 'mdfgf-form mdfgf-md');?>>Material Design</option>
+                            <option value="mdfgf-bootstrap" <?php selected($settings['design'], 'mdfgf-bootstrap');?>>Bootstrap</option>
+                            <option value="" <?php selected($settings['design'], '');?>>None</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="mdfgf-theme-options"<?= (!$settings['design'] || $settings['design'] === 'mdfgf-gf' ? ' style="display:none;"' : '');?>>
+                    <th><label for="mdfgf_theme">Theme <?php gform_tooltip("mdfgf_theme_tooltip", '');?></label></th>
+                    <td>
+                        <select id="mdfgf_theme" name="mdfgf[theme]" style="width: 300px;">
+                            <option value="mdfgf-theme-default" <?php selected($settings['theme'], 'mdfgf-theme-default');?>>Default</option>
+                            <option value="mdfgf-theme-greyish" <?php selected($settings['theme'], 'mdfgf-theme-greyish');?>>Greyish</option>
+                            <option value="mdfgf-theme-vivid" <?php selected($settings['theme'], 'mdfgf-theme-vivid');?>>Vivid</option>
+                            <option value="mdfgf-theme-ash" <?php selected($settings['theme'], 'mdfgf-theme-ash');?>>Ash (Good on Medium Dark Backgrounds)</option>
+                            <option value="mdfgf-theme-dark" <?php selected($settings['theme'], 'mdfgf-theme-dark');?>>Dark (Good on Dark Backgrounds)</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="mdfgf-theme-options"<?= (!$settings['design'] || $settings['design'] === 'mdfgf-gf' ? ' style="display:none;"' : '');?>>
+                    <th><label for="mdfgf_text_class">Text Color</label></th>
+                    <td>
+                        <select id="mdfgf_text_class" name="mdfgf[text_class]" style="width: 300px;">
+                            <option value="" <?php selected($settings['theme'], '');?>>Use Theme Default (Auto Detect)</option>
+                            <option value="mdfgf-text-light" <?php selected($settings['text_class'], 'mdfgf-text-light');?>>Light Text</option>
+                            <option value="mdfgf-text-dark" <?php selected($settings['text_class'], 'mdfgf-text-dark');?>>Dark Text</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="mdfgf-theme-options"<?= (!$settings['design'] || $settings['design'] === 'mdfgf-gf' ? ' style="display:none;"' : '');?>>
+                    <th><label for="mdfgf_color">Primary Color <?php gform_tooltip("mdfgf_color_tooltip", '');?></label></th>
+                    <td>
+                        <input type="text" id="mdfgf_color" name="mdfgf[color]" value="<?= ($settings['color'] ? $settings['color'] : '');?>" style="width: 300px;">
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="mdfgf_add_classes">Add Additional Classes <?php gform_tooltip("mdfgf_add_classes_tooltip", '');?></label></th>
+                    <td>
+                        <select name="mdfgf[add_classes]" style="width: 300px;">
+                            <option value="" <?php selected($settings['add_classes'], '');?>>None</option>
+                            <option value="bootstrap" <?php selected($settings['add_classes'], 'bootstrap');?>>Add Bootstrap Classes</option>
+                            <option value="mdb" <?php selected($settings['add_classes'], 'mdb');?>>Add MDB Classes (mdbootstrap.com)</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="mdfgf-theme-options"<?= (!$settings['design'] || $settings['design'] === 'mdfgf-gf' ? ' style="display:none;"' : '');?>>
+                    <th><label for="mdfgf_use_custom_selects">Use Custom Dropdowns <?php gform_tooltip("mdfgf_use_custom_selects_tooltip", '');?></label></th>
+                    <td>
+                        <input type="hidden" name="mdfgf[use_custom_selects]" value="0" readonly>
+                        <input type="checkbox" id="mdfgf_use_custom_selects" name="mdfgf[use_custom_selects]" value="1" <?php checked($settings['use_custom_selects'], 1);?>>
+                    </td>
+                </tr>
+                <tr class="mdfgf-theme-options"<?= (!$settings['design'] || $settings['design'] === 'mdfgf-gf' ? ' style="display:none;"' : '');?>>
+                    <th><label for="mdfgf_auto_grow_textareas">Auto Grow Textareas <?php gform_tooltip("mdfgf_auto_grow_textareas_tooltip", '');?></label></th>
+                    <td>
+                        <input type="hidden" name="mdfgf[auto_grow_textareas]" value="0" readonly>
+                        <input type="checkbox" id="mdfgf_auto_grow_textareas" name="mdfgf[auto_grow_textareas]" value="1" <?php checked($settings['auto_grow_textareas'], 1);?>>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="mdfgf_add_classes">Shortcode Overrides <?php gform_tooltip("mdfgf_shortcode_overrides_tooltip", '');?></label></th>
+                    <td></td>
+                </tr>
+            </table>
+            <p class="submit" style="text-align: left;">
+                <input type="submit" name="submit" value="Save Settings" class="button-primary gfbutton" id="save">
+                <span id="gform_spinner" style="display:none;margin-left:10px;">
+                    <img src="http://gtheme.local.com/wp-content/plugins/gravityforms/images/spinner.gif">
+                </span>
+            </p>
+        </form>
+        <?php
+    }
 
     /**
      * Update the field on Save for Gravity Forms
@@ -763,6 +943,7 @@ class MDFGF {
      */
     public static function formSettingsSave($form)
     {
+        $form['mdfgf_override_globals'] = rgpost('mdfgf_override_globals');
         $form['mdfgf_design'] = rgpost('mdfgf_design');
         $form['mdfgf_theme'] = rgpost('mdfgf_theme');
         $form['mdfgf_add_classes'] = rgpost('mdfgf_add_classes') ? rgpost('mdfgf_add_classes') : '';
@@ -810,6 +991,19 @@ class MDFGF {
                     jQuery('.mdfgf-theme-options').hide();
                 } else {
                     jQuery('.mdfgf-theme-options').show();
+                }
+            });
+            jQuery('#mdfgf_override_globals').on('click', function(){
+                if (jQuery(this).is(':checked')) {
+                    jQuery('.mdfgf-override-options').show();
+                    var val = jQuery('#mdfgf_design').val();    
+                    if (!val || val === 'mdfgf-gf') {
+                        jQuery('.mdfgf-theme-options').hide();
+                    } else {
+                        jQuery('.mdfgf-theme-options').show();
+                    }
+                } else {
+                    jQuery('.mdfgf-override-options').hide();
                 }
             });
         </script>
