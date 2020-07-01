@@ -86,15 +86,26 @@ $themes: (
         flex: 0 0 calc(100% - 15px);
         padding-right: 10px;
         min-width: 180px;
-        @media only screen and (min-width: 600px) {
-            flex: 0 0 calc(50% - 15px);
-        }
-        @media only screen and (min-width: 700px) {
-            flex: 0 0 calc(33% - 15px);
-        }
-        @media only screen and (min-width: 1000px) {
-            flex: 0 0 calc(25% - 15px);
-        }
+    }
+}
+
+.mdfgf-container .mdfgfcol-6 ul.gfield_checkbox li,
+.mdfgf-container .mdfgfcol-6 ul.gfield_radio li {
+    @media only screen and (min-width: 800px) {
+        flex: 0 0 calc(50% - 15px);
+    }
+}
+
+.mdfgf-container .mdfgfcol-12 ul.gfield_checkbox li,
+.mdfgf-container .mdfgfcol-12 ul.gfield_radio li {
+    @media only screen and (min-width: 600px) {
+        flex: 0 0 calc(50% - 15px);
+    }
+    @media only screen and (min-width: 700px) {
+        flex: 0 0 calc(33% - 15px);
+    }
+    @media only screen and (min-width: 1000px) {
+        flex: 0 0 calc(25% - 15px);
     }
 }
 
@@ -111,15 +122,25 @@ $themes: (
     margin: 0 0 1.5rem 0;
     box-sizing: border-box;
     max-width: 100%;
+    @media only screen and (min-width: 640px) {
+        &.mdfgfcol-6,
+        &.mdfgfcol-3 {
+            flex: 0 0 calc(50% - 10px);
+            max-width: calc(50% - 10px);
+        }
+    }
     @media only screen and (min-width: 800px) {
-        &.mdfgfcol-4 {
+        &.mdfgfcol-3,
+        &.mdfgfcol-input-3 .ginput_complex .mdfgf-field {
+            flex: 0 0 calc(25% - 10px);
+            max-width: calc(25% - 10px);
+        }
+        &.mdfgfcol-4,
+        &.mdfgfcol-input-4 .ginput_complex .mdfgf-field {
             flex: 0 0 calc(33% - 10px);
             max-width: calc(33% - 10px);
         }
-    }
-    @media only screen and (min-width: 640px) {
-        &.mdfgfcol-6,
-        .ginput_complex .mdfgf-field {
+        &.mdfgfcol-input-6 .ginput_complex .mdfgf-field {
             flex: 0 0 calc(50% - 10px);
             max-width: calc(50% - 10px);
         }
@@ -128,6 +149,10 @@ $themes: (
     & .ginput_container_date.mdfgf-field {
         flex: 0 0 calc(33% - 10px);
         max-width: calc(33% - 10px);
+    }
+    &.mdfgf-24 .ginput_container_time.mdfgf-field {
+        flex: 0 0 calc(50% - 10px);
+        max-width: calc(50% - 10px);
     }
 }
 
@@ -503,7 +528,7 @@ textarea.mdfgf-input {
 
 .mdfgf-input,
 .mdfgf-container .gf_progressbar,
-.gf_page_steps .gf_step {
+.gf_page_steps .gf_step .gf_step_number {
     width: 100%;
     color: inherit;
     outline: none;
@@ -521,6 +546,11 @@ textarea.mdfgf-input {
     &:checked {
         box-shadow: inset 0 0 0 3px rgba(150,150,150, .1);
     }
+}
+
+.mdfgf-container .gf_progressbar_title {
+    margin-top: .5rem;
+    font-size: 1.5rem;
 }
 
 .mdfgf-container .gf_progressbar { 
@@ -556,17 +586,31 @@ textarea.mdfgf-input {
 }
 
 .mdfgf-container .gf_page_steps {
-    margin: 1rem 0;
+    margin: 1rem 0 0;
     .gf_step {
-        position: relative;
         width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        text-align: center;
+        position: relative;
         .gf_step_number {
             display: block;
             line-height: 34px;
+            width: 100%;
+            height: 34px;
+            border-radius: 50%;
+            text-align: center;
+            padding: 0;
         }
+        
+    }
+    .gf_step .gf_step_label {
+        position: relative;
+        display: block;
+        width: 200px;
+        top: -20px;
+        left: 50%;
+        font-size: .8rem;
+        transform: translateX(-50%);
+        text-align: center;
+        text-align: center;
     }
     .mdfgf-step-spacer {
         height: 1px;
@@ -630,7 +674,7 @@ textarea.mdfgf-input {
 
 .mdfgf-input,
 .mdfgf-container .gf_progressbar,
-.mdfgf-container .gf_page_steps .gf_step,
+.mdfgf-container .gf_page_steps .gf_step .gf_step_number,
 .mdfgf-multifile [id^="gform_preview"] {
     border: 1px solid map.get(map.get($themes, 'default'), 'border-color');
     background-color: map.get(map.get($themes, 'default'), 'background-color');
@@ -677,8 +721,8 @@ textarea.mdfgf-input {
 .mdfgf-container {
     .button,
     input[type="file"]:before,
-    .gf_page_steps .gf_step.gf_step_active,
-    .gf_page_steps .gf_step.gf_step_completed {
+    .gf_page_steps .gf_step.gf_step_active .gf_step_number,
+    .gf_page_steps .gf_step.gf_step_completed .gf_step_number {
         background-color: map.get(map.get($themes, 'default'), 'accent-color');
         color: map.get(map.get($themes, 'default'), 'accent-text-color');
     }
@@ -721,7 +765,7 @@ textarea.mdfgf-input {
     @if $theme-name != 'default' {
         .mdfgf-theme-#{$theme-name} .mdfgf-input,
         .mdfgf-theme-#{$theme-name} .gf_progressbar,
-        .mdfgf-theme-#{$theme-name} .gf_page_steps .gf_step,
+        .mdfgf-theme-#{$theme-name} .gf_page_steps .gf_step .gf_step_number,
         .mdfgf-theme-#{$theme-name} .mdfgf-multifile [id^="gform_preview"],
         .mdfgf-theme-#{$theme-name} .gform_fileupload_multifile .gform_drop_area {
             @if map.get($theme, 'input-text-color') {
@@ -759,8 +803,8 @@ textarea.mdfgf-input {
         .mdfgf-theme-#{$theme-name} {
             .button,
             input[type="file"]:before,
-            .gf_page_steps .gf_step.gf_step_active,
-            .gf_page_steps .gf_step.gf_step_completed {
+            .gf_page_steps .gf_step.gf_step_active .gf_step_number,
+            .gf_page_steps .gf_step.gf_step_completed .gf_step_number {
                 background-color: map.get($theme, 'accent-color');
                 color: map.get($theme, 'accent-text-color');
             }

@@ -44,8 +44,39 @@ class MDFGF {
         'multiselect', 
         'select', 
         'number', 
-        'date', 
         'website'
+    );
+
+
+
+    /**
+     * Array of Single Text Types for Gravity Forms
+     */
+    private static $columnFields = array(
+        'text', 
+        'email', 
+        'phone', 
+        'textarea', 
+        'multiselect', 
+        'select', 
+        'number', 
+        'date', 
+        'time', 
+        'radio', 
+        'checkbox', 
+        'website',
+        'name', 
+        'address', 
+        'post_image',
+    );
+
+    /**
+     * Array of Single Text Types for Gravity Forms
+     */
+    private static $complexFields = array(
+        'name', 
+        'address', 
+        'post_image',
     );
 
 
@@ -73,6 +104,25 @@ class MDFGF {
         add_action('gform_field_content', array(__CLASS__, 'fieldContent'), 10, 5);
         add_filter('admin_footer', array(__CLASS__, 'adminFooter'));
         add_action( 'gform_settings_mdfgf', array(__CLASS__, 'globalSettings'));
+
+        add_action('gform_field_appearance_settings', function($position, $formId){
+            if($position === 500) {
+            ?>
+            <li class="size_setting size_input_setting field_setting" style="display: none;">
+                <label for="field_inputsize" class="section_label">
+                    <?php esc_html_e( 'Input Size', 'gravityforms' ); ?>
+                    <?php gform_tooltip( 'form_field_size' ) ?>
+                </label>
+                <select id="field_inputsize" onchange="SetFieldProperty('inputsize', jQuery(this).val());">
+                    <option value="tiny"><?php esc_html_e( 'Tiny (1/4 Column)', 'gravityforms' ); ?></option>
+                    <option value="small"><?php esc_html_e( 'Small (1/3 Column)', 'gravityforms' ); ?></option>
+                    <option value="medium"><?php esc_html_e( 'Medium (1/2 Column)', 'gravityforms' ); ?></option>
+                    <option value="large"><?php esc_html_e( 'Large (Full Width)', 'gravityforms' ); ?></option>
+                </select>
+            </li>
+            <?php
+            }
+        }, 10, 2);
 
         add_filter( 'gform_settings_menu', function($tabs) {
             $tabs[] = array( 'name' => 'mdfgf', 'label' => 'Modern Designs' );
@@ -273,7 +323,7 @@ class MDFGF {
                     if (form.find('.gf_page_steps .gf_step').length) {
                         form.find('.gf_page_steps .gf_step').after('<div class="mdfgf-step-spacer"></div>');
                         var steps = form.find('.gf_step').length;
-                        form.find('.mdfgf-step-spacer').css('width', 'calc('+(100 / (steps - 1))+'% - '+(42 * (steps - 1))+'px)');
+                        form.find('.mdfgf-step-spacer').css('width', 'calc('+(100 / (steps - 1))+'% - '+(42 * (steps - (steps > 2 ? 1 : 0)))+'px)');
                     }
 
                     form.find('select').each(function(){
@@ -427,10 +477,22 @@ class MDFGF {
                 $classes.= ' mdfgf-multifile';
             }
 
-            if (in_array($field->type, self::$singleTextFields)) {
-                $classes.= ' mdfgf-field '.($field->size === 'small' ? ' mdfgfcol-4' : ($field->size === 'large' ? ' mdfgfcol-12' : ' mdfgfcol-6'));
-            } elseif (in_array($field->type, array('radio', 'checkbox', 'list'))) {
+            if ($field['type'] === 'time' && $field['timeFormat'] === '24') {
+                $classes.= ' mdfgf-24';
+            }
+
+            if (in_array($field->type, self::$singleTextFields) || ($field['type'] === 'date' && $field['dateType'] === 'datepicker')) {
                 $classes.= ' mdfgf-field';
+            } //elseif (in_array($field->type, array('radio', 'checkbox', 'list'))) {
+              //  $classes.= ' mdfgf-field';
+            //}
+
+            if (in_array($field->type, self::$columnFields)) {
+                $classes.= ' '.($field->size === 'tiny' ? ' mdfgfcol-3' : ($field->size === 'small' ? ' mdfgfcol-4' : ($field->size === 'large' ? ' mdfgfcol-12' : ' mdfgfcol-6')));
+            }
+
+            if (in_array($field->type, self::$complexFields)) {
+                $classes.= ' mdfgf-complex '.(!empty($field->inputsize) && $field->inputsize === 'tiny' ? ' mdfgfcol-input-3' : (!empty($field->inputsize) && $field->inputsize === 'small' ? ' mdfgfcol-input-4' : (!empty($field->inputsize) && $field->inputsize === 'large' ? ' mdfgfcol-input-12' : ' mdfgfcol-input-6')));
             }
         }
 
@@ -637,10 +699,10 @@ class MDFGF {
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' select[multiple="multiple"] option:checked,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-custom-select.multiple button.active:after,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-custom-select.multiple button.active:after,
-.mdfgf-container #gform_wrapper_'.$attributes['id'].' .gf_page_steps .gf_step_active,
-.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .gf_page_steps .gf_step_active,
-.mdfgf-container #gform_wrapper_'.$attributes['id'].' .gf_page_steps .gf_step_completed,
-.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .gf_page_steps .gf_step_completed,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .gf_page_steps .gf_step_active .gf_step_number,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .gf_page_steps .gf_step_active .gf_step_number,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .gf_page_steps .gf_step_completed .gf_step_number,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .gf_page_steps .gf_step_completed .gf_step_number,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .gf_page_steps .gf_step_completed + .mdfgf-step-spacer,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .gf_page_steps .gf_step_completed + .mdfgf-step-spacer {
     background-color: '.$mainColor.';
@@ -987,9 +1049,24 @@ class MDFGF {
         <script>
             //binding to the load field settings event to initialize the checkbox
             jQuery(document).bind("gform_load_field_settings", function(event, field, form) {
-               jQuery('#field_size option[value="small"]').html('Small (1/3 Column)');
-               jQuery('#field_size option[value="medium"]').html('Medium (1/2 Column)');
-               jQuery('#field_size option[value="large"]').html('Large (Full Width)');
+                if (!jQuery('#field_size option[value="tiny"]').length) {
+                    jQuery('#field_size').prepend('<option value="tiny">Tiny (1/4 Column)</option>');
+                }
+                jQuery('#field_size option[value="small"]').html('Small (1/3 Column)');
+                jQuery('#field_size option[value="medium"]').html('Medium (1/2 Column)');
+                jQuery('#field_size option[value="large"]').html('Large (Full Width)');
+
+                if (['<?= implode("','", self::$columnFields);?>'].includes(field.type)) {
+                    jQuery('.size_setting.field_setting').show();
+                }
+                if (['<?= implode("','", self::$complexFields);?>'].includes(field.type)) {
+                    jQuery('#field_inputsize').val((typeof field.inputsize !== 'undefined' && field.inputsize ? field.inputsize : 'medium'));
+                    jQuery('.size_input_setting.field_setting').show();
+                } else {
+                    jQuery('.size_input_setting.field_setting').hide();
+                }
+
+
             });
         </script>
         <?php
