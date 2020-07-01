@@ -954,6 +954,10 @@ textarea.mdfgf-input {
             &:hover,
             &.ui-state-highlight {
                 background-color: rgba(150,150,150,0.15);
+                color: #222;
+                @media (prefers-color-scheme: dark) {
+                    color: #fff;
+                }
             }
             &.ui-state-active {
                 background-color: rgba(150,150,150,0.3);
