@@ -44,7 +44,9 @@ class MDFGF {
         'multiselect', 
         'select', 
         'number', 
-        'website'
+        'website',
+        'quantity',
+        'option',
     );
 
 
@@ -68,6 +70,8 @@ class MDFGF {
         'name', 
         'address', 
         'post_image',
+        'quantity',
+        'option',
     );
 
     /**
@@ -287,13 +291,26 @@ class MDFGF {
                 //     }
                 // });
 
-                // $('.ginput_container_address input, .ginput_container_name input, .ginput_container_address select, .ginput_container_name select').off('focus').on('focus.mbdGformStyles', function(){
-                //     $(this).closest('span').find('label').addClass('active');
-                // }).off('blur').on('blur.mbdGformStyles', function(){
-                //     if (!$(this).val()){
-                //         $(this).closest('span').find('label').removeClass('active');
-                //     }
-                // });
+                $('.mdfgf-input').off('focus.mdfgf').on('focus.mdfgf', function(){
+                    $(this).closest('.mdfgf-field').addClass('active');
+                }).off('blur.mdfgf').on('blur.mdfgf', function(){
+                    var self = $(this);
+                    setTimeout(function(){
+                        if (!self.val()){
+                            self.closest('.mdfgf-field').removeClass('active');
+                        }
+                    }, 100);
+                });
+
+                $('.mdfgf-input').each(function(){
+                    if ($(this).val()) {
+                        $(this).closest('.mdfgf-field').addClass('no-transition').addClass('active');
+                    }
+                });
+                // Don't show animation on page load
+                setTimeout(function(){
+                    $('.no-transition').removeClass('no-transition');
+                }, 100);
 
                 // $('.form-check-input').off('focus.mbdGformStyles').on('focus.mbdGformStyles', function(){
                 //     $(this).before('<div class=\"form-check-ripple\"></div>');
@@ -473,6 +490,10 @@ class MDFGF {
                 $classes.= ' mdfgf-show-extensions';
             }
 
+            if (empty($field->label)) {
+                $classes.= ' mdfgf-no-label';
+            }
+
             if ($field->type === 'fileupload' && !empty($field['multipleFiles'])) {
                 $classes.= ' mdfgf-multifile';
             }
@@ -614,6 +635,7 @@ class MDFGF {
         $useCustomSelects = false;
         $useCustomDatepicker = false;
         $colorString = '';
+        $labelAnimation = '';
         
         if(!empty($settings['design']) && $settings['design'] !== 'mdfgf-gf') {
             if($settings['color']) {
@@ -624,6 +646,9 @@ class MDFGF {
             }
             if (!empty($settings['text_class'])) {
                 $textColorClass = esc_attr($settings['text_class']);
+            }
+            if (!empty($settings['label_animation'])) {
+                $labelAnimation = esc_attr($settings['label_animation']);
             }
             if (!empty($settings['auto_grow_textareas'])) {
                 $autoGrowTextareas = true;
@@ -645,6 +670,9 @@ class MDFGF {
         if (isset($attributes['mdfgf_text_class'])) {
             $textColorClass = esc_attr($attributes['mdfgf_text_class']);
         }
+        if (isset($attributes['mdfgf_label_animation'])) {
+            $labelAnimation = esc_attr($attributes['mdfgf_label_animation']);
+        }
         if (isset($attributes['mdfgf_auto_grow_textareas'])) {
             $autoGrowTextareas = !empty($attributes['mdfgf_auto_grow_textareas']);
         }
@@ -661,6 +689,10 @@ class MDFGF {
 
         if ($themeClass) {
             $classes[] = $themeClass;
+        }
+
+        if (!empty($labelAnimation)) {
+            $classes[] = 'mdfgf-animate-'.$labelAnimation;
         }
 
         if ($autoGrowTextareas) {
@@ -749,6 +781,7 @@ class MDFGF {
         $tooltips["mdfgf_use_custom_selects_tooltip"] = "This will add custom styles and functionality to the Dropdown fields (select fields). Their may be issues when using this with other frameworks, plugins, or older devices.";
         $tooltips["mdfgf_use_custom_datepicker_tooltip"] = "This will add custom styles to the Datepicker.";
         $tooltips["mdfgf_override_globals_tooltip"] = "This will allow you to override the settings from the Global Settings.";
+        $tooltips["mdfgf_label_animation_tooltip"] = "This will place the label inside field and use it as a Placeholder. This will also remove the placeholder text if it has been set. The label will be animated once the user sets focus to the field. The placement of the animated label (Above or Below) will still depend on the setting you give it within your field settings";
         return $tooltips;
     }
 
@@ -769,6 +802,7 @@ class MDFGF {
             'theme' => 'mdfgf-theme-default',
             'text_class' => '',
             'color' => '',
+            'label_animation' => '',
             'add_classes' => '',
             'auto_grow_textareas' => 0,
             'use_custom_selects' => 0,
@@ -864,6 +898,17 @@ class MDFGF {
                 <th><label for="mdfgf_color">Primary Color '.gform_tooltip("mdfgf_color_tooltip", '', true).'</label></th>
                 <td>
                     <input type="text" id="mdfgf_color" name="mdfgf_color" value="'.(rgar($form, 'mdfgf_color') ? rgar($form, 'mdfgf_color') : '').'" style="width: 300px;">
+                </td>
+            </tr>
+            <tr class="mdfgf-theme-options mdfgf-override-options">
+                <th><label for="mdfgf_label_animation">Label Animation '.gform_tooltip("mdfgf_label_animation_tooltip", '', true).'</label></th>
+                <td>
+                    <select id="mdfgf_label_animation" name="mdfgf_label_animation" style="width: 300px;">
+                        <option value="" '.selected(rgar($form, 'mdfgf_label_animation'), '', false).'>None</option>
+                        <option value="out" '.selected(rgar($form, 'mdfgf_label_animation'), 'out', false).'>On Focus Out</option>
+                        <option value="in" '.selected(rgar($form, 'mdfgf_label_animation'), 'in', false).'>On Focus In</option>
+                        <option value="line" '.selected(rgar($form, 'mdfgf_label_animation'), 'line', false).'>On Focus Line</option>
+                    </select>
                 </td>
             </tr>
             <tr class="mdfgf-override-options">
@@ -969,10 +1014,21 @@ class MDFGF {
                         <input type="text" id="mdfgf_color" name="mdfgf[color]" value="<?= ($settings['color'] ? $settings['color'] : '');?>" style="width: 300px;">
                     </td>
                 </tr>
+                <tr class="mdfgf-theme-options"<?= (!$settings['design'] || $settings['design'] === 'mdfgf-gf' || $settings['design'] === 'mdfgf-md' ? ' style="display:none;"' : '');?>>
+                    <th><label for="mdfgf_label_animation">Label Animation <?php gform_tooltip("mdfgf_label_animation_tooltip", '');?></label></th>
+                    <td>
+                        <select id="mdfgf_label_animation" name="mdfgf[label_animation]" style="width: 300px;">
+                            <option value="" <?php selected($settings['label_animation'], '');?>>None</option>
+                            <option value="out" <?php selected($settings['label_animation'], 'out');?>>On Focus Out</option>
+                            <option value="in" <?php selected($settings['label_animation'], 'in');?>>On Focus In</option>
+                            <option value="line" <?php selected($settings['label_animation'], 'line');?>>On Focus Line</option>
+                        </select>
+                    </td>
+                </tr>
                 <tr>
                     <th><label for="mdfgf_add_classes">Add Additional Classes <?php gform_tooltip("mdfgf_add_classes_tooltip", '');?></label></th>
                     <td>
-                        <select name="mdfgf[add_classes]" style="width: 300px;">
+                        <select id="mdfgf_add_classes" name="mdfgf[add_classes]" style="width: 300px;">
                             <option value="" <?php selected($settings['add_classes'], '');?>>None</option>
                             <option value="bootstrap" <?php selected($settings['add_classes'], 'bootstrap');?>>Add Bootstrap Classes</option>
                             <option value="mdb" <?php selected($settings['add_classes'], 'mdb');?>>Add MDB Classes (mdbootstrap.com)</option>
@@ -1028,6 +1084,7 @@ class MDFGF {
         $form['mdfgf_design'] = rgpost('mdfgf_design');
         $form['mdfgf_theme'] = rgpost('mdfgf_theme');
         $form['mdfgf_add_classes'] = rgpost('mdfgf_add_classes') ? rgpost('mdfgf_add_classes') : '';
+        $form['mdfgf_label_animation'] = rgpost('mdfgf_label_animation') ? rgpost('mdfgf_label_animation') : '';
         $form['mdfgf_text_class'] = rgpost('mdfgf_text_class') ? rgpost('mdfgf_text_class') : '';
         $form['mdfgf_color'] = rgpost('mdfgf_color') ? strtolower(rgpost('mdfgf_color')) : '';
         $form['mdfgf_auto_grow_textareas'] = rgpost('mdfgf_auto_grow_textareas') ? 1 : 0;
