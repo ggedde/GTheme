@@ -768,7 +768,9 @@ class MDFGF {
     color: #eee;
 }
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-input:focus,
-.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-input:focus {
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-input:focus,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock {
     border-color: '.$mainColor.';
 }
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .button:hover,
