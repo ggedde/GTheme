@@ -292,9 +292,10 @@ class MDFGF {
                 // });
 
                 $('.mdfgf-input').off('focus.mdfgf').on('focus.mdfgf', function(){
-                    $(this).closest('.mdfgf-field').addClass('active');
+                    $(this).closest('.mdfgf-field').addClass('active has-focus');
                 }).off('blur.mdfgf').on('blur.mdfgf', function(){
                     var self = $(this);
+                    self.closest('.mdfgf-field').removeClass('has-focus');
                     setTimeout(function(){
                         if (!self.val()){
                             self.closest('.mdfgf-field').removeClass('active');
@@ -333,6 +334,10 @@ class MDFGF {
                 //     }
                 // });
 
+                $('.mdfgf-animate-line .mdfgf-render .mdfgf-field .mdfgf-label').each(function(){
+                    $(this).appendTo($(this).closest('.mdfgf-field').find('.mdfgf-fieldblock-label'));
+                });
+
                 $('.mdfgf-render').each(function(){
                     var form = $(this);
                     var formId = $(this).attr('id');
@@ -345,14 +350,16 @@ class MDFGF {
 
                     form.find('select').each(function(){
                         $(this).wrap('<div class="mdfgf-select'+($(this).prop('multiple') ? ' multiple' : '')+'"></div>');
-                    })
+                    });
 
                     form.find('.gform_button, .gform_next_button, .gform_previous_button').each(function(){
                         $(this).wrap('<span class="mdfgf-button'+($(this).hasClass('gform_next_button') ? ' mdfgf-next' : ($(this).hasClass('gform_previous_button') ? ' mdfgf-prev' : ($(this).hasClass('gform_button') ? ' mdfgf-submit' : '')))+'"></span>');
-                    })
+                    });
+
                     form.off('submit.mdfgf').on('submit.mdfgf', function(){
                         $(this).addClass('mdfgf-submitted');
                     });
+
                     form.find('.gform_page:visible .mdfgf-prev').on('click.mdfgf').on('click.mdfgf', function(e){
                         $(this).closest('form').addClass('mdfgf-prev-submitted');
                     });
@@ -360,6 +367,13 @@ class MDFGF {
                     form.find('.gfield_error .mdfgf-input').on('change', function(){
                         $(this).closest('.gfield_error').removeClass('gfield_error');
                     });
+
+                    setTimeout(function(){
+                        form.find('.mdfgf-fieldblock .mdfgf-label').each(function(){
+                            var wid = $(this).width();
+                            $(this).css('width', ((wid - (wid * .1)) + 10)).addClass('mdfgf-collapse').parent().addClass('mdfgf-remove-border');
+                        });
+                    }, 10);
 
                     $('.mdfgf-auto-grow-textareas #'+formId+'.mdfgf-render textarea').attr('rows', 0).css({'min-height': '80px', 'max-height': '300px', 'overflow': 'auto'}).on('input', function(){
                         var element = $(this)[0];
@@ -412,7 +426,7 @@ class MDFGF {
                 });
             }
 
-            mdfgfRenderForms();
+            // mdfgfRenderForms();
         });
     }
     
@@ -567,24 +581,36 @@ class MDFGF {
             $content = preg_replace('/('.implode('|',$complexFieldsClasses).')/m', 'mdfgf-field $1', $content);
         }
 
-        if (preg_match_all('/\<(input|select|textarea) [^\>]+\>/m', $content, $matches)) {
-            if (!empty($matches[0])) {
-                foreach ($matches[0] as $tag) {
-                    $newTag = '';
+        preg_match_all('/\<input [^\>]+\>/ms', $content, $inputs);
+        preg_match_all('/\<select [^\>]+\>.*?\<\/select\>/ms', $content, $selects);
+        preg_match_all('/\<textarea [^\>]+\>.*?\<\/textarea\>/ms', $content, $textareas);
 
-                    if (stripos($tag, "type='hidden")) {
-                        continue;
-                    }
+        $tags = array_merge($inputs[0], $selects[0], $textareas[0]);
 
-                    if (preg_match("/class=\'([^\']*)\'/m", $tag, $classMatches)) {
-                        $newTag = str_replace($classMatches[0], "class='mdfgf-input".($classMatches[1] ? ' '.$classMatches[1] : '')."'", $tag);
-                    } else {
-                        $newTag = preg_replace('/\<(select|input|textarea) /m', '<$1 class="mdfgf-input" ', $tag);
-                    }
 
-                    if ($newTag) {
-                        $content = str_replace($tag, $newTag, $content);
+
+        if (!empty($tags)) {
+            foreach ($tags as $tag) {
+                $newTag = '';
+
+                if (stripos($tag, "type='hidden")) {
+                    continue;
+                }
+
+                if (preg_match("/class=\'([^\']*)\'/m", $tag, $classMatches)) {
+                    $newTag = str_replace($classMatches[0], "class='mdfgf-input".($classMatches[1] ? ' '.$classMatches[1] : '')."'", $tag);
+                } else {
+                    $newTag = preg_replace('/\<(select|input|textarea) /m', '<$1 class="mdfgf-input" ', $tag);
+                }
+
+                if ($settings['label_animation'] === 'line') {
+                    if ($newTag && !in_array($field['type'], array('radio', 'checkbox', 'consent', 'fileupload'))) {
+                        $newTag = '<div class="mdfgf-fieldset"><div class="mdfgf-fieldblock"></div><div class="mdfgf-fieldblock mdfgf-fieldblock-label"></div><div class="mdfgf-fieldblock"></div>'.$newTag.'</div>';
                     }
+            }
+
+                if ($newTag) {
+                    $content = str_replace($tag, $newTag, $content);
                 }
             }
         }
