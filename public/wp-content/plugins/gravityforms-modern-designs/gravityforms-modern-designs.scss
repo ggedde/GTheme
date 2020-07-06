@@ -172,7 +172,7 @@ $themes: (
     margin: .1rem 0;
     display: block;
     &.gfield_label {
-        font-weight: 500;
+        font-weight: 400;
     }
 }
 
@@ -627,62 +627,6 @@ li.gfield.mdfgf-field-type-address {
         line-height: 24px;
         background-color: rgba(40,40,40,.6);
     }
-    .ginput_container input[type="checkbox"],
-    .ginput_container input[type="radio"] {
-        opacity: 1;
-        width: 18px;
-        height: 18px;
-        min-height: 18px;
-        padding: 0;
-        vertical-align: top;
-        margin: 2px 6px 0 0;
-        position: relative;
-        pointer-events: all;
-        &::before {
-            content: '';
-            position: absolute;
-            left: -9px;
-            top: -9px;
-            display: block;
-            background-color: transparent;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            transition: background-color .1s ease-in-out, transform .1s ease-in-out;
-            transform: scale(0.5);
-            margin: 0;
-        }
-        &:focus::before {
-            background-color: rgba(150,150,150, 0.1);
-            transform: scale(1);
-        }
-        &::after {
-            content: '';
-            display: block;
-            margin: auto;
-            height: 100%;
-            width: 100%;
-            transform: scale(0.7);
-            border-radius: 2px;
-            border-color: transparent;
-            transition: background-color .1s ease-in-out;
-        }
-        + label {
-            width: calc(100% - 30px);
-            line-height: 1.4;
-            display: inline-block;
-            vertical-align: top;
-            margin-left: 0;
-        }
-    }
-
-    .gfield input[type="radio"] {
-        border-radius: 50%;
-        margin-right: 10px;
-        &::after { 
-            border-radius: 50%;
-        }
-    }
 
     .gform_ajax_spinner,
     .gform_validation_container,
@@ -748,6 +692,65 @@ li.gfield.mdfgf-field-type-address {
         }
         &:before {
             opacity: 1;
+        }
+    }
+
+    &.mdfgf-checkboxes-mdfgf {
+        .ginput_container input[type="checkbox"],
+        .ginput_container input[type="radio"] {
+            opacity: 1;
+            width: 18px;
+            height: 18px;
+            min-height: 18px;
+            padding: 0;
+            vertical-align: top;
+            margin: 2px 6px 0 0;
+            position: relative;
+            pointer-events: all;
+            &::before {
+                content: '';
+                position: absolute;
+                left: -9px;
+                top: -9px;
+                display: block;
+                background-color: transparent;
+                width: 34px;
+                height: 34px;
+                border-radius: 50%;
+                transition: background-color .1s ease-in-out, transform .1s ease-in-out;
+                transform: scale(0.5);
+                margin: 0;
+            }
+            &:focus::before {
+                background-color: rgba(150,150,150, 0.1);
+                transform: scale(1);
+            }
+            &::after {
+                content: '';
+                display: block;
+                margin: auto;
+                height: 100%;
+                width: 100%;
+                transform: scale(0.7);
+                border-radius: 2px;
+                border-color: transparent;
+                transition: background-color .1s ease-in-out;
+            }
+            + label {
+                width: calc(100% - 30px);
+                line-height: 1.4;
+                display: inline-block;
+                vertical-align: top;
+                margin-left: 0;
+            }
+        }
+
+        .gfield input[type="radio"] {
+            border-radius: 50%;
+            margin-right: 10px;
+            &::after { 
+                border-radius: 50%;
+            }
         }
     }
 }
@@ -1346,5 +1349,53 @@ textarea.mdfgf-input {
     .mdfgf-custom-select {
         opacity: 1;
         transform: scaleY(1);
+    }
+}
+
+.mdfgf-container form.mdfgf-bootstrap {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    .mdfgf-input,
+    .button {
+        height: auto;
+        padding: 0.375rem .75rem;
+        font-size: 1rem;
+        line-height: 1.5 !important;
+        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+        font-size: 1rem;
+        font-weight: 400;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        appearance: auto;
+        -webkit-appearance: auto;
+    }
+    .button {
+        min-width: 0 !important;
+    }
+    .mdfgf-select::after {
+        display: none;
+    }
+    select.mdfgf-input {
+        padding: .5rem;
+    }
+    .gfield_checkbox li,
+    .gfield_radio li {
+        margin-left: 0;
+    }
+    .ginput_container input[type="checkbox"],
+    .ginput_container input[type="radio"] {
+        margin: 0 .4rem 0 0;
+    }
+    label {
+        font-weight: 400px;
+        font-size: 1rem;
+        margin-bottom: .5rem;
     }
 }

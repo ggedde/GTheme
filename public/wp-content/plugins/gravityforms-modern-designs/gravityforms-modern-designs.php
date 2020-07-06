@@ -464,6 +464,25 @@ class MDFGF {
 
 
     /**
+     * Get RGB color
+     * 
+     * @param string $hexCode
+     * 
+     * @return string
+     */
+    public static function hexToRGB($hexCode) {
+        $hexCode = ltrim($hexCode, '#');
+        if (strlen($hexCode) == 3) {
+            $hexCode = $hexCode[0] . $hexCode[0] . $hexCode[1] . $hexCode[1] . $hexCode[2] . $hexCode[2];
+        }
+        list($r, $g, $b) = sscanf('#'.$hexCode, "#%02x%02x%02x");
+        
+        return array('r' => $r, 'g' => $g, 'b' => $b);
+    }
+
+
+
+    /**
      * Pre Render Form functon before Gravity Form is Created
      * 
      * @param array $form
@@ -597,10 +616,12 @@ class MDFGF {
                     continue;
                 }
 
-                if (preg_match("/class=\'([^\']*)\'/m", $tag, $classMatches)) {
-                    $newTag = str_replace($classMatches[0], "class='mdfgf-input".($classMatches[1] ? ' '.$classMatches[1] : '')."'", $tag);
-                } else {
-                    $newTag = preg_replace('/\<(select|input|textarea) /m', '<$1 class="mdfgf-input" ', $tag);
+                if ($settings['design'] !== 'mdfgf-bootstrap' || ($settings['design'] === 'mdfgf-bootstrap' && !preg_match("/type=\'(checkbox|radio)\'/m", $tag))) {
+                    if (preg_match("/class=\'([^\']*)\'/m", $tag, $classMatches)) {
+                        $newTag = str_replace($classMatches[0], "class='mdfgf-input".($classMatches[1] ? ' '.$classMatches[1] : '')."'", $tag);
+                    } else {
+                        $newTag = preg_replace('/\<(select|input|textarea) /m', '<$1 class="mdfgf-input" ', $tag);
+                    }
                 }
 
                 if ($settings['label_animation'] === 'line') {
@@ -733,9 +754,16 @@ class MDFGF {
             $classes[] = 'mdfgf-use-custom-datepicker';
         }
 
+        if (!$mainColor && $settings['design'] === 'mdfgf-bootstrap') {
+            $mainColor = '#007bff';
+            $hoverColor = self::adjustBrightness($mainColor, -.2);
+        }
+
         if ($mainColor) {
             $mainColor = strtolower($mainColor);
-            $hoverColor = self::adjustBrightness($mainColor, .2);
+            if (empty($hoverColor)) {
+                $hoverColor = self::adjustBrightness($mainColor, .2);
+            }
             $colorString = '
         <style>
 /* Modern Designs for Gravity Forms Custom css for Single Form */
@@ -771,7 +799,16 @@ class MDFGF {
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-input:focus,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock {
-    border-color: '.$mainColor.';
+    border-color: '.($settings['design'] === 'mdfgf-bootstrap' ? self::adjustBrightness($mainColor, .5) : $mainColor).';';
+
+    if ($settings['design'] === 'mdfgf-bootstrap') {
+        $rgb = self::hexToRGB($mainColor);
+        $colorString.= '
+    box-shadow: 0 0 0 0.2rem rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.2);
+    ';
+    }
+    
+    $colorString.= '
 }
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .button:hover,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .button:hover,
@@ -942,7 +979,7 @@ class MDFGF {
             <tr class="mdfgf-override-options">
                 <th><label for="mdfgf_add_classes">Add Additional Classes '.gform_tooltip("mdfgf_add_classes_tooltip", '', true).'</label></th>
                 <td>
-                    <select name="mdfgf_add_classes" style="width: 300px;">
+                    <select id="mdfgf_add_classes" name="mdfgf_add_classes" style="width: 300px;">
                         <option value="" '.selected(rgar($form, 'mdfgf_add_classes'), '', false).'>None</option>
                         <option value="bootstrap" '.selected(rgar($form, 'mdfgf_add_classes'), 'bootstrap', false).'>Add Bootstrap Classes</option>
                         <option value="mdb" '.selected(rgar($form, 'mdfgf_add_classes'), 'mdb', false).'>Add MDB Classes (mdbootstrap.com)</option>
@@ -953,6 +990,17 @@ class MDFGF {
                 <th><label for="mdfgf_use_custom_selects">Use Custom Dropdowns '.gform_tooltip("mdfgf_use_custom_selects_tooltip", '', true).'</label></th>
                 <td>
                     <input type="checkbox" id="mdfgf_use_custom_selects" name="mdfgf_use_custom_selects" value="1" '.checked(rgar($form, 'mdfgf_use_custom_selects'), 1, false).'>
+                </td>
+            </tr>
+            <tr class="mdfgf-theme-options mdfgf-override-options">
+                <th><label for="mdfgf_use_custom_checkboxes">Use Custom Checkboxes '.gform_tooltip("mdfgf_use_custom_checkboxes_tooltip", '', true).'</label></th>
+                <td>
+                    <select id="mdfgf_use_custom_checkboxes" name="mdfgf_use_custom_checkboxes" style="width: 300px;">
+                        <option value="" '.selected(rgar($form, 'mdfgf_use_custom_checkboxes'), '', false).'>None</option>
+                        <option value="mdfgf-checkboxes-mdfgf" '.selected(rgar($form, 'mdfgf_use_custom_checkboxes'), 'mdfgf-checkboxes-mdfgf', false).'>Modern Designs for Gravity Forms Style</option>
+                        <option value="mdfgf-checkboxes-md" '.selected(rgar($form, 'mdfgf_use_custom_checkboxes'), 'mdfgf-checkboxes-md', false).'>Material Design Checkboxes</option>
+                        <option value="mdfgf-checkboxes-switch" '.selected(rgar($form, 'mdfgf_use_custom_checkboxes'), 'mdfgf-checkboxes-switch', false).'>Material Design Switches</option>
+                    </select>
                 </td>
             </tr>
             <tr class="mdfgf-theme-options mdfgf-override-options">
