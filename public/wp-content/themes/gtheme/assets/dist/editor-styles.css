@@ -256,11 +256,6 @@ hr {
   border-color: rgba(255, 255, 255, 0.4);
 }
 
-*:active,
-*:focus {
-  outline: none;
-}
-
 .pagination {
   margin-top: 2rem;
   justify-content: center;

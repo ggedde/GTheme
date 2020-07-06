@@ -168,6 +168,10 @@ $themes: (
     }
 }
 
+.mdfgf-container form.mdfgf-bootstrap .mdfgf-field {
+    margin: 0 0 1rem 0;
+}
+
 .mdfgf-label {
     margin: .1rem 0;
     display: block;
@@ -367,6 +371,29 @@ $themes: (
             transform: scale(.8) translate(13px, 36px);
         } 
     }
+    form.mdfgf-bootstrap {
+        .field_sublabel_above .mdfgf-field {
+            > .mdfgf-label {
+                transform: translate(10px, 36px);
+            }
+            &.active > .mdfgf-label {
+                transform: scale(.8) translate(13px, 32px);
+            }
+        }
+        .field_sublabel_below .mdfgf-field {
+            > .mdfgf-label {
+                transform: translate(10px, -37px);
+            }
+            &.active > .mdfgf-label {
+                transform: scale(.8) translate(13px, -32px);
+            }
+        }
+        .mdfgf-field.active {
+            > .mdfgf-label {
+                transform: scale(.8) translate(13px, 32px);
+            } 
+        }
+    }
 }
 
 .mdfgf-animate-out {
@@ -387,6 +414,21 @@ $themes: (
         > .mdfgf-label {
             transform: translate(0, 0);
         } 
+    }
+    form.mdfgf-bootstrap {
+        .mdfgf-field > .mdfgf-label {
+            transform: translate(10px, 40px);
+        }
+        .field_sublabel_above .mdfgf-field {
+            > .mdfgf-label {
+                transform: translate(10px, 40px);
+            }
+        }
+        .field_sublabel_below .mdfgf-field {
+            > .mdfgf-label {
+                transform: translate(10px, -34px);
+            }
+        }
     }
 }
 
@@ -1205,6 +1247,7 @@ textarea.mdfgf-input {
     transform: scaleY(0.8);
     button {
         display: block;
+        outline: none;
         width: 100%;
         text-align: left;
         background-color: transparent;
@@ -1419,17 +1462,11 @@ textarea.mdfgf-input {
     color: #212529;
     .mdfgf-input,
     .button {
-        height: auto;
-        padding: 0.375rem .75rem;
         font-size: 1rem;
-        line-height: 1.5 !important;
         font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
         font-size: 1rem;
         font-weight: 400;
-        color: #495057;
-        background-color: #fff;
         background-clip: padding-box;
-        border: 1px solid #ced4da;
         border-radius: .25rem;
         transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
         appearance: auto;
@@ -1440,9 +1477,6 @@ textarea.mdfgf-input {
     }
     .mdfgf-select::after {
         display: none;
-    }
-    select.mdfgf-input {
-        padding: .5rem;
     }
     .gfield_checkbox li,
     .gfield_radio li {
@@ -1456,5 +1490,18 @@ textarea.mdfgf-input {
         font-weight: 400px;
         font-size: 1rem;
         margin-bottom: .5rem;
+    }
+}
+
+.mdfgf-container.mdfgf-animate-line form.mdfgf-bootstrap .mdfgf-input {
+    border: 0 !important;
+}
+
+.mdfgf-container.mdfgf-theme-default form.mdfgf-bootstrap {
+    .mdfgf-input,
+    .button {
+        color: #495057;
+        background-color: #fff;
+        border: 1px solid #ced4da;
     }
 }
