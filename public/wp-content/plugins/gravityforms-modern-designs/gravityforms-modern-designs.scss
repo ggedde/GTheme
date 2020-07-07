@@ -168,8 +168,14 @@ $themes: (
     }
 }
 
-.mdfgf-container form.mdfgf-bootstrap .mdfgf-field {
-    margin: 0 0 1rem 0;
+.mdfgf-container {
+    form.mdfgf-bootstrap .mdfgf-field {
+        margin: 0 0 1rem 0;
+    }
+    &.mdfgf-animate-line .mdfgf-field,
+    &.mdfgf-animate-line form.mdfgf-bootstrap .mdfgf-field {
+        margin: 0 0 1.8rem 0;
+    }
 }
 
 .mdfgf-label {
@@ -252,9 +258,7 @@ $themes: (
                 border-left-width: 0;
             }
             .field_sublabel_above .ginput_complex &,
-            .field_sublabel_above .ginput_container_time &,
-            .field_sublabel_above .ginput_container_date &,
-            .ginput_container:not(.ginput_complex):not(.ginput_container_time):not(.ginput_container_date) & {
+            .ginput_container:not(.ginput_complex) & {
                 &.mdfgf-remove-border {
                     border-top-color: transparent !important;
                     &:before { 
@@ -262,9 +266,7 @@ $themes: (
                     }
                 }
             }
-            .field_sublabel_below .ginput_complex &,
-            .field_sublabel_below .ginput_container_date &,
-            .field_sublabel_below .ginput_container_time & {
+            .field_sublabel_below .ginput_complex & {
                 &.mdfgf-remove-border {
                     border-bottom-color: transparent !important;
                     &:before { 
@@ -446,8 +448,7 @@ $themes: (
         }
     }
     .field_sublabel_below .ginput_complex .mdfgf-field.active,
-    .field_sublabel_below .ginput_container_date.mdfgf-field.active,
-    .field_sublabel_below .ginput_container_time.mdfgf-field.active {
+    .field_sublabel_below .ginput_complex.mdfgf-field.active {
         .mdfgf-fieldblock .mdfgf-label {
             transform: scale(.85) translate(0px, 26px);
         } 
@@ -497,7 +498,6 @@ li.gfield.mdfgf-field-type-address {
     .ginput_complex label,
     .validation_message,
     .screen-reader-text,
-    .ginput_container_time label,
     .ginput_container_fileupload span[id^="extensions_"],
     .ginput_container_post_image span[id^="extensions_"],
     .gfield_list th {
@@ -550,7 +550,7 @@ li.gfield.mdfgf-field-type-address {
             position: absolute;
             font-style: normal;
             top: 9px;
-            right: -11px;
+            right: -12px;
         }
     }
     .button,
@@ -1502,5 +1502,11 @@ textarea.mdfgf-input {
         color: #495057;
         background-color: #fff;
         border: 1px solid #ced4da;
+    }
+}
+
+.mdfgf-container.mdfgf-animate-line form.mdfgf-bootstrap {
+    .mdfgf-input:focus {
+        box-shadow: none !important;
     }
 }

@@ -537,9 +537,7 @@ class MDFGF {
 
             if (in_array($field->type, self::$singleTextFields) || ($field['type'] === 'date' && $field['dateType'] === 'datepicker')) {
                 $classes.= ' mdfgf-field';
-            } //elseif (in_array($field->type, array('radio', 'checkbox', 'list'))) {
-              //  $classes.= ' mdfgf-field';
-            //}
+            }
 
             if (in_array($field->type, self::$columnFields)) {
                 $classes.= ' '.($field->size === 'tiny' ? ' mdfgfcol-3' : ($field->size === 'small' ? ' mdfgfcol-4' : ($field->size === 'large' ? ' mdfgfcol-12' : ' mdfgfcol-6')));
@@ -568,6 +566,10 @@ class MDFGF {
 
         if (empty($settings['design']) || $settings['design'] === 'mdfgf-gf') {
             return $content;
+        }
+
+        if (strpos($content, 'ginput_complex') === false && ($field['type'] === 'time' || $field['type'] === 'date' && $field['dateType'] !== 'datepicker')) {
+            $content = preg_replace("/class=\'([^\']*ginput_container[^\']*)\'/m", "class='ginput_complex $1'", $content);
         }
 
         $complexFieldsClasses = array(
@@ -804,12 +806,29 @@ class MDFGF {
     if ($settings['design'] === 'mdfgf-bootstrap') {
         $rgb = self::hexToRGB($mainColor);
         $colorString.= '
-    box-shadow: 0 0 0 0.2rem rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.2);
+    box-shadow: '.($labelAnimation === 'line' ? '0 0 1px 1px' : '0 0 0 0.2rem').' rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.2);
     ';
     }
     
     $colorString.= '
+}';
+if ($settings['design'] === 'mdfgf-bootstrap' && $labelAnimation === 'line') {
+    $rgb = self::hexToRGB($mainColor);
+    $colorString.= '
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:nth-child(2),
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:nth-child(2) {
+    box-shadow: 0 1px 1px 0 rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.2);
 }
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .field_sublabel_below .ginput_complex .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:nth-child(2),
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .field_sublabel_below .ginput_complex.mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:nth-child(2),
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .field_sublabel_below .ginput_complex .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:nth-child(2),
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .field_sublabel_below .ginput_complex.mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:nth-child(2) {
+    box-shadow: 0 -1px 1px 0 rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.2);
+}
+';
+}
+    
+$colorString.= '
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .button:hover,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .button:hover,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' input[type="file"]:hover:before,
