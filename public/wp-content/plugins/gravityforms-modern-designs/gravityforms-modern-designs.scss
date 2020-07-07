@@ -796,6 +796,58 @@ li.gfield.mdfgf-field-type-address {
         }
     }
 
+    form.mdfgf-bootstrap {
+        .ginput_container input[type="checkbox"],
+        .ginput_container input[type="radio"] {
+            opacity: 1;
+            width: 1rem;
+            height: 1rem;
+            min-height: 1rem;
+            padding: 0;
+            vertical-align: top;
+            margin: 2px 6px 0 0;
+            position: relative;
+            pointer-events: all;
+            appearance: none;
+            -webkit-appearance: none;
+            border-radius: .25rem;
+            &::after {
+                content: '';
+                display: block;
+                margin: auto;
+                height: 100%;
+                width: 100%;
+                border-radius: 2px;
+                border-color: transparent;
+                transition: background-color .1s ease-in-out;
+            }
+            &:checked::after {
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: 60% 60%;
+                background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E");
+            }
+            + label {
+                width: calc(100% - 30px);
+                line-height: 1.2;
+                display: inline-block;
+                vertical-align: top;
+                margin-left: 0;
+            }
+        }
+
+        .gfield input[type="radio"] {
+            border-radius: 50%;
+            margin-right: 10px;
+            &::after { 
+                border-radius: 50%;
+            }
+            &:checked::after {
+                background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='%23fff'/%3E%3C/svg%3E");
+            }
+        }
+    }
+
     &.mdfgf-checkboxes-mdfgf {
         .ginput_container input[type="checkbox"],
         .ginput_container input[type="radio"] {
@@ -943,7 +995,7 @@ textarea.mdfgf-input {
         position: relative;
         .gf_step_number {
             display: block;
-            line-height: 34px;
+            line-height: 32px;
             width: 100%;
             height: 34px;
             border-radius: 50%;
@@ -1469,8 +1521,12 @@ textarea.mdfgf-input {
         background-clip: padding-box;
         border-radius: .25rem;
         transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-        appearance: auto;
-        -webkit-appearance: auto;
+    }
+    select {
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right .75rem center;
+        background-size: 8px 10px;
     }
     .button {
         min-width: 0 !important;

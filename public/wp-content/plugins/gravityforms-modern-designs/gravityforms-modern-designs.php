@@ -618,13 +618,13 @@ class MDFGF {
                     continue;
                 }
 
-                if ($settings['design'] !== 'mdfgf-bootstrap' || ($settings['design'] === 'mdfgf-bootstrap' && !preg_match("/type=\'(checkbox|radio)\'/m", $tag))) {
+                // if ($settings['design'] !== 'mdfgf-bootstrap' || ($settings['design'] === 'mdfgf-bootstrap' && !preg_match("/type=\'(checkbox|radio)\'/m", $tag))) {
                     if (preg_match("/class=\'([^\']*)\'/m", $tag, $classMatches)) {
                         $newTag = str_replace($classMatches[0], "class='mdfgf-input".($classMatches[1] ? ' '.$classMatches[1] : '')."'", $tag);
                     } else {
                         $newTag = preg_replace('/\<(select|input|textarea) /m', '<$1 class="mdfgf-input" ', $tag);
                     }
-                }
+                // }
 
                 if ($settings['label_animation'] === 'line') {
                     if ($newTag && !in_array($field['type'], array('radio', 'checkbox', 'consent', 'fileupload'))) {
@@ -1006,20 +1006,20 @@ $colorString.= '
                 </td>
             </tr>
             <tr class="mdfgf-theme-options mdfgf-override-options">
-                <th><label for="mdfgf_use_custom_selects">Use Custom Dropdowns '.gform_tooltip("mdfgf_use_custom_selects_tooltip", '', true).'</label></th>
+                <th><label for="mdfgf_use_custom_controls">Use Custom Controls '.gform_tooltip("mdfgf_use_custom_controls_tooltip", '', true).'</label></th>
                 <td>
-                    <input type="checkbox" id="mdfgf_use_custom_selects" name="mdfgf_use_custom_selects" value="1" '.checked(rgar($form, 'mdfgf_use_custom_selects'), 1, false).'>
+                    <select id="mdfgf_use_custom_controls" name="mdfgf_use_custom_controls" style="width: 300px;">
+                        <option value="" '.selected(rgar($form, 'mdfgf_use_custom_controls'), '', false).'>None</option>
+                        <option value="mdfgf-checkboxes-mdfgf" '.selected(rgar($form, 'mdfgf_use_custom_controls'), 'mdfgf-checkboxes-mdfgf', false).'>Modern Designs for Gravity Forms Style</option>
+                        <option value="mdfgf-checkboxes-md" '.selected(rgar($form, 'mdfgf_use_custom_controls'), 'mdfgf-checkboxes-md', false).'>Material Design Checkboxes</option>
+                        <option value="mdfgf-checkboxes-switch" '.selected(rgar($form, 'mdfgf_use_custom_controls'), 'mdfgf-checkboxes-switch', false).'>Material Design Switches</option>
+                    </select>
                 </td>
             </tr>
             <tr class="mdfgf-theme-options mdfgf-override-options">
-                <th><label for="mdfgf_use_custom_checkboxes">Use Custom Checkboxes '.gform_tooltip("mdfgf_use_custom_checkboxes_tooltip", '', true).'</label></th>
+                <th><label for="mdfgf_use_custom_selects">Use Custom Dropdowns '.gform_tooltip("mdfgf_use_custom_selects_tooltip", '', true).'</label></th>
                 <td>
-                    <select id="mdfgf_use_custom_checkboxes" name="mdfgf_use_custom_checkboxes" style="width: 300px;">
-                        <option value="" '.selected(rgar($form, 'mdfgf_use_custom_checkboxes'), '', false).'>None</option>
-                        <option value="mdfgf-checkboxes-mdfgf" '.selected(rgar($form, 'mdfgf_use_custom_checkboxes'), 'mdfgf-checkboxes-mdfgf', false).'>Modern Designs for Gravity Forms Style</option>
-                        <option value="mdfgf-checkboxes-md" '.selected(rgar($form, 'mdfgf_use_custom_checkboxes'), 'mdfgf-checkboxes-md', false).'>Material Design Checkboxes</option>
-                        <option value="mdfgf-checkboxes-switch" '.selected(rgar($form, 'mdfgf_use_custom_checkboxes'), 'mdfgf-checkboxes-switch', false).'>Material Design Switches</option>
-                    </select>
+                    <input type="checkbox" id="mdfgf_use_custom_selects" name="mdfgf_use_custom_selects" value="1" '.checked(rgar($form, 'mdfgf_use_custom_selects'), 1, false).'>
                 </td>
             </tr>
             <tr class="mdfgf-theme-options mdfgf-override-options">
