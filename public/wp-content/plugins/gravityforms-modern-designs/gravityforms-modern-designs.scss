@@ -207,35 +207,48 @@ $themes: (
     padding-top: 0;
     padding-bottom: 16px;
 }   
+.mdfgf-animate-in .gfield_date_dropdown_day.mdfgf-field .mdfgf-input,
+.mdfgf-animate-in .gfield_date_dropdown_month.mdfgf-field .mdfgf-input,
+.mdfgf-animate-in .gfield_date_dropdown_year.mdfgf-field .mdfgf-input {
+    padding-bottom: 0;
+}
 
 .mdfgf-fieldset {
     width: 100%;
-    display: flex;
-    height: 44px;
+    height: auto;
     position: relative;
-    .mdfgf-input,
-    .mdfgf-select {
-        position: absolute !important;
-        top: 1px;
-        bottom: 1px;
-        left: 1px;
-        right: 1px;
-        border: 0;
-        background-color: transparent;
-        height: calc(100% - 2px);
-        width: calc(100% - 2px);
-        &:focus {
-            box-shadow: none;
-        }
-    }
-    .mdfgf-select .mdfgf-input {
+    padding: 1px;
+    .mdfgf-fieldblockset {
+        display: flex;
+        position: absolute;
         top: 0;
         bottom: 0;
         left: 0;
         right: 0;
-        height: 100%;
-        width: 100%;
+        z-index: 1;
+        pointer-events: none;
     }
+    .mdfgf-input,
+    .mdfgf-select {
+        position: relative;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border: 0;
+        width: 100%;
+        &:focus {
+            box-shadow: none;
+        }
+    }
+    // .mdfgf-select .mdfgf-input {
+    //     top: 0;
+    //     bottom: 0;
+    //     left: 0;
+    //     right: 0;
+    //     height: 100%;
+    //     width: 100%;
+    // }
     > label {
         display: none;
     }
@@ -373,7 +386,7 @@ $themes: (
             transform: translate(10px, 36px);
         }
         &.active > .mdfgf-label {
-            transform: scale(.8) translate(13px, 34px);
+            transform: scale(.8) translate(13px, 32px);
         }
     }
     .field_sublabel_below .mdfgf-field {
@@ -381,12 +394,12 @@ $themes: (
             transform: translate(10px, -35px);
         }
         &.active > .mdfgf-label {
-            transform: scale(.8) translate(13px, -32px);
+            transform: scale(.8) translate(13px, -30px);
         }
     }
     .mdfgf-field.active {
         > .mdfgf-label {
-            transform: scale(.8) translate(13px, 36px);
+            transform: scale(.8) translate(13px, 34px);
         } 
     }
     form.mdfgf-bootstrap {
@@ -578,7 +591,7 @@ li.gfield.mdfgf-field-type-address {
         -webkit-appearance: none;
         padding: 0 1rem;
         height: 40px;
-        line-height: 40px;
+        line-height: 38px;
         min-width: 140px;
         text-align: center;
         font-size: .8em;
@@ -963,7 +976,7 @@ textarea.mdfgf-input {
     text-overflow: ellipsis;
     &:focus,
     &:checked {
-        box-shadow: inset 0 0 0 3px rgba(150,150,150, .1);
+        box-shadow: inset 0 0 0 3px rgba(150,150,150, .2);
     }
 }
 
@@ -1011,7 +1024,7 @@ textarea.mdfgf-input {
         position: relative;
         .gf_step_number {
             display: block;
-            line-height: 34px;
+            line-height: 33px;
             width: 100%;
             height: 34px;
             border-radius: 50%;
@@ -1258,6 +1271,9 @@ textarea.mdfgf-input {
         margin: 2px 0;
         border-radius: .2rem;
     }
+}
+.mdfgf-container.mdfgf-animate-in:not(.mdfgf-use-custom-selects) select[multiple="multiple"] {
+    padding-top: 1.5rem;
 }
 
 .mdfgf-select { 
@@ -1524,12 +1540,11 @@ textarea.mdfgf-input {
     }
 }
 
-.mdfgf-container form.mdfgf-bootstrap {
+form.mdfgf-bootstrap {
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    color: #212529;
     .mdfgf-input,
     .button {
         font-size: 1rem;
@@ -1545,6 +1560,14 @@ textarea.mdfgf-input {
         background-repeat: no-repeat;
         background-position: right .75rem center;
         background-size: 8px 10px;
+        .mdfgf-theme-ash &,
+        .mdfgf-theme-dark & {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23c4cac0' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E");
+        }
+    }
+    
+    select[multiple="multiple"] {
+        background-image: none;
     }
     .button {
         min-width: 0 !important;
@@ -1584,6 +1607,20 @@ textarea.mdfgf-input {
 
 .mdfgf-container.mdfgf-animate-line form.mdfgf-bootstrap {
     .mdfgf-input:focus {
-        box-shadow: none !important;
+        box-shadow: none;
     }
+    .ginput_container input[type="checkbox"]:focus,
+    .ginput_container input[type="radio"]:focus {
+        box-shadow: 0 0 0 3px rgba(150,150,150,.2);
+    }
+}
+
+.mdfgf-container.mdfgf-no-backgrounds .mdfgf-input {
+    background-color: transparent;
+}
+.mdfgf-container.mdfgf-no-borders .mdfgf-input,
+.mdfgf-container.mdfgf-no-borders form.mdfgf-bootstrap .mdfgf-input,
+.mdfgf-container.mdfgf-no-borders .mdfgf-fieldset .mdfgf-fieldblock,
+.mdfgf-container.mdfgf-no-borders form.mdfgf-bootstrap .mdfgf-fieldset .mdfgf-fieldblock {
+    border-color: transparent;
 }

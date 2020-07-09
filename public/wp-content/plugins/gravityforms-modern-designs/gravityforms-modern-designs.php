@@ -628,7 +628,7 @@ class MDFGF {
 
                 if ($settings['label_animation'] === 'line') {
                     if ($newTag && !in_array($field['type'], array('radio', 'checkbox', 'consent', 'fileupload'))) {
-                        $newTag = '<div class="mdfgf-fieldset"><div class="mdfgf-fieldblock"></div><div class="mdfgf-fieldblock mdfgf-fieldblock-label"></div><div class="mdfgf-fieldblock"></div>'.$newTag.'</div>';
+                        $newTag = '<div class="mdfgf-fieldset"><div class="mdfgf-fieldblockset"><div class="mdfgf-fieldblock"></div><div class="mdfgf-fieldblock mdfgf-fieldblock-label"></div><div class="mdfgf-fieldblock"></div></div>'.$newTag.'</div>';
                     }
             }
 
@@ -685,6 +685,7 @@ class MDFGF {
         $useCustomDatepicker = false;
         $colorString = '';
         $labelAnimation = '';
+        $fieldAppearance = '';
         
         if(!empty($settings['design']) && $settings['design'] !== 'mdfgf-gf') {
             if($settings['color']) {
@@ -698,6 +699,9 @@ class MDFGF {
             }
             if (!empty($settings['label_animation'])) {
                 $labelAnimation = esc_attr($settings['label_animation']);
+            }
+            if (!empty($settings['field_appearance'])) {
+                $fieldAppearance = esc_attr($settings['field_appearance']);
             }
             if (!empty($settings['auto_grow_textareas'])) {
                 $autoGrowTextareas = true;
@@ -722,6 +726,9 @@ class MDFGF {
         if (isset($attributes['mdfgf_label_animation'])) {
             $labelAnimation = esc_attr($attributes['mdfgf_label_animation']);
         }
+        if (isset($attributes['mdfgf_field_appearance'])) {
+            $fieldAppearance = esc_attr($attributes['mdfgf_field_appearance']);
+        }
         if (isset($attributes['mdfgf_auto_grow_textareas'])) {
             $autoGrowTextareas = !empty($attributes['mdfgf_auto_grow_textareas']);
         }
@@ -742,6 +749,10 @@ class MDFGF {
 
         if (!empty($labelAnimation)) {
             $classes[] = 'mdfgf-animate-'.$labelAnimation;
+        }
+
+        if (!empty($fieldAppearance)) {
+            $classes[] = 'mdfgf-'.$fieldAppearance;
         }
 
         if ($autoGrowTextareas) {
@@ -803,30 +814,15 @@ class MDFGF {
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock {
     border-color: '.($settings['design'] === 'mdfgf-bootstrap' ? self::adjustBrightness($mainColor, .5) : $mainColor).';';
 
-    if ($settings['design'] === 'mdfgf-bootstrap') {
+    if ($settings['design'] === 'mdfgf-bootstrap' && $labelAnimation !== 'line') {
         $rgb = self::hexToRGB($mainColor);
         $colorString.= '
-    box-shadow: '.($labelAnimation === 'line' ? '0 0 1px 1px' : '0 0 0 0.2rem').' rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.2);
+    box-shadow: 0 0 0 0.2rem rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.2);
     ';
     }
     
     $colorString.= '
 }';
-if ($settings['design'] === 'mdfgf-bootstrap' && $labelAnimation === 'line') {
-    $rgb = self::hexToRGB($mainColor);
-    $colorString.= '
-.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:nth-child(2),
-.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:nth-child(2) {
-    box-shadow: 0 1px 1px 0 rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.2);
-}
-.mdfgf-container #gform_wrapper_'.$attributes['id'].' .field_sublabel_below .ginput_complex .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:nth-child(2),
-.mdfgf-container #gform_wrapper_'.$attributes['id'].' .field_sublabel_below .ginput_complex.mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:nth-child(2),
-.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .field_sublabel_below .ginput_complex .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:nth-child(2),
-.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .field_sublabel_below .ginput_complex.mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:nth-child(2) {
-    box-shadow: 0 -1px 1px 0 rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.2);
-}
-';
-}
     
 $colorString.= '
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .button:hover,
@@ -860,12 +856,13 @@ $colorString.= '
         $tooltips["mdfgf_design_tooltip"] = "Select which Design Style you would like to use. When using somthing other than Gravity Forms Default, Gravity forms Styles will be de-registered for faster page loads. If you are already using a css framework like Bootstrap or MDB, then it is best to set this to None and 'Add Additional Classes' for your Framework.";
         $tooltips["mdfgf_add_classes_tooltip"] = "Alternatively, if you are already including a css framework like bootstrap or mdb then you can add the classes to the form markup. Currently Supports Bootstrap 4 and MDB (mdbootstrap.com)";
         $tooltips["mdfgf_shortcode_overrides_tooltip"] = "You can Override these values within the shortcode attributes. This is useful when needing to change colors or themes when embedding the form in different locations.<br>Examples:<br>mdfgf_theme=\"mdfgf-theme-default\"<br>mdfgf_theme=\"mdfgf-theme-greyish\"<br>mdfgf_theme=\"mdfgf-theme-ash\"<br>mdfgf_theme=\"mdfgf-theme-dark\"<br>mdfgf_text_class=\"mdfgf-text-light\"<br>mdfgf_color=\"#21759b\"";
-        $tooltips["mdfgf_color_tooltip"] = "This will override the Highlight color used for Buttons, Radios and Checkboxes when filled and Focus events. Use Hexadecimal value.<br>Ex #21759b";
+        $tooltips["mdfgf_color_tooltip"] = "This will override the Highlight color used for Buttons, Radios and Checkboxes when filled and Focus events. Use Hexadecimal value.<br>Ex #8a8a8a";
         $tooltips["mdfgf_auto_grow_textareas_tooltip"] = "This will collapse all textarea fields in the form to 80px and will auto grow the height when the user types content into the box. The Max height is 300px and will show a scrollbar once they enter that much data.";
         $tooltips["mdfgf_use_custom_selects_tooltip"] = "This will add custom styles and functionality to the Dropdown fields (select fields). Their may be issues when using this with other frameworks, plugins, or older devices.";
         $tooltips["mdfgf_use_custom_datepicker_tooltip"] = "This will add custom styles to the Datepicker.";
         $tooltips["mdfgf_override_globals_tooltip"] = "This will allow you to override the settings from the Global Settings.";
         $tooltips["mdfgf_label_animation_tooltip"] = "This will place the label inside field and use it as a Placeholder. This will also remove the placeholder text if it has been set. The label will be animated once the user sets focus to the field. The placement of the animated label (Above or Below) will still depend on the setting you give it within your field settings";
+        $tooltips["mdfgf_field_appearance_tooltip"] = "This will determine how the field inputs will show. When removing the backgrounds or borders make sure your page background color contrasts with the fields enough to be seen. You cannot remove both the border and background as that would make it too difficult for the user to see the field.";
         return $tooltips;
     }
 
@@ -887,6 +884,7 @@ $colorString.= '
             'text_class' => '',
             'color' => '',
             'label_animation' => '',
+            'field_appearance' => '',
             'add_classes' => '',
             'auto_grow_textareas' => 0,
             'use_custom_selects' => 0,
@@ -969,6 +967,12 @@ $colorString.= '
                 </td>
             </tr>
             <tr class="mdfgf-theme-options mdfgf-override-options">
+                <th><label for="mdfgf_color">Theme Color '.gform_tooltip("mdfgf_color_tooltip", '', true).'</label></th>
+                <td>
+                    <input type="text" id="mdfgf_color" placeholder="#8a8a8a" name="mdfgf_color" value="'.(rgar($form, 'mdfgf_color') ? rgar($form, 'mdfgf_color') : '').'" style="width: 300px;">
+                </td>
+            </tr>
+            <tr class="mdfgf-theme-options mdfgf-override-options">
                 <th><label for="mdfgf_text_class">Text Color</label></th>
                 <td>
                     <select id="mdfgf_text_class" name="mdfgf_text_class" style="width: 300px;">
@@ -979,9 +983,13 @@ $colorString.= '
                 </td>
             </tr>
             <tr class="mdfgf-theme-options mdfgf-override-options">
-                <th><label for="mdfgf_color">Primary Color '.gform_tooltip("mdfgf_color_tooltip", '', true).'</label></th>
+                <th><label for="mdfgf_field_appearance">Field Appearance '.gform_tooltip("mdfgf_field_appearance_tooltip", '', true).'</label></th>
                 <td>
-                    <input type="text" id="mdfgf_color" name="mdfgf_color" value="'.(rgar($form, 'mdfgf_color') ? rgar($form, 'mdfgf_color') : '').'" style="width: 300px;">
+                    <select id="mdfgf_field_appearance" name="mdfgf_field_appearance" style="width: 300px;">
+                        <option value="" '.selected(rgar($form, 'mdfgf_field_appearance'), '', false).'>Show Backgrounds and Borders</option>
+                        <option value="no-backgrounds" '.selected(rgar($form, 'mdfgf_field_appearance'), 'no-backgrounds', false).'>Remove Backgrounds</option>
+                        <option value="no-borders" '.selected(rgar($form, 'mdfgf_field_appearance'), 'no-borders', false).'>Remove Borders</option>
+                    </select>
                 </td>
             </tr>
             <tr class="mdfgf-theme-options mdfgf-override-options">
@@ -1002,17 +1010,6 @@ $colorString.= '
                         <option value="" '.selected(rgar($form, 'mdfgf_add_classes'), '', false).'>None</option>
                         <option value="bootstrap" '.selected(rgar($form, 'mdfgf_add_classes'), 'bootstrap', false).'>Add Bootstrap Classes</option>
                         <option value="mdb" '.selected(rgar($form, 'mdfgf_add_classes'), 'mdb', false).'>Add MDB Classes (mdbootstrap.com)</option>
-                    </select>
-                </td>
-            </tr>
-            <tr class="mdfgf-theme-options mdfgf-override-options">
-                <th><label for="mdfgf_use_custom_controls">Use Custom Controls '.gform_tooltip("mdfgf_use_custom_controls_tooltip", '', true).'</label></th>
-                <td>
-                    <select id="mdfgf_use_custom_controls" name="mdfgf_use_custom_controls" style="width: 300px;">
-                        <option value="" '.selected(rgar($form, 'mdfgf_use_custom_controls'), '', false).'>None</option>
-                        <option value="mdfgf-checkboxes-mdfgf" '.selected(rgar($form, 'mdfgf_use_custom_controls'), 'mdfgf-checkboxes-mdfgf', false).'>Modern Designs for Gravity Forms Style</option>
-                        <option value="mdfgf-checkboxes-md" '.selected(rgar($form, 'mdfgf_use_custom_controls'), 'mdfgf-checkboxes-md', false).'>Material Design Checkboxes</option>
-                        <option value="mdfgf-checkboxes-switch" '.selected(rgar($form, 'mdfgf_use_custom_controls'), 'mdfgf-checkboxes-switch', false).'>Material Design Switches</option>
                     </select>
                 </td>
             </tr>
@@ -1094,6 +1091,12 @@ $colorString.= '
                     </td>
                 </tr>
                 <tr class="mdfgf-theme-options"<?= (!$settings['design'] || $settings['design'] === 'mdfgf-gf' ? ' style="display:none;"' : '');?>>
+                    <th><label for="mdfgf_color">Theme Color <?php gform_tooltip("mdfgf_color_tooltip", '');?></label></th>
+                    <td>
+                        <input type="text" id="mdfgf_color" placeholder="#8a8a8a" name="mdfgf[color]" value="<?= ($settings['color'] ? $settings['color'] : '');?>" style="width: 300px;">
+                    </td>
+                </tr>
+                <tr class="mdfgf-theme-options"<?= (!$settings['design'] || $settings['design'] === 'mdfgf-gf' ? ' style="display:none;"' : '');?>>
                     <th><label for="mdfgf_text_class">Text Color</label></th>
                     <td>
                         <select id="mdfgf_text_class" name="mdfgf[text_class]" style="width: 300px;">
@@ -1103,10 +1106,14 @@ $colorString.= '
                         </select>
                     </td>
                 </tr>
-                <tr class="mdfgf-theme-options"<?= (!$settings['design'] || $settings['design'] === 'mdfgf-gf' ? ' style="display:none;"' : '');?>>
-                    <th><label for="mdfgf_color">Primary Color <?php gform_tooltip("mdfgf_color_tooltip", '');?></label></th>
+                <tr class="mdfgf-theme-options"<?= (!$settings['design'] || $settings['design'] === 'mdfgf-gf' || $settings['design'] === 'mdfgf-md' ? ' style="display:none;"' : '');?>>
+                    <th><label for="mdfgf_field_appearance">Field Appearance <?= gform_tooltip("mdfgf_field_appearance_tooltip", '');?></label></th>
                     <td>
-                        <input type="text" id="mdfgf_color" name="mdfgf[color]" value="<?= ($settings['color'] ? $settings['color'] : '');?>" style="width: 300px;">
+                        <select id="mdfgf_field_appearance" name="mdfgf_field_appearance" style="width: 300px;">
+                            <option value="" <?php selected($settings['field_appearance'], '');?>>Show Backgrounds and Borders</option>
+                            <option value="no-backgrounds" <?php selected($settings['field_appearance'], 'no-backgrounds');?>>Remove Backgrounds</option>
+                            <option value="no-borders" <?php selected($settings['field_appearance'], 'no-borders');?>>Remove Borders</option>
+                        </select>
                     </td>
                 </tr>
                 <tr class="mdfgf-theme-options"<?= (!$settings['design'] || $settings['design'] === 'mdfgf-gf' || $settings['design'] === 'mdfgf-md' ? ' style="display:none;"' : '');?>>
@@ -1128,6 +1135,13 @@ $colorString.= '
                             <option value="bootstrap" <?php selected($settings['add_classes'], 'bootstrap');?>>Add Bootstrap Classes</option>
                             <option value="mdb" <?php selected($settings['add_classes'], 'mdb');?>>Add MDB Classes (mdbootstrap.com)</option>
                         </select>
+                    </td>
+                </tr>
+                <tr class="mdfgf-theme-options"<?= (!$settings['design'] || $settings['design'] === 'mdfgf-gf' ? ' style="display:none;"' : '');?>>
+                    <th><label for="mdfgf_use_transparent_backgrounds">Transparent Backgrounds <?php gform_tooltip("mdfgf_use_custom_selects_tooltip", '');?></label></th>
+                    <td>
+                        <input type="hidden" name="mdfgf[use_transparent_backgrounds]" value="0" readonly>
+                        <input type="checkbox" id="mdfgf_use_transparent_backgrounds" name="mdfgf[use_transparent_backgrounds]" value="1" <?php checked($settings['use_transparent_backgrounds'], 1);?>>
                     </td>
                 </tr>
                 <tr class="mdfgf-theme-options"<?= (!$settings['design'] || $settings['design'] === 'mdfgf-gf' ? ' style="display:none;"' : '');?>>
@@ -1184,6 +1198,7 @@ $colorString.= '
         $form['mdfgf_color'] = rgpost('mdfgf_color') ? strtolower(rgpost('mdfgf_color')) : '';
         $form['mdfgf_auto_grow_textareas'] = rgpost('mdfgf_auto_grow_textareas') ? 1 : 0;
         $form['mdfgf_use_custom_selects'] = rgpost('mdfgf_use_custom_selects') ? 1 : 0;
+        $form['mdfgf_field_appearance'] = rgpost('mdfgf_field_appearance') ? rgpost('mdfgf_field_appearance') : '';
         $form['mdfgf_use_custom_datepicker'] = rgpost('mdfgf_use_custom_datepicker') ? 1 : 0;
         return $form;
     }
