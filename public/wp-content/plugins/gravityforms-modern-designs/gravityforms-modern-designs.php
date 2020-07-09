@@ -628,7 +628,7 @@ class MDFGF {
 
                 if ($settings['label_animation'] === 'line') {
                     if ($newTag && !in_array($field['type'], array('radio', 'checkbox', 'consent', 'fileupload'))) {
-                        $newTag = '<div class="mdfgf-fieldset"><div class="mdfgf-fieldblockset"><div class="mdfgf-fieldblock"></div><div class="mdfgf-fieldblock mdfgf-fieldblock-label"></div><div class="mdfgf-fieldblock"></div></div>'.$newTag.'</div>';
+                        $newTag = '<div class="mdfgf-fieldset">'.$newTag.'<div class="mdfgf-fieldblockset"><div class="mdfgf-fieldblock"></div><div class="mdfgf-fieldblock mdfgf-fieldblock-label"></div><div class="mdfgf-fieldblock"></div></div></div>';
                     }
             }
 
@@ -823,6 +823,16 @@ class MDFGF {
     
     $colorString.= '
 }';
+
+if ($settings['design'] === 'mdfgf-bootstrap') {
+    $rgb = self::hexToRGB($mainColor);
+    $colorString.= '
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-bootstrap .button:focus,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-bootstrap .button:focus {
+    box-shadow: 0 0 0 0.2rem rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.5);
+}
+    ';
+}
     
 $colorString.= '
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .button:hover,
