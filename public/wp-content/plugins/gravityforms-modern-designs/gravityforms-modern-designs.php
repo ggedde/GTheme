@@ -134,11 +134,15 @@ class MDFGF {
         });
 
         add_action( 'gform_enqueue_scripts', function ( $form, $is_ajax ) {
-            wp_deregister_style('gforms_reset_css');
-            wp_deregister_style('gforms_datepicker_css');
-            wp_deregister_style('gforms_formsmain_css');
-            wp_deregister_style('gforms_ready_class_css');
-            wp_deregister_style('gforms_browsers_css');
+
+            $settings = self::getSettings($form['id']);
+            if (empty($settings['design']) || $settings['design'] !== 'mdfgf-gf') {
+                wp_deregister_style('gforms_reset_css');
+                wp_deregister_style('gforms_datepicker_css');
+                wp_deregister_style('gforms_formsmain_css');
+                wp_deregister_style('gforms_ready_class_css');
+                wp_deregister_style('gforms_browsers_css');
+            }
         }, 10, 2);
     }
 
@@ -494,7 +498,7 @@ class MDFGF {
 
         $settings = self::getSettings($form['id']);
         
-        if (!empty($settings['design'])) {
+        if (!empty($settings['design']) && $settings['design'] !== 'mdfgf-gf') {
             $form['cssClass'].= (empty($form['cssClass']) ? '' : ' ').$settings['design'].' mdfgf-render';
         }
         return $form;
@@ -675,6 +679,10 @@ class MDFGF {
     public static function shortcodeForm($string, $attributes, $content) {
 
         $settings = self::getSettings($attributes['id']);
+
+        if(empty($settings['design']) || $settings['design'] === 'mdfgf-gf') {
+            return $string;
+        }
 
         $classes = array('mdfgf-container');
         $mainColor = '';
