@@ -1175,10 +1175,6 @@ textarea.mdfgf-input {
         border-color: map.get(map.get($themes, 'default'), 'error-color');
     }
 }
-.mdfgf-use-custom-selects .mdfgf-custom-select,
-.mdfgf-use-custom-datepicker .ui-datepicker {
-    border: 1px solid map.get(map.get($themes, 'default'), 'border-color');
-}
 .mdfgf-select:after {
     border: 1px solid map.get(map.get($themes, 'default'), 'arrow-color');
 }
@@ -1338,8 +1334,8 @@ textarea.mdfgf-input {
         height: 10px;
         transform: translateY(-75%) rotate(45deg);
         background-color: transparent;
-        border-top: 0;
-        border-left: 0;
+        border-top-color: transparent;
+        border-left-color: transparent;
         pointer-events: none;
     }
     .mdfgf-multi-text {
@@ -1376,6 +1372,7 @@ textarea.mdfgf-input {
     max-height: 300px;
     overflow-y: auto;
     transform: scaleY(0.8);
+    box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
     button {
         display: block;
         outline: none;
@@ -1408,31 +1405,6 @@ textarea.mdfgf-input {
             color: #333;
         }
     }
-    @media (prefers-color-scheme: dark) {
-        background-color: #333;
-        color: #eee;
-        &::after {
-            border-color: #eee;
-        }
-        button {
-            color: #eee;
-            &.active,
-            &:focus,
-            &:hover {
-                background-color: rgba(255,255,255,0.05);
-                color: #eee;
-            }
-            &:focus,
-            &.active {
-                background-color: rgba(255,255,255,0.1);
-            }
-            &:active {
-                background-color: rgba(255,255,255,0.2);
-                color: #eee;
-            }
-        }    
-    }
-
     &.multiple {
         button {
             padding-left: 40px;
@@ -1453,17 +1425,44 @@ textarea.mdfgf-input {
             &.active:after {
                 background: #555;
             }
-            @media (prefers-color-scheme: dark) {
-                position: relative;
-                &:after {
-                    border: 1px solid #999;
-                    box-shadow: inset 0 0 0 2px #333;
-                }
-                &.active:after {
-                    background: #ddd;
-                    border-color: #ddd;
-                }
-            }
+        }
+    }
+}
+
+.mdfgf-container.mdfgf-theme-dark.mdfgf-use-custom-selects .mdfgf-custom-select,
+.mdfgf-container.mdfgf-theme-ash.mdfgf-use-custom-selects .mdfgf-custom-select,
+.mdfgf-theme-dark.mdfgf-use-custom-datepicker .ui-datepicker,
+.mdfgf-theme-ash.mdfgf-use-custom-datepicker .ui-datepicker {
+    background-color: #333;
+    color: #eee;
+    &::after {
+        border-color: #eee;
+    }
+    button {
+        color: #eee;
+        &.active,
+        &:focus,
+        &:hover {
+            background-color: rgba(255,255,255,0.05);
+            color: #eee;
+        }
+        &:focus,
+        &.active {
+            background-color: rgba(255,255,255,0.1);
+        }
+        &:active {
+            background-color: rgba(255,255,255,0.2);
+            color: #eee;
+        }
+    } 
+    &.multiple button {
+        &:after {
+            border: 1px solid #999;
+            box-shadow: inset 0 0 0 2px #333;
+        }
+        &.active:after {
+            background: #ddd;
+            border-color: #ddd;
         }
     }
 }
@@ -1473,48 +1472,58 @@ textarea.mdfgf-input {
     max-width: 300px;
     max-height: none;
     width: 84%;
-    padding: 1rem;
+    padding: 0 0 1rem 0;
     transform: none;
     transition: none;
+    .ui-datepicker-header {
+        padding: 1rem 1rem 0;
+        position: relative;
+    }
     .ui-datepicker-title {
         text-align: center;
-        margin-bottom: 1rem;
-        margin-top: -34px;
-        padding-left: 5px;
+        position: absolute;
+        top: 10px;
+        left: 0;
+        width: 100%
     }
     .ui-datepicker-calendar {
         border-spacing: 0;
-        width: 100%;
+        width: 90%;
+        margin: auto;
         td a {
             text-align: center;
             text-decoration: none;
-            padding: 4px 0;
+            padding: 0;
             display: block;
             color: #555;
-            @media (prefers-color-scheme: dark) {
-                color: #bbb;
-            }
-            &:hover,
+            width: 32px;
+            height: 32px;
+            line-height: 31px;
+            border-radius: 50%;
+            font-size: 14px;
+            border: 1px solid transparent;
+            transition: all .1s ease-in-out;
             &.ui-state-highlight {
-                background-color: rgba(150,150,150,0.15);
+                border-color: map.get(map.get($themes, 'default'), 'accent-color');;
                 color: #222;
-                @media (prefers-color-scheme: dark) {
-                    color: #fff;
-                }
             }
             &.ui-state-active {
-                background-color: rgba(150,150,150,0.3);
-                color: #222;
-                @media (prefers-color-scheme: dark) {
-                    color: #fff;
-                }
+                background-color: map.get(map.get($themes, 'default'), 'accent-color');
+                color: #fdfdfd;
+            }
+            &:hover {
+                background-color: rgba(0,0,0,0.05)
             }
         }
         thead {
-            background-color: rgba(150,150,150,0.1);
+            // background-color: rgba(150,150,150,0.1);
+            padding: 1rem;
             th {
                 text-align: center;
-                padding: 4px 0;
+                padding: 16px 0 8px;
+                font-weight: normal;
+                font-size: 14px;
+                opacity: 0.6;
             }
         }
         
@@ -1523,37 +1532,48 @@ textarea.mdfgf-input {
     .ui-datepicker-prev {
         color: transparent !important;
         position: relative;
-        width: 20px;
+        width: 24px;
+        height: 24px;
         display: inline-block;
         user-select: none;
+        border-radius: 50%;
+        vertical-align: -4px;
+        z-index: 1;
+        cursor: pointer;
         span {
             display: inline-block;
             overflow: hidden;
             text-indent: 200px;
             width: 20px;
         }
-        &:after {
+        &::after {
             content: '';
             position: absolute;
             display: block;
-            width: 12px;
-            height: 12px;
-            border: 1px solid #333;
+            width: 8px;
+            height: 8px;
+            border: 2px solid rgba(0,0,0,0.3);
             border-top: 0;
             border-right: 0;
             transform: rotate(45deg);
-            top: 8px;
+            top: 0;
             left: 3px;
-            @media (prefers-color-scheme: dark) {
-                border-color: #eee;
+            bottom: 0;
+            margin: auto;
+            right: 0;
+        }
+        &:hover {
+            background-color: rgba(0,0,0,0.05);
+            &::after {
+                border-color: rgba(0,0,0,0.6);
             }
         }
-        
     }
     .ui-datepicker-next {
         float: right;
         &:after {
             transform: rotate(225deg);
+            left: -3px;
         }
     }
     select {
@@ -1564,9 +1584,33 @@ textarea.mdfgf-input {
         border-radius: .2rem;
         width: auto;
         color: #333;
-        @media (prefers-color-scheme: dark) {
-            color: #eee;
+        opacity: .6;
+        font-size: 14px;
+    }
+}
+
+.mdfgf-use-custom-datepicker.mdfgf-theme-dark .ui-datepicker,
+.mdfgf-use-custom-datepicker.mdfgf-theme-ash .ui-datepicker {
+    .ui-datepicker-calendar {
+        td a {
+            color: #bbb;
+            &:hover,
+            &.ui-state-highlight {
+                color: #fff;
+            }
+            &.ui-state-active {
+                color: #fff;
+            }
         }
+    }
+    .ui-datepicker-next,
+    .ui-datepicker-prev {
+        &:after {
+            border-color: #eee;
+        }
+    }
+    select {
+        color: #eee;
     }
 }
 
@@ -1574,16 +1618,20 @@ textarea.mdfgf-input {
     position: relative;
     z-index: 2;
     &::after {
-        border-color: #555;
-    }
-    @media (prefers-color-scheme: dark) {
-        &::after {
-            border-color: #ccc;
-        }
+        border-right-color: #555;
+        border-bottom-color: #555;
     }
     .mdfgf-custom-select {
         opacity: 1;
         transform: scaleY(1);
+    }
+}
+
+.mdfgf-container.mdfgf-theme-ash .mdfgf-select-open,
+.mdfgf-container.mdfgf-theme-dark .mdfgf-select-open {
+    &::after {
+        border-right-color: #ccc;
+        border-bottom-color: #ccc;
     }
 }
 
@@ -1696,6 +1744,20 @@ form.mdfgf-bootstrap {
     &.has-focus .mdfgf-field-input::after {
         width: 100%;
         opacity: 1;
+    }
+    .mdfgf-select::after {
+        width: 6px;
+        height: 6px;
+        border-width: 3px;
+        transition: transform .2s ease-in-out;
+    }
+    .mdfgf-select-open::after {
+        transform: rotate(225deg);
+    }
+    .mdfgf-custom-select {
+        top: 100%;
+        border-radius: 0 0 4px;
+        border: 0;
     }
 }
 .mdfgf-container.mdfgf-no-borders .mdfgf-input,

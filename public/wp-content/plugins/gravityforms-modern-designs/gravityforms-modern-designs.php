@@ -180,6 +180,9 @@ class MDFGF {
                 $('.mdfgf-select-open').each(function(){
                     $(this).removeClass('mdfgf-select-open');
                     $(this).find('.mdfgf-custom-select').hide().find('button').off();
+                    if(!isMobile()) {
+                        $(this).find('select').focus();
+                    }
                 });
             }
             
@@ -195,6 +198,9 @@ class MDFGF {
                 } else {
                     customSelect.find('button:first-child').focus();
                 }
+                setTimeout(function(){
+                    customSelect.closest('.mdfgf-field').addClass('active has-focus');
+                }, 100);
                 customSelect.find('button').off().on('click keydown tap', function(e){                    
                     if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32 || parseInt(e.keyCode) === 27))){
                         if (e.type !== 'keydown' || parseInt(e.keyCode) !== 27) {
@@ -216,9 +222,6 @@ class MDFGF {
                                 $(this).siblings().removeClass('active');
                                 $(this).addClass('active');
                             }
-                        }
-                        if(!isMobile()) {
-                            $(this).parent().siblings('select').focus();
                         }
                         if (!customSelect.hasClass('multiple') || (customSelect.hasClass('multiple') && e.type === 'keydown' && parseInt(e.keyCode) === 27)) {
                             mdfgfCloseCustomSelects();
@@ -301,14 +304,14 @@ class MDFGF {
                     var self = $(this);
                     self.closest('.mdfgf-field').removeClass('has-focus');
                     setTimeout(function(){
-                        if (!self.val()){
+                        if ((typeof self.val() === 'string' && !self.val()) || (typeof self.val() === 'object' && !self.val().length)) {
                             self.closest('.mdfgf-field').removeClass('active');
                         }
                     }, 100);
                 });
 
                 $('.mdfgf-input').each(function(){
-                    if ($(this).val()) {
+                    if ((typeof $(this).val() === 'string' && $(this).val()) || (typeof $(this).val() === 'object' && $(this).val().length)) {
                         $(this).closest('.mdfgf-field').addClass('no-transition').addClass('active');
                     }
                 });
@@ -783,6 +786,7 @@ class MDFGF {
             if (empty($hoverColor)) {
                 $hoverColor = self::adjustBrightness($mainColor, .2);
             }
+            $rgb = self::hexToRGB($mainColor);
             $colorString = '
         <style>
 /* Modern Designs for Gravity Forms Custom css for Single Form */
@@ -814,6 +818,12 @@ class MDFGF {
     border-color: '.$mainColor.';
     color: #eee;
 }
+.mdfgf-use-custom-datepicker .ui-datepicker .ui-datepicker-calendar td a:hover {
+    background-color: rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.2);
+}
+.mdfgf-use-custom-datepicker .ui-datepicker .ui-datepicker-calendar td a.ui-state-active {
+    background-color: '.$mainColor.';
+}
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-input:focus,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-input:focus,
 .mdfgf-container.mdfgf-md-regular #gform_wrapper_'.$attributes['id'].' .mdfgf-md .mdfgf-field.has-focus .mdfgf-field-input:after,
@@ -823,7 +833,6 @@ class MDFGF {
     border-color: '.($settings['design'] === 'mdfgf-bootstrap' ? self::adjustBrightness($mainColor, .5) : $mainColor).';';
 
     if ($settings['design'] === 'mdfgf-bootstrap' && $labelAnimation !== 'line') {
-        $rgb = self::hexToRGB($mainColor);
         $colorString.= '
     box-shadow: 0 0 0 0.2rem rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.2);
     ';
@@ -832,8 +841,9 @@ class MDFGF {
     $colorString.= '
 }';
 
+
+
 if ($settings['design'] === 'mdfgf-bootstrap') {
-    $rgb = self::hexToRGB($mainColor);
     $colorString.= '
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-bootstrap .button:focus,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-bootstrap .button:focus {
