@@ -251,53 +251,6 @@ class MDFGF {
             }
             function mdfgfRenderForms(){
 
-                // var mdForm = $('.md-form');
-                // if (mdForm.length) {
-                //     mdForm.find('.custom-select').each(function(){
-                //         $(this).removeClass('custom-select').addClass('mdb-select').materialSelect();
-                //     });
-                //     mdForm.find('input, select, textarea').trigger('change');
-                // }
-
-                // $('.ginput_container_name input, .ginput_container_address input').each(function(){
-                //     if ($(this).val()) {
-                //         $(this).closest('li.gfield').find('label').addClass('active');
-                //     }
-                // })
-                // $('.ginput_container_name input, .ginput_container_address input').on('focus', function(){
-                //     $(this).closest('li.gfield').find('label').addClass('active');
-                // });
-
-                // if (typeof bsCustomFileInput !== 'undefined') {
-                //     bsCustomFileInput.init();
-                // }
-        
-                // var inputs = [
-                //     'form.bootstrap.nested-labels .ginput_container_text input',
-                //     'form.bootstrap.nested-labels .ginput_container_email input',
-                //     'form.bootstrap.nested-labels .ginput_container_phone input',
-                //     'form.bootstrap.nested-labels .ginput_container_number input',
-                //     'form.bootstrap.nested-labels .ginput_container_textarea textarea',
-                // ];
-
-                // $(inputs.join(', ')).off('focus.mbdGformStyles').on('focus.mbdGformStyles', function(){
-                //     $(this).closest('.gfield').find('.gfield_label').addClass('active');
-                // }).off('blur.mbdGformStyles').on('blur.mbdGformStyles', function(){
-                //     if (!$(this).val()){
-                //         $(this).closest('.gfield').find('.gfield_label').removeClass('active');
-                //     }
-                // });
-
-                // $('form.bootstrap.nested-labels .ginput_container_select select').off('change.mbdGformStyles').on('change.mbdGformStyles', function(){
-                //     if ($(this).find('option:checked')) {
-                //         $(this).addClass('is-selected');
-                //         $(this).closest('.gfield').find('.gfield_label').addClass('active');
-                //     } else {
-                //         $(this).removeClass('is-selected');
-                //         $(this).closest('.gfield').find('.gfield_label').removeClass('active');
-                //     }
-                // });
-
                 $('.mdfgf-input').off('focus.mdfgf').on('focus.mdfgf', function(){
                     $(this).closest('.mdfgf-field').addClass('active has-focus');
                 }).off('blur.mdfgf').on('blur.mdfgf', function(){
@@ -319,27 +272,6 @@ class MDFGF {
                 setTimeout(function(){
                     $('.no-transition').removeClass('no-transition');
                 }, 100);
-
-                // $('.form-check-input').off('focus.mbdGformStyles').on('focus.mbdGformStyles', function(){
-                //     $(this).before('<div class=\"form-check-ripple\"></div>');
-                //     setTimeout(function(){
-                //         $('.form-check-ripple').addClass('show');
-                //     }, 1);
-                // }).off('blur.mbdGformStyles').on('blur.mbdGformStyles', function(){
-                //     $(this).parent().find('.form-check-ripple').remove();
-                // });
-
-                // $('.custom-file-input').each(function(){
-                //     if ($(this).get(0).files.length) {
-                //         $(this).parent().find('.gfield_label').addClass('active');
-                //     }
-                // });
-
-                // $('.custom-file-input').on('change', function(){
-                //     if ($(this).get(0).files.length) {
-                //         $(this).parent().find('.gfield_label').addClass('active');
-                //     }
-                // });
 
                 $('.mdfgf-animate-line .mdfgf-render .mdfgf-field .mdfgf-label').each(function(){
                     $(this).appendTo($(this).closest('.mdfgf-field').find('.mdfgf-fieldblock-label'));
@@ -432,8 +364,6 @@ class MDFGF {
                     return html;
                 });
             }
-
-            // mdfgfRenderForms();
         });
     }
     
