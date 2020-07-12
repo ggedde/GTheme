@@ -176,18 +176,20 @@ class MDFGF {
                 }
                 return false;
             }
-            function mdfgfCloseCustomSelects(force){
+            function mdfgfCloseCustomSelects(focus){
                 $('.mdfgf-select-open').each(function(){
                     $(this).removeClass('mdfgf-select-open');
                     $(this).find('.mdfgf-custom-select').hide().find('button').off();
-                    if(!isMobile()) {
+                    if(!isMobile() && focus) {
                         $(this).find('select').focus();
+                    } else {
+                        $(this).find('select').blur();
                     }
                 });
             }
             
             function mdfgfOpenCustomSelect(select){
-                mdfgfCloseCustomSelects(true);
+                mdfgfCloseCustomSelects(false);
                 var customSelect = select.siblings('.mdfgf-custom-select');
                 customSelect.show();
                 setTimeout(function(){
@@ -224,7 +226,7 @@ class MDFGF {
                             }
                         }
                         if (!customSelect.hasClass('multiple') || (customSelect.hasClass('multiple') && e.type === 'keydown' && parseInt(e.keyCode) === 27)) {
-                            mdfgfCloseCustomSelects();
+                            mdfgfCloseCustomSelects(true);
                         }
                         e.preventDefault();
                         return false;
@@ -243,9 +245,9 @@ class MDFGF {
                     }
                 });
                 $(document).on('click', function(e) { 
-                    $target = $(e.target);
-                    if(!$target.closest('.mdfgf-custom-select').length && $('.mdfgf-custom-select').is(":visible")) {
-                        mdfgfCloseCustomSelects();
+                    var target = $(e.target);
+                    if(!target.closest('.mdfgf-select').length && $('.mdfgf-custom-select').is(":visible")) {
+                        mdfgfCloseCustomSelects(!target.hasClass('mdfgf-input'));
                     }        
                 });
             }
@@ -261,6 +263,14 @@ class MDFGF {
                             self.closest('.mdfgf-field').removeClass('active');
                         }
                     }, 100);
+                });
+
+                $('.mdfgf-input').off('change').on('change', function(){
+                    if ($(this).is(':invalid')) {
+                        $(this).closest('.mdfgf-field').addClass('invalid');
+                    } else {
+                        $(this).closest('.mdfgf-field').removeClass('invalid');
+                    }
                 });
 
                 $('.mdfgf-input').each(function(){
@@ -310,7 +320,7 @@ class MDFGF {
                     setTimeout(function(){
                         form.find('.mdfgf-fieldblock .mdfgf-label').each(function(){
                             var wid = $(this).width();
-                            $(this).css('width', ((wid - (wid * .1)) + 10)).addClass('mdfgf-collapse').parent().addClass('mdfgf-remove-border');
+                            $(this).css('width', ((wid - (wid * .15)) + 10)).addClass('mdfgf-collapse').parent().addClass('mdfgf-remove-border');
                         });
                     }, 10);
 
@@ -336,9 +346,11 @@ class MDFGF {
                         }
                     });
 
-                    $('.mdfgf-use-custom-selects #'+formId+'.mdfgf-render select').on('click keydown tap', function(e){
+                    $('.mdfgf-use-custom-selects #'+formId+'.mdfgf-render select').on('mousedown click keydown tap', function(e){
                         if(e.type !== 'keydown' || (e.type === 'keydown' && (parseInt(e.keyCode) === 13 || parseInt(e.keyCode) === 32 || parseInt(e.keyCode) === 38 || parseInt(e.keyCode) === 40))){
-                            mdfgfOpenCustomSelect($(this));
+                            if (!$(this).parent().hasClass('mdfgf-select-open')) {
+                                mdfgfOpenCustomSelect($(this));
+                            }
                             e.preventDefault();
                             return false;
                         }
@@ -553,13 +565,15 @@ class MDFGF {
                     continue;
                 }
 
-                // if ($settings['design'] !== 'mdfgf-bootstrap' || ($settings['design'] === 'mdfgf-bootstrap' && !preg_match("/type=\'(checkbox|radio)\'/m", $tag))) {
-                    if (preg_match("/class=\'([^\']*)\'/m", $tag, $classMatches)) {
-                        $newTag = str_replace($classMatches[0], "class='mdfgf-input".($classMatches[1] ? ' '.$classMatches[1] : '')."'", $tag);
-                    } else {
-                        $newTag = preg_replace('/\<(select|input|textarea) /m', '<$1 class="mdfgf-input" ', $tag);
-                    }
-                // }
+                $newTag = $tag;
+
+                $addTextareaWrapper = (strpos($tag, '<textarea') !== false && $settings['label_animation'] === 'in');
+
+                if (preg_match("/class=\'([^\']*)\'/m", $tag, $classMatches)) {
+                    $newTag = str_replace($classMatches[0], "class='mdfgf-input".($classMatches[1] ? ' '.$classMatches[1] : '')."'", $newTag);
+                } else {
+                    $newTag = preg_replace('/\<(select|input|textarea) /m', '<$1 class="mdfgf-input" ', $newTag);
+                }
 
                 if ($settings['label_animation'] === 'line') {
                     if ($newTag && !in_array($field['type'], array('radio', 'checkbox', 'consent', 'fileupload'))) {
@@ -568,7 +582,7 @@ class MDFGF {
                 }
 
                 if ($newTag) {
-                    $content = str_replace($tag, '<span class="mdfgf-field-input">'.$newTag.'</span>', $content);
+                    $content = str_replace($tag, '<span class="mdfgf-field-input">'.($addTextareaWrapper ? '<span class="mdfgf-input mdfgf-textarea">' : '').$newTag.($addTextareaWrapper ? '</span>' : '').'</span>', $content);
                 }
             }
         }
@@ -754,10 +768,17 @@ class MDFGF {
 .mdfgf-use-custom-datepicker .ui-datepicker .ui-datepicker-calendar td a.ui-state-active {
     background-color: '.$mainColor.';
 }
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-md .mdfgf-field.has-focus .mdfgf-label {
+    color: '.$mainColor.';
+}
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-textarea,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-textarea,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-input:focus,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-input:focus,
-.mdfgf-container.mdfgf-md-regular #gform_wrapper_'.$attributes['id'].' .mdfgf-md .mdfgf-field.has-focus .mdfgf-field-input:after,
-.mdfgf-container.mdfgf-md-regular .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-md .mdfgf-field.has-focus .mdfgf-field-input:after,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-md .mdfgf-field.has-focus .mdfgf-field-input:after,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-md .mdfgf-field.has-focus .mdfgf-field-input:after,
+.mdfgf-container.mdfgf-md-outlined #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:before,
+.mdfgf-container.mdfgf-md-outlined .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:before,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock {
     border-color: '.($settings['design'] === 'mdfgf-bootstrap' ? self::adjustBrightness($mainColor, .5) : $mainColor).';';
@@ -894,6 +915,8 @@ $colorString.= '
         $settings['Modern Designs for Gravity Forms']['mdfgf_design'] = '
         '.(!rgar($form, 'mdfgf_override_globals') ? '<style>.mdfgf-override-options { display: none; }</style>' : '').'
         '.(!$formDesign || $formDesign === 'mdfgf-gf' ? '<style>.mdfgf-theme-options { display: none; }</style>' : '').'
+        '.($formDesign === 'mdfgf-md' ? '<style>.mdfgf-not-md-options { display: none; }</style>' : '').'
+        '.($formDesign ? '<style>.mdfgf-none-options { display: none; }</style>' : '').'
             <tr>
                 <th><label for="mdfgf_use_custom_selects">Override Global Styles '.gform_tooltip("mdfgf_override_globals_tooltip", '', true).'</label></th>
                 <td>
@@ -916,11 +939,11 @@ $colorString.= '
                 <th><label for="mdfgf_theme">Theme '.gform_tooltip("mdfgf_theme_tooltip", '', true).'</label></th>
                 <td>
                     <select id="mdfgf_theme" name="mdfgf_theme" style="width: 300px;">
-                        <option value="mdfgf-theme-default" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-theme-default', false).'>Default</option>
-                        <option value="mdfgf-theme-greyish" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-theme-greyish', false).'>Greyish</option>
-                        <option value="mdfgf-theme-vivid" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-theme-vivid', false).'>Vivid</option>
-                        <option value="mdfgf-theme-ash" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-theme-ash', false).'>Ash (Good on Medium Dark Backgrounds)</option>
-                        <option value="mdfgf-theme-dark" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-theme-dark', false).'>Dark (Good on Dark Backgrounds)</option>
+                        <option class="mdfgf-md-options" value="mdfgf-theme-default" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-theme-default', false).'>Default</option>
+                        <option class="mdfgf-not-md-options" value="mdfgf-theme-greyish" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-theme-greyish', false).'>Greyish</option>
+                        <option class="mdfgf-md-options" value="mdfgf-theme-vivid" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-theme-vivid', false).'>Vivid</option>
+                        <option class="mdfgf-not-md-options" value="mdfgf-theme-ash" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-theme-ash', false).'>Ash (Good on Medium Dark Backgrounds)</option>
+                        <option class="mdfgf-md-options" value="mdfgf-theme-dark" '.selected(rgar($form, 'mdfgf_theme'), 'mdfgf-theme-dark', false).'>Dark (Good on Dark Backgrounds)</option>
                     </select>
                 </td>
             </tr>
@@ -1161,6 +1184,29 @@ $colorString.= '
         $form['mdfgf_use_custom_selects'] = rgpost('mdfgf_use_custom_selects') ? 1 : 0;
         $form['mdfgf_field_appearance'] = rgpost('mdfgf_field_appearance') ? rgpost('mdfgf_field_appearance') : '';
         $form['mdfgf_use_custom_datepicker'] = rgpost('mdfgf_use_custom_datepicker') ? 1 : 0;
+
+        if ($form['mdfgf_design'] === 'mdfgf-md') {
+            if (!in_array($form['mdfgf_field_appearance'], array('md-regular', 'md-filled', 'md-outlined'))) {
+                $form['mdfgf_field_appearance'] = 'md-regular';
+            }
+
+            if (!in_array($form['mdfgf_theme'], array('mdfgf-theme-default', 'mdfgf-theme-vivid', 'mdfgf-theme-dark'))) {
+                $form['mdfgf_theme'] = 'mdfgf-theme-default';
+            }
+
+            switch ($form['mdfgf_field_appearance']) {
+                case 'md-regular':
+                    $form['mdfgf_label_animation'] = 'out';
+                    break;
+                case 'md-filled':
+                    $form['mdfgf_label_animation'] = 'in';
+                    break;
+                case 'md-outlined':
+                    $form['mdfgf_label_animation'] = 'line';
+                    break;
+            }
+        }
+
         return $form;
     }
 

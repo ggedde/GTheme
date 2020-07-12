@@ -55,7 +55,7 @@ $themes: (
         'background-color': rgba(255,255,255,0.05),
         'checkbox-checked-background-color': rgba(255,255,255,0.7),
         'error-color': rgba(252,90,73,.8),
-        'input-text-color': rgba(255,255,255,.7),
+        'input-text-color': rgba(255,255,255,.9),
         'arrow-color': rgba(255,255,255,0.6),
         'accent-color': rgba(255,255,255,0.4),
         'accent-highlight-color': rgba(255,255,255,0.6),
@@ -94,6 +94,14 @@ $themes: (
         flex: 0 0 calc(100% - 15px);
         padding-right: 10px;
         min-width: 180px;
+    }
+    .gfield_consent_label,
+    li label {
+        display: inline;
+        font-weight: 300;
+    }
+    .mdfgf-field-input {
+        width: auto;
     }
 }
 
@@ -196,6 +204,9 @@ $themes: (
     display: block;
     &.gfield_label {
         font-weight: 400;
+        .mdfgf-md & {
+            font-weight: 300;
+        }
     }
 }
 
@@ -211,6 +222,7 @@ $themes: (
 .mdfgf-animate-in .field_sublabel_below .mdfgf-field .mdfgf-input {
     padding-top: 0;
     padding-bottom: 16px;
+    line-height: 34px;
 }   
 .mdfgf-animate-in .gfield_date_dropdown_day.mdfgf-field .mdfgf-input,
 .mdfgf-animate-in .gfield_date_dropdown_month.mdfgf-field .mdfgf-input,
@@ -244,14 +256,6 @@ $themes: (
             box-shadow: none;
         }
     }
-    // .mdfgf-select .mdfgf-input {
-    //     top: 0;
-    //     bottom: 0;
-    //     left: 0;
-    //     right: 0;
-    //     height: 100%;
-    //     width: 100%;
-    // }
     > label {
         display: none;
     }
@@ -275,6 +279,10 @@ $themes: (
             border: 3px solid transparent;
             border-right-width: 0;
             transition: border-color .2s cubic-bezier(.7, 0.1, 0, 1);
+            .mdfgf-md-outlined & {
+                border-width: 1px;
+                border-right-width: 0;
+            }
             .mdfgf-field.has-focus & {
                 border-color: rgba(150,150,150, .1);
             }
@@ -311,7 +319,6 @@ $themes: (
                 display: inline-block;
                 padding: 0;
                 line-height: 35px;
-                text-align: center;
                 white-space: nowrap;
                 .mdfgf-field:not(.active) & {
                     &.mdfgf-collapse {
@@ -332,6 +339,9 @@ $themes: (
             &:before { 
                 border-left-width: 0;
                 border-right-width: 3px;
+                .mdfgf-md-outlined & {
+                    border-right-width: 1px;
+                }
             }
         }
     }
@@ -345,7 +355,7 @@ $themes: (
         position: relative;
         z-index: 1;
         transform-origin: left;
-        opacity: .6;
+        opacity: .7;
         transition: all .2s cubic-bezier(.7, 0.1, 0, 1);
         pointer-events: none;
     }
@@ -381,15 +391,16 @@ $themes: (
 
 .mdfgf-animate-in {
     .mdfgf-field > .mdfgf-label {
-        transform: translate(10px, 38px);
+        transform: translate(10px, 14px);
         margin: 0;
+        position: absolute;
     }
     .field_sublabel_above .mdfgf-field {
         > .mdfgf-label {
-            transform: translate(10px, 36px);
+            transform: translate(10px, 16px);
         }
         &.active > .mdfgf-label {
-            transform: scale(.8) translate(13px, 32px);
+            transform: scale(.8) translate(13px, 8px);
         }
     }
     .field_sublabel_below .mdfgf-field {
@@ -402,7 +413,7 @@ $themes: (
     }
     .mdfgf-field.active {
         > .mdfgf-label {
-            transform: scale(.8) translate(13px, 34px);
+            transform: scale(.8) translate(13px, 4px);
         } 
     }
     form.mdfgf-bootstrap {
@@ -425,6 +436,32 @@ $themes: (
         .mdfgf-field.active {
             > .mdfgf-label {
                 transform: scale(.8) translate(13px, 32px);
+            } 
+        }
+    }
+    &.mdfgf-md-filled {
+        .mdfgf-field > .mdfgf-label {
+            transform: translate(12px, 12px);
+        }
+        .field_sublabel_above .mdfgf-field {
+            > .mdfgf-label {
+                transform: translate(12px, 14px);
+            }
+            &.active > .mdfgf-label {
+                transform: scale(.8) translate(15px, 2px);
+            }
+        }
+        .field_sublabel_below .mdfgf-field {
+            > .mdfgf-label {
+                transform: translate(12px, -33px);
+            }
+            &.active > .mdfgf-label {
+                transform: scale(.8) translate(15px, -29px);
+            }
+        }
+        .mdfgf-field.active {
+            > .mdfgf-label {
+                transform: scale(.8) translate(15px, 2px);
             } 
         }
     }
@@ -495,20 +532,20 @@ $themes: (
 .mdfgf-animate-line {
     .mdfgf-field .mdfgf-fieldblock > .mdfgf-label {
         transform: translate(2px, 0);
-        transform-origin: center;
+        transform-origin: left;
     }
     .field_sublabel_above .ginput_complex .mdfgf-field.active,
     .mdfgf-field.active .ginput_container:not(.ginput_complex),
     .ginput_container:not(.ginput_complex) .mdfgf-field.active {
         .mdfgf-fieldblock .mdfgf-label.gfield_label,
         .mdfgf-fieldblock .mdfgf-label {
-            transform: scale(.85) translate(0px, -23px);
+            transform: scale(.85) translate(6px, -23px);
         }
     }
     .field_sublabel_below .ginput_complex .mdfgf-field.active,
     .field_sublabel_below .ginput_complex.mdfgf-field.active {
         .mdfgf-fieldblock .mdfgf-label {
-            transform: scale(.85) translate(0px, 24px);
+            transform: scale(.85) translate(6px, 24px);
         } 
     }
 }
@@ -914,7 +951,7 @@ li.gfield.mdfgf-field-type-address {
             border-left: 0;
             border-right: 0;
             border-radius: 4px 4px 0 0;
-            padding-left: 16px;
+            padding-left: 12px;
         }
     }
 
@@ -1024,6 +1061,9 @@ textarea.mdfgf-input {
         box-shadow: inset 0 0 0 3px rgba(150,150,150, .2);
     }
 }
+.mdfgf-field.has-focus .mdfgf-textarea {
+    box-shadow: inset 0 0 0 3px rgba(150,150,150, .2);
+}
 
 .mdfgf-container .gf_progressbar_title {
     margin-top: .5rem;
@@ -1086,7 +1126,6 @@ textarea.mdfgf-input {
         left: 50%;
         font-size: .8rem;
         transform: translateX(-50%);
-        text-align: center;
         text-align: center;
     }
     .mdfgf-step-spacer {
@@ -1175,14 +1214,20 @@ textarea.mdfgf-input {
         border-color: map.get(map.get($themes, 'default'), 'error-color');
     }
 }
+.mdfgf-field.has-focus .mdfgf-textarea {
+    border-color: map.get(map.get($themes, 'default'), 'border-color-focus');
+}
 .mdfgf-select:after {
     border: 1px solid map.get(map.get($themes, 'default'), 'arrow-color');
 }
 .mdfgf-container .gfield_error .mdfgf-select:after {
-    border-color: map.get(map.get($themes, 'default'), 'error-color');
+    border-right-color: map.get(map.get($themes, 'default'), 'error-color');
+    border-bottom-color: map.get(map.get($themes, 'default'), 'error-color');
 }
 .validation_message,
-.validation_error {
+.validation_error,
+.mdfgf-container form.mdfgf-md .mdfgf-field.invalid .mdfgf-label,
+.mdfgf-field.invalid .mdfgf-label {
     color: map.get(map.get($themes, 'default'), 'error-color');
 }
 .mdfgf-step-spacer {
@@ -1198,6 +1243,10 @@ textarea.mdfgf-input {
 }
 .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock {
     border-color: map.get(map.get($themes, 'default'), 'border-color-focus');
+}
+.mdfgf-field.invalid .mdfgf-input,
+.mdfgf-field.invalid .mdfgf-fieldset .mdfgf-fieldblock {
+    border-color: map.get(map.get($themes, 'default'), 'error-color');
 }
 
 .mdfgf-container {
@@ -1266,14 +1315,19 @@ textarea.mdfgf-input {
             }
         }
         .mdfgf-theme-#{$theme-name} .mdfgf-select:after {
-            border-color: map.get($theme, 'arrow-color');
+            border-right-color: map.get($theme, 'arrow-color');
+            border-bottom-color: map.get($theme, 'arrow-color');
         }
-        .mdfgf-theme-#{$theme-name} .gfield_error .mdfgf-input,
-        .mdfgf-theme-#{$theme-name} .gfield_error .mdfgf-select:after {
+        .mdfgf-theme-#{$theme-name} .gfield_error .mdfgf-input {
             border-color: map.get($theme, 'error-color');
         }
+        .mdfgf-theme-#{$theme-name} .gfield_error .mdfgf-select:after {
+            border-right-color: map.get($theme, 'error-color');
+            border-bottom-color: map.get($theme, 'error-color');
+        }
         .mdfgf-theme-#{$theme-name} .validation_message,
-        .mdfgf-theme-#{$theme-name} .validation_error {
+        .mdfgf-theme-#{$theme-name} .validation_error,
+        .mdfgf-theme-#{$theme-name} .mdfgf-field.invalid .mdfgf-label {
             color: map.get($theme, 'error-color');
         }
         .mdfgf-theme-#{$theme-name} .mdfgf-step-spacer {
@@ -1302,6 +1356,9 @@ textarea.mdfgf-input {
                     border-color: map.get($theme, 'border-color-focus');
                 }
             }
+            .mdfgf-field.invalid .mdfgf-input {
+                border-color: map.get($theme, 'error-color');
+            }
         }
     }
 }
@@ -1324,6 +1381,9 @@ textarea.mdfgf-input {
     select,
     .mdfgf-multi-text {
         padding-right: 30px;
+    }
+    .mdfgf-multi-text {
+        background: none !important;
     }
     &::after {
         content: '';
@@ -1358,7 +1418,7 @@ textarea.mdfgf-input {
 .mdfgf-container.mdfgf-use-custom-selects .mdfgf-custom-select,
 .mdfgf-use-custom-datepicker .ui-datepicker  {
     position: absolute;
-    top: 0;
+    top: 100%;
     left: 0;
     right: 0;
     padding: 0;
@@ -1625,6 +1685,9 @@ textarea.mdfgf-input {
         opacity: 1;
         transform: scaleY(1);
     }
+    + .mdfgf-fieldblockset {
+        z-index: 2;
+    }
 }
 
 .mdfgf-container.mdfgf-theme-ash .mdfgf-select-open,
@@ -1718,27 +1781,24 @@ form.mdfgf-bootstrap {
     padding-left: 1px;
     box-shadow: none;
 }
-.mdfgf-container.mdfgf-md-regular .mdfgf-md .mdfgf-field {
+.mdfgf-container.mdfgf-md-regular .mdfgf-md .mdfgf-field,
+.mdfgf-container.mdfgf-md-outlined .mdfgf-md .mdfgf-field,
+.mdfgf-container.mdfgf-md-filled .mdfgf-md .mdfgf-field {
     .mdfgf-field-input {
-    position: relative;
-    margin-top: -2px;
-    .mdfgf-input {
-        height: 34px;
-        line-height: 34px;
-    }
+        position: relative;
         &::after {
             content: '';
             display: block;
             border-bottom: 2px solid map.get(map.get($themes, 'default'), 'accent-color');
-            width: 30%;
+            width: 10%;
             position: absolute;
-            z-index: 10;
+            z-index: 1;
             bottom: 0px;
             left: 0;
             right: 0;
             margin: auto;
             opacity: 0;
-            transition: all .2s ease-in-out;
+            transition: .3s cubic-bezier(.25,.8,.5,1);
         }
     }
     &.has-focus .mdfgf-field-input::after {
@@ -1760,9 +1820,85 @@ form.mdfgf-bootstrap {
         border: 0;
     }
 }
+.mdfgf-container.mdfgf-md-regular .mdfgf-md .mdfgf-field {
+    .mdfgf-field-input {
+        margin-top: -2px;
+        .mdfgf-input {
+            height: 34px;
+            line-height: 34px;
+        }
+    }
+}
+.mdfgf-container.mdfgf-md-filled .mdfgf-md .mdfgf-field {
+    .mdfgf-field-input {
+        .mdfgf-input {
+            height: 46px;
+            line-height: 46px;
+            box-shadow: none;
+            background-color: rgba(0,0,0,0.04);
+            &:hover {
+                background-color: rgba(0,0,0,0.07);
+                border-color: rgba(0,0,0,0.6);
+            }
+        }
+    }
+    &.has-focus .mdfgf-input {
+        background-color: rgba(0,0,0,0.07);
+        border-color: rgba(0,0,0,0.6);
+    }
+}
+
+
+.mdfgf-container.mdfgf-md-outlined .mdfgf-md .mdfgf-field {
+    .mdfgf-input {
+        border-radius: 4px;
+        background-color: transparent;
+    }
+    .mdfgf-field-input::after {
+        display: none;
+    }
+}
+.mdfgf-container.mdfgf-md-filled .mdfgf-md .mdfgf-field .mdfgf-field-input .mdfgf-input {
+    line-height: 30px;
+}
+.mdfgf-theme-default form.mdfgf-md .mdfgf-label {
+    color: rgba(0,0,0,0.6);
+    opacity: 1;
+}
+.mdfgf-container.mdfgf-md-regular.mdfgf-theme-dark form.mdfgf-md {
+    .mdfgf-field-input {
+        .mdfgf-input {
+            border-color: rgba(255,255,255,0.6) !important;
+            &:hover {
+                border-color: rgba(255,255,255,0.9) !important;
+            }
+        }
+    }
+    .mdfgf-field {
+        .mdfgf-label {
+            color: rgba(255,255,255,0.6);
+            opacity: 1;
+        }
+    }
+}
 .mdfgf-container.mdfgf-no-borders .mdfgf-input,
 .mdfgf-container.mdfgf-no-borders form.mdfgf-bootstrap .mdfgf-input,
 .mdfgf-container.mdfgf-no-borders .mdfgf-fieldset .mdfgf-fieldblock,
 .mdfgf-container.mdfgf-no-borders form.mdfgf-bootstrap .mdfgf-fieldset .mdfgf-fieldblock {
     border-color: transparent;
+}
+
+.mdfgf-container .mdfgf-field .mdfgf-textarea {
+    display: block;
+    height: auto !important;
+    padding-top: 1.4rem;
+    padding-bottom: .4rem;
+    padding-right: .4rem;
+    textarea {
+        border: none !important;
+        background: none !important;
+        box-shadow: none !important;
+        line-height: 1.4 !important;
+        padding: 0 !important;
+    }
 }
