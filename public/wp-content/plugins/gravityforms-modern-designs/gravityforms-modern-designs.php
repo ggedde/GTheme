@@ -757,7 +757,9 @@ class MDFGF {
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .gf_page_steps .gf_step_completed .gf_step_number,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .gf_page_steps .gf_step_completed .gf_step_number,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .gf_page_steps .gf_step_completed + .mdfgf-step-spacer,
-.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .gf_page_steps .gf_step_completed + .mdfgf-step-spacer {
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .gf_page_steps .gf_step_completed + .mdfgf-step-spacer,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' form.mdfgf-md .mdfgf-input[type="checkbox"]:checked,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' form.mdfgf-md .mdfgf-input[type="checkbox"]:checked {
     background-color: '.$mainColor.';
     border-color: '.$mainColor.';
     color: #eee;
@@ -780,7 +782,9 @@ class MDFGF {
 .mdfgf-container.mdfgf-md-outlined #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:before,
 .mdfgf-container.mdfgf-md-outlined .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:before,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock,
-.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock {
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' form.mdfgf-md .mdfgf-input[type="radio"]:checked,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' form.mdfgf-md .mdfgf-input[type="radio"]:checked {
     border-color: '.($settings['design'] === 'mdfgf-bootstrap' ? self::adjustBrightness($mainColor, .5) : $mainColor).';';
 
     if ($settings['design'] === 'mdfgf-bootstrap' && $labelAnimation !== 'line') {

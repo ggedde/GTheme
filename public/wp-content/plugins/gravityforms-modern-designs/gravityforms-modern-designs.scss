@@ -947,11 +947,42 @@ li.gfield.mdfgf-field-type-address {
 
     form.mdfgf-md {
         .mdfgf-input {
+            border-color: rgba(0,0,0,0.4);
+            &:hover {
+                border-color: rgba(0,0,0,0.6);
+            }
+        }
+        .mdfgf-input:not([type="checkbox"]):not([type="radio"]) {
             border-top: 0;
             border-left: 0;
             border-right: 0;
             border-radius: 4px 4px 0 0;
             padding-left: 12px;
+        }
+        .ginput_container .mdfgf-input[type="checkbox"],
+        .ginput_container .mdfgf-input[type="radio"] {
+            border-width: 2px;
+            &::before {
+                top: -10px;
+                left: -10px;
+            }
+        }
+        .mdfgf-input[type="checkbox"] {
+            border-radius: 2px;
+            &:checked::after {
+                height: 7px;
+                width: 14px;
+                transform: scale(1) rotate(-49deg);
+                background-color: transparent !important;
+                border: 2px solid;
+                border-top: 0;
+                border-right: 0;
+                border-color: white !important;
+                transition: all .1s ease-in-out;
+                top: 2px;
+                left: 0;
+                position: absolute;
+            }
         }
     }
 
@@ -1777,8 +1808,10 @@ form.mdfgf-bootstrap {
 .mdfgf-container.mdfgf-md-regular .mdfgf-md .mdfgf-input {
     background-color: transparent;
 }
-.mdfgf-container.mdfgf-md-regular .mdfgf-md .mdfgf-input {
+.mdfgf-container.mdfgf-md-regular form.mdfgf-md .mdfgf-input:not([type="checkbox"]):not([type="radio"]) {
     padding-left: 1px;
+}
+.mdfgf-container form.mdfgf-md .mdfgf-input {
     box-shadow: none;
 }
 .mdfgf-container.mdfgf-md-regular .mdfgf-md .mdfgf-field,
