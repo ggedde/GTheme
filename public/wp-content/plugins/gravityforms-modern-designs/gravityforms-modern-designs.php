@@ -369,6 +369,9 @@ class MDFGF {
                     if ($('.mdfgf-container').hasClass('mdfgf-use-custom-datepicker')) {
                         $('body').addClass('mdfgf-use-custom-datepicker');
                     }
+                    if ($('.mdfgf-container').hasClass('mdfgf-theme-dark') || $('.mdfgf-container').hasClass('mdfgf-theme-ash')) {
+                        $('body').addClass('mdfgf-use-dark-theme');
+                    }
 
                     $(this).removeClass('mdfgf-render');
                 });
@@ -1251,6 +1254,10 @@ $colorString.= '
         $form['mdfgf_use_custom_datepicker'] = rgpost('mdfgf_use_custom_datepicker') ? 1 : 0;
 
         if ($form['mdfgf_design'] === 'mdfgf-md') {
+
+            $form['mdfgf_use_custom_selects'] = 1;
+            $form['mdfgf_use_custom_datepicker'] = 1;
+
             if (!in_array($form['mdfgf_field_appearance'], array('md-regular', 'md-filled', 'md-outlined'))) {
                 $form['mdfgf_field_appearance'] = 'md-regular';
             }

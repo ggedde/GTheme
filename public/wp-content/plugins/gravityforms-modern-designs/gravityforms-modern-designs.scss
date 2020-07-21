@@ -751,46 +751,67 @@ li.gfield.mdfgf-field-type-address {
         width: 12px;
         height: 12px;
         font-size: 10px;
-        background-color: #aaa;
+        background-color: rgba(0,0,0,0.3);
         line-height: 13px;
         vertical-align: 5px;
-        margin-left: 4px;
+        margin-left: 6px;
         font-weight: bold;
         color: white;
         cursor: default;
         transition: all .1s ease-in-out;
         .mdfgf-tooltip-content-container {
             width: 400px;
+            max-width: 80vw;
             position: absolute;
             top: auto;
             left: 0;
             bottom: 20px;
             text-align: left;
             pointer-events: none;
+            z-index: 1;
         }
         .mdfgf-tooltip-content {
             display: inline-block;
             transform-origin: center;
-            transform: scale(.8);
+            transform: scale(.8) translateX(-16%);
             position: relative;
             border-radius: .25rem;
             padding: 1.2rem 1rem;
             text-align: left;
             width: auto;
             max-width: 300px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: normal;
             text-align: left;
-            line-height: 1.2;
+            line-height: 1.4;
             white-space: normal;
             color: #777;
         }
         &:hover {
-            background-color: #999;
+            background-color: rgba(0,0,0,0.5);
             .mdfgf-tooltip-content {
                 opacity: 1;
-                transform: scale(1);
+                transform: scale(1) translateX(-16%);
             }
+        }
+    }
+
+    &.mdfgf-theme-dark,
+    &.mdfgf-theme-ash {
+        .mdfgf-tooltip {
+            background-color: rgba(255,255,255,0.2);
+            color: rgba(0,0,0,0.5);
+            &:hover {
+                background-color: rgba(255,255,255,0.5);
+            }
+        }
+    }
+
+    &.mdfgf-animate-line,
+    &.mdfgf-animate-in,
+    &.mdfgf-animate-out {
+        .mdfgf-field.active .mdfgf-tooltip:hover .mdfgf-tooltip-content {
+            transform: scale(1.2) translateX(-16%);
         }
     }
 
@@ -1615,8 +1636,8 @@ textarea.mdfgf-input {
 
 .mdfgf-container.mdfgf-theme-dark.mdfgf-use-custom-selects .mdfgf-custom-select,
 .mdfgf-container.mdfgf-theme-ash.mdfgf-use-custom-selects .mdfgf-custom-select,
-.mdfgf-theme-dark.mdfgf-use-custom-datepicker .ui-datepicker,
-.mdfgf-theme-ash.mdfgf-use-custom-datepicker .ui-datepicker {
+.mdfgf-use-dark-theme.mdfgf-use-custom-datepicker .ui-datepicker,
+.mdfgf-container .mdfgf-tooltip .mdfgf-tooltip-content {
     background-color: #333;
     color: #eee;
     &::after {
@@ -1773,8 +1794,7 @@ textarea.mdfgf-input {
     }
 }
 
-.mdfgf-use-custom-datepicker.mdfgf-theme-dark .ui-datepicker,
-.mdfgf-use-custom-datepicker.mdfgf-theme-ash .ui-datepicker {
+.mdfgf-use-custom-datepicker.mdfgf-use-dark-theme .ui-datepicker {
     .ui-datepicker-calendar {
         td a {
             color: #bbb;
