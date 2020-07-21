@@ -110,9 +110,18 @@ class MDFGF {
         add_action( 'gform_settings_mdfgf', array(__CLASS__, 'globalSettings'));
 
         add_action('gform_field_appearance_settings', function($position, $formId){
+            if($position === 100) {
+                ?>
+                <li class="field_checkbox_style_setting field_setting" style="display: none;">
+                    <label class="section_label"> Checkbox Style</label>
+                    <label><input type="radio" id="field_checkbox_style_setting_normal" value="normal" name="field_checkbox_style" onclick="SetFieldProperty('checkboxstyle', jQuery(this).val());"> Normal</label>
+                    <label><input type="radio" id="field_checkbox_style_setting_switch" value="switch" name="field_checkbox_style" onclick="SetFieldProperty('checkboxstyle', jQuery(this).val());"> Use Switch</label>
+                </li>
+                <?php
+            }
             if($position === 500) {
             ?>
-            <li class="size_setting size_input_setting field_setting" style="display: none;">
+            <li class="size_setting size_input_setting field_setting">
                 <label for="field_inputsize" class="section_label">
                     <?php esc_html_e( 'Input Size', 'gravityforms' ); ?>
                     <?php gform_tooltip( 'form_field_size' ) ?>
@@ -254,12 +263,13 @@ class MDFGF {
             function mdfgfRenderForms(){
 
                 $('.mdfgf-input').off('focus.mdfgf').on('focus.mdfgf', function(){
+                    mdfgfCloseCustomSelects();
                     $(this).closest('.mdfgf-field').addClass('active has-focus');
                 }).off('blur.mdfgf').on('blur.mdfgf', function(){
                     var self = $(this);
                     self.closest('.mdfgf-field').removeClass('has-focus');
                     setTimeout(function(){
-                        if ((typeof self.val() === 'string' && !self.val()) || (typeof self.val() === 'object' && !self.val().length)) {
+                        if (!self.is(":focus") && (typeof self.val() === 'string' && !self.val()) || (typeof self.val() === 'object' && !self.val().length)) {
                             self.closest('.mdfgf-field').removeClass('active');
                         }
                     }, 100);
@@ -495,6 +505,14 @@ class MDFGF {
             if (in_array($field->type, self::$complexFields)) {
                 $classes.= ' mdfgf-complex '.(!empty($field->inputsize) && $field->inputsize === 'tiny' ? ' mdfgfcol-input-3' : (!empty($field->inputsize) && $field->inputsize === 'small' ? ' mdfgfcol-input-4' : (!empty($field->inputsize) && $field->inputsize === 'large' ? ' mdfgfcol-input-12' : ' mdfgfcol-input-6')));
             }
+
+            if (!empty($field->checkboxstyle) && in_array($field->type, array('checkbox', 'consent'))) {
+                $classes.= ' mdfgf-checkbox-'.$field->checkboxstyle;
+            }
+
+            if ($field['descriptionPlacement'] === 'tooltip' && !empty($field['description'])) {
+                $classes.= ' mdfgf-has-tooltip';
+            }
         }
 
         return $classes;
@@ -503,9 +521,9 @@ class MDFGF {
 
 
     /**
-     * Array of ToolTips for Gravity Forms
+     * Filter the Content
      * 
-     * @param array $tooltips
+     * @param string $content
      * 
      * @return string
      */
@@ -587,13 +605,15 @@ class MDFGF {
             }
         }
 
+        $hasTooltip = ($field['descriptionPlacement'] === 'tooltip' && !empty($field['description']));
+
         if (preg_match_all('/\<(label)[^\>]+\>/m', $content, $matches)) {
             if (!empty($matches[0])) {
                 foreach ($matches[0] as $tag) {
                     $newTag = '';
 
                     if (preg_match("/class=\'([^\']*)\'/m", $tag, $classMatches)) {
-                        $newTag = str_replace($classMatches[0], "class='mdfgf-label".($classMatches[1] ? ' '.$classMatches[1] : '')."'", $tag);
+                        $newTag = str_replace($classMatches[0], "class='mdfgf-label".($hasTooltip && strpos($classMatches[1], 'gfield_label') !== false ? ' mdfgf-has-tooltip' : '').($classMatches[1] ? ' '.$classMatches[1] : '')."'", $tag);
                     } else if (!in_array($field['type'], array('radio', 'checkbox', 'consent'))) {
                         $newTag = preg_replace('/\<(label)/m', '<$1 class="mdfgf-label"', $tag);
                     }
@@ -603,6 +623,11 @@ class MDFGF {
                     }
                 }
             }
+        }
+
+        if ($hasTooltip) {
+            $tooltipContent = '<span class="mdfgf-tooltip">?<span class="mdfgf-tooltip-content-container"><span class="mdfgf-tooltip-content">'.$field['description'].'</span></span></span>';
+                $content = preg_replace('/\<label[^\>]+gfield\_label[^\>]*\>[^\<]*/m', '$0'.$tooltipContent, $content);
         }
 
         $content = str_replace("'gformDeleteUploadedFile(", "'mdfgfUpdateUploadPreviews();gformDeleteUploadedFile(", $content);
@@ -767,12 +792,24 @@ class MDFGF {
 .mdfgf-use-custom-datepicker .ui-datepicker .ui-datepicker-calendar td a:hover {
     background-color: rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.2);
 }
-.mdfgf-use-custom-datepicker .ui-datepicker .ui-datepicker-calendar td a.ui-state-active {
+.mdfgf-use-custom-datepicker .ui-datepicker .ui-datepicker-calendar td a.ui-state-active,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-tooltip,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-tooltip {
     background-color: '.$mainColor.';
 }
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-md .mdfgf-field.has-focus .mdfgf-label {
     color: '.$mainColor.';
 }
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-checkbox-switch input[type="checkbox"]:checked, 
+.mdfgf-container gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-checkbox-switch input[type="checkbox"]:checked {
+    background-color: rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.4) !important;
+}
+
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-checkbox-switch input[type="checkbox"]:checked:after, 
+.mdfgf-container gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-checkbox-switch input[type="checkbox"]:checked:after {
+    background-color: '.$mainColor.' !important;
+}
+
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-textarea,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-textarea,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-input:focus,
@@ -815,9 +852,33 @@ $colorString.= '
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .button:focus,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .button:focus,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' input[type="file"]:focus:before, 
-    .gform_wrapper_original_id_'.$attributes['id'].' input[type="file"]:focus:before {
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' input[type="file"]:focus:before {
     background-color: '.$hoverColor.';
+}';
+
+if ($settings['design'] === 'mdfgf-md') {
+
+    $rippleColor = self::adjustBrightness($hoverColor, .2);
+
+    $colorString.= '
+    .mdfgf-container #gform_wrapper_'.$attributes['id'].' form.mdfgf-md .button:hover,
+    .mdfgf-container #gform_wrapper_'.$attributes['id'].' form.mdfgf-md input[type="file"]:hover:before,
+    .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' form.mdfgf-md .button:hover,
+    .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' form.mdfgf-md input[type="file"]:hover:before {
+        background: '.$hoverColor.' radial-gradient(circle, transparent 1%, '.$hoverColor.' 1%) center/15000%;
+    }
+    .mdfgf-container #gform_wrapper_'.$attributes['id'].' form.mdfgf-md .button:active,
+    .mdfgf-container #gform_wrapper_'.$attributes['id'].' form.mdfgf-md input[type="file"]:active:before,
+    .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' form.mdfgf-md .button:active,
+    .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' form.mdfgf-md input[type="file"]:active:before {
+        background-color: '.$rippleColor.';
+        background-size: 100%;
+        transition: background 0s;
+    }
+    ';
 }
+
+$colorString.= '
 </style>';
 
         }
@@ -1225,7 +1286,7 @@ $colorString.= '
     {
        ?>
         <script>
-            //binding to the load field settings event to initialize the checkbox
+            // binding to the load field settings event to initialize the checkbox
             jQuery(document).bind("gform_load_field_settings", function(event, field, form) {
                 if (!jQuery('#field_size option[value="tiny"]').length) {
                     jQuery('#field_size').prepend('<option value="tiny">Tiny (1/4 Column)</option>');
@@ -1244,7 +1305,22 @@ $colorString.= '
                     jQuery('.size_input_setting.field_setting').hide();
                 }
 
+                if (!jQuery('#field_description_placement option[value="tooltip"]').length) {
+                    jQuery('#field_description_placement').append('<option value="tooltip">Tooltip</option>');
+                }
 
+                if (['checkbox', 'consent'].includes(field.type)) {
+                    if (typeof field.checkboxstyle !== 'undefined' && field.checkboxstyle === 'switch') {
+                        jQuery('#field_checkbox_style_setting_normal').prop('checked', false);
+                        jQuery('#field_checkbox_style_setting_switch').prop('checked', true);
+                    } else {
+                        jQuery('#field_checkbox_style_setting_switch').prop('checked', false);
+                        jQuery('#field_checkbox_style_setting_normal').prop('checked', true);
+                    }
+                    jQuery('.field_checkbox_style_setting').show();
+                } else {
+                    jQuery('.field_checkbox_style_setting').hide();
+                }
             });
         </script>
         <?php

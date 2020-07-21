@@ -136,6 +136,11 @@ $themes: (
     margin-top: .8rem;
     margin-left: 5px;
 }
+.mdfgf-container .mdfgf-md .ginput_container_consent,
+.mdfgf-container .mdfgf-md ul.gfield_checkbox li,
+.mdfgf-container .mdfgf-md ul.gfield_radio li {
+    margin-bottom: .4rem;
+}
 .mdfgf-field-type-checkbox,
 .mdfgf-field-type-radio,
 .mdfgf-field-type-consent {
@@ -186,6 +191,7 @@ $themes: (
 
 .mdfgf-field-input {
     display: inline-block;
+    position: relative;
     width: 100%;
 }
 
@@ -595,6 +601,7 @@ li.gfield.mdfgf-field-type-address {
     .screen-reader-text,
     .ginput_container_fileupload span[id^="extensions_"],
     .ginput_container_post_image span[id^="extensions_"],
+    .gfield_description,
     .gfield_list th {
         font-size: 14px;
         font-weight: 300;
@@ -736,6 +743,77 @@ li.gfield.mdfgf-field-type-address {
         }
     }
 
+    .mdfgf-tooltip {
+        position: relative;
+        border-radius: 50%;
+        text-align: center;
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        font-size: 10px;
+        background-color: #aaa;
+        line-height: 13px;
+        vertical-align: 5px;
+        margin-left: 4px;
+        font-weight: bold;
+        color: white;
+        cursor: default;
+        transition: all .1s ease-in-out;
+        .mdfgf-tooltip-content-container {
+            width: 400px;
+            position: absolute;
+            top: auto;
+            left: 0;
+            bottom: 20px;
+            text-align: left;
+            pointer-events: none;
+        }
+        .mdfgf-tooltip-content {
+            display: inline-block;
+            transform-origin: center;
+            transform: scale(.8);
+            position: relative;
+            border-radius: .25rem;
+            padding: 1.2rem 1rem;
+            text-align: left;
+            width: auto;
+            max-width: 300px;
+            font-size: 12px;
+            font-weight: normal;
+            text-align: left;
+            line-height: 1.2;
+            white-space: normal;
+            color: #777;
+        }
+        &:hover {
+            background-color: #999;
+            .mdfgf-tooltip-content {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    }
+
+    .mdfgf-has-tooltip {
+        .gfield_description {
+            display: none;
+        }
+        .mdfgf-label {
+            pointer-events: all !important;
+            user-select: none;
+            cursor: text;
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+
+    .mdfgf-field.active {
+        .mdfgf-tooltip {
+            vertical-align: 2px;
+        }
+    }
+
     .mdfgf-multifile {
         .ginput_container_fileupload {
             display: block;
@@ -860,7 +938,8 @@ li.gfield.mdfgf-field-type-address {
                 transform: scale(0.5);
                 margin: 0;
             }
-            &:focus::before {
+            &:focus::before,
+            &:hover::before {
                 background-color: rgba(150,150,150, 0.1);
                 transform: scale(1);
             }
@@ -889,6 +968,51 @@ li.gfield.mdfgf-field-type-address {
             margin-right: 10px;
             &::after { 
                 border-radius: 50%;
+            }
+        }
+        .mdfgf-checkbox-switch .ginput_container_consent,
+        .mdfgf-checkbox-switch ul.gfield_checkbox {
+            input[type="checkbox"] {
+                border: 0;
+                background: rgba(0,0,0,0.2);
+                border-radius: 10px;
+                height: 14px !important;
+                width: 36px;
+                min-height: 0;
+                position: relative;
+                &::after {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    top: -3px;
+                    left: 0;
+                    height: 20px;
+                    width: 20px;
+                    border-radius: 50%;
+                    background-color: white;
+                    box-shadow: 0px 1px 1px 1px rgba(0,0,0,.1);
+                    transform: scale(1);
+                    transition: all .1s ease-in-out;
+                }
+                &::before {
+                    top: -14px;
+                    left: -11px;
+                    transition: all .1s ease-in-out;
+                }
+                &:checked {
+                    background: rgba(0,0,0,0.3);
+                    &::after {
+                        left: 18px;
+                        top: -3px;
+                        background: #777;
+                        border: 0;
+                        height: 20px;
+                        width: 20px;
+                    }
+                    &::before {
+                        left: 8px;
+                    }
+                }
             }
         }
     }
@@ -952,7 +1076,7 @@ li.gfield.mdfgf-field-type-address {
                 border-color: rgba(0,0,0,0.6);
             }
         }
-        .mdfgf-input:not([type="checkbox"]):not([type="radio"]) {
+        .mdfgf-input:not([type="checkbox"]):not([type="radio"]):not([type="button"]) {
             border-top: 0;
             border-left: 0;
             border-right: 0;
@@ -962,13 +1086,20 @@ li.gfield.mdfgf-field-type-address {
         .ginput_container .mdfgf-input[type="checkbox"],
         .ginput_container .mdfgf-input[type="radio"] {
             border-width: 2px;
+            margin-right: 14px;
             &::before {
-                top: -10px;
-                left: -10px;
+                top: -13px;
+                left: -13px;
+                width: 40px;
+                height: 40px;
+            }
+            &:hover::before {
+                transform: scale(1);
             }
         }
-        .mdfgf-input[type="checkbox"] {
+        .ginput_container .mdfgf-input[type="checkbox"] {
             border-radius: 2px;
+            margin-right: 10px;
             &:checked::after {
                 height: 7px;
                 width: 14px;
@@ -984,64 +1115,25 @@ li.gfield.mdfgf-field-type-address {
                 position: absolute;
             }
         }
-    }
-
-    &.mdfgf-checkboxes-mdfgf {
-        .ginput_container input[type="checkbox"],
-        .ginput_container input[type="radio"] {
-            opacity: 1;
-            width: 18px;
-            height: 18px;
-            min-height: 18px;
-            padding: 0;
-            vertical-align: top;
-            margin: 2px 6px 0 0;
-            position: relative;
-            pointer-events: all;
-            &::before {
-                content: '';
-                position: absolute;
-                left: -9px;
-                top: -9px;
-                display: block;
-                background-color: transparent;
-                width: 34px;
-                height: 34px;
-                border-radius: 50%;
-                transition: background-color .1s ease-in-out, transform .1s ease-in-out;
-                transform: scale(0.5);
-                margin: 0;
-            }
-            &:focus::before {
-                background-color: rgba(150,150,150, 0.1);
-                transform: scale(1);
-            }
-            &::after {
-                content: '';
-                display: block;
-                margin: auto;
-                height: 100%;
-                width: 100%;
-                transform: scale(0.7);
-                border-radius: 2px;
-                border-color: transparent;
-                transition: background-color .1s ease-in-out;
-            }
-            + label {
-                width: calc(100% - 30px);
-                line-height: 1.4;
-                display: inline-block;
-                vertical-align: top;
-                margin-left: 0;
+        .mdfgf-checkbox-switch .ginput_container .mdfgf-input[type="checkbox"] {
+            &:checked::after { 
+                background-color: #777 !important;
             }
         }
-
-        .gfield input[type="radio"] {
-            border-radius: 50%;
-            margin-right: 10px;
-            &::after { 
-                border-radius: 50%;
-            }
+        .button,
+        input[type="file"]::before {
+            background-position: center;
+            transition: background 0.6s;
+        }
+        .button:hover,
+        input[type="file"]:hover::before {
+            background: map.get(map.get($themes, 'default'), 'accent-highlight-color') radial-gradient(circle, transparent 1%, map.get(map.get($themes, 'default'), 'accent-highlight-color') 1%) center/15000%;
+        }
+        .button:active,
+        input[type="file"]:active::before {
+            background-color: map.get(map.get($themes, 'default'), 'accent-color');
+            background-size: 100%;
+            transition: background 0s;
         }
     }
 }
@@ -1447,7 +1539,8 @@ textarea.mdfgf-input {
 
 
 .mdfgf-container.mdfgf-use-custom-selects .mdfgf-custom-select,
-.mdfgf-use-custom-datepicker .ui-datepicker  {
+.mdfgf-use-custom-datepicker .ui-datepicker,
+.mdfgf-tooltip-content  {
     position: absolute;
     top: 100%;
     left: 0;
@@ -1853,13 +1946,20 @@ form.mdfgf-bootstrap {
         border: 0;
     }
 }
-.mdfgf-container.mdfgf-md-regular .mdfgf-md .mdfgf-field {
-    .mdfgf-field-input {
-        margin-top: -2px;
-        .mdfgf-input {
-            height: 34px;
-            line-height: 34px;
+.mdfgf-container.mdfgf-md-regular .mdfgf-md {
+    .mdfgf-field {
+        .mdfgf-field-input {
+            margin-top: -2px;
+            .mdfgf-input {
+                height: 34px;
+                line-height: 34px;
+            }
         }
+    }
+    .ginput_container_fileupload input[type=file]::before, 
+    .ginput_container_post_image input[type=file]::before {
+        left: 0;
+        min-width: 92px;
     }
 }
 .mdfgf-container.mdfgf-md-filled .mdfgf-md .mdfgf-field {
