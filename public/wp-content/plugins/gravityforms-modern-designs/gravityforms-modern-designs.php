@@ -297,6 +297,11 @@ class MDFGF {
                     $(this).appendTo($(this).closest('.mdfgf-field').find('.mdfgf-fieldblock-label'));
                 });
 
+                $('.mdfgf-tooltip-content').on('click', function(e){
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+
                 $('.mdfgf-render').each(function(){
                     var form = $(this);
                     var formId = $(this).attr('id');

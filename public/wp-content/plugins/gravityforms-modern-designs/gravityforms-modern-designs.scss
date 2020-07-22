@@ -274,6 +274,7 @@ $themes: (
         border-radius: .2rem 0 0 .2rem;
         border-right-width: 0;
         position: relative;
+        transition: border-color .1s ease-in-out;
         &:before {
             content: '';
             display: block;
@@ -765,10 +766,11 @@ li.gfield.mdfgf-field-type-address {
             position: absolute;
             top: auto;
             left: 0;
-            bottom: 20px;
+            bottom: 10px;
             text-align: left;
             pointer-events: none;
             z-index: 1;
+            padding-bottom: 10px;
         }
         .mdfgf-tooltip-content {
             display: inline-block;
@@ -789,9 +791,15 @@ li.gfield.mdfgf-field-type-address {
         }
         &:hover {
             background-color: rgba(0,0,0,0.5);
+            .mdfgf-tooltip-content-container {
+                pointer-events: all;
+            }
             .mdfgf-tooltip-content {
                 opacity: 1;
                 transform: scale(1) translateX(-16%);
+                pointer-events: all;
+                user-select: text;
+                cursor: auto;
             }
         }
     }
@@ -1097,6 +1105,10 @@ li.gfield.mdfgf-field-type-address {
                 border-color: rgba(0,0,0,0.6);
             }
         }
+        .mdfgf-field .mdfgf-fieldblock > .mdfgf-label,
+        .mdfgf-field > .mdfgf-label {
+            opacity: 1;
+        }
         .mdfgf-input:not([type="checkbox"]):not([type="radio"]):not([type="button"]) {
             border-top: 0;
             border-left: 0;
@@ -1385,7 +1397,8 @@ textarea.mdfgf-input {
 .mdfgf-fieldset .mdfgf-fieldblock {
     border-color: map.get(map.get($themes, 'default'), 'border-color');
 }
-.mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock {
+.mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock,
+form.mdfgf-md .mdfgf-fieldset:hover .mdfgf-fieldblock {
     border-color: map.get(map.get($themes, 'default'), 'border-color-focus');
 }
 .mdfgf-field.invalid .mdfgf-input,
@@ -1496,9 +1509,10 @@ textarea.mdfgf-input {
             }
             .mdfgf-fieldset .mdfgf-fieldblock {
                 border-color: map.get($theme, 'border-color');
-                .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock {
-                    border-color: map.get($theme, 'border-color-focus');
-                }
+            }
+            .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock,
+            form.mdfgf-md .mdfgf-fieldset:hover .mdfgf-fieldblock {
+                border-color: map.get($theme, 'border-color-focus');
             }
             .mdfgf-field.invalid .mdfgf-input {
                 border-color: map.get($theme, 'error-color');
@@ -1637,7 +1651,8 @@ textarea.mdfgf-input {
 .mdfgf-container.mdfgf-theme-dark.mdfgf-use-custom-selects .mdfgf-custom-select,
 .mdfgf-container.mdfgf-theme-ash.mdfgf-use-custom-selects .mdfgf-custom-select,
 .mdfgf-use-dark-theme.mdfgf-use-custom-datepicker .ui-datepicker,
-.mdfgf-container .mdfgf-tooltip .mdfgf-tooltip-content {
+.mdfgf-container.mdfgf-theme-dark .mdfgf-tooltip .mdfgf-tooltip-content,
+.mdfgf-container.mdfgf-theme-ash .mdfgf-tooltip .mdfgf-tooltip-content {
     background-color: #333;
     color: #eee;
     &::after {
