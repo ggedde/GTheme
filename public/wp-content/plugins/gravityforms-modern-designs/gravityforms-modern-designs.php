@@ -104,8 +104,10 @@ class MDFGF {
         add_action('gform_editor_js', array(__CLASS__, 'editorJs'));
         add_action('gform_pre_render', array(__CLASS__, 'preRenderForm'), 10, 6);
         add_action('gform_shortcode_form', array(__CLASS__, 'shortcodeForm'), 10, 3);
-        add_action('gform_field_css_class', array(__CLASS__, 'fieldClasses'), 10, 3);
-        add_action('gform_field_content', array(__CLASS__, 'fieldContent'), 10, 5);
+        if (!is_admin()) {
+            add_action('gform_field_css_class', array(__CLASS__, 'fieldClasses'), 10, 3);
+            add_action('gform_field_content', array(__CLASS__, 'fieldContent'), 10, 5);
+        }
         add_filter('admin_footer', array(__CLASS__, 'adminFooter'));
         add_action( 'gform_settings_mdfgf', array(__CLASS__, 'globalSettings'));
 
