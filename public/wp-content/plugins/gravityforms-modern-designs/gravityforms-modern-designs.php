@@ -32,6 +32,11 @@
 class MDFGF {
 
 
+    /**
+     * Version
+     */
+    private static $version = '1.0.0';
+
 
     /**
      * Array of Single Text Types for Gravity Forms
@@ -153,6 +158,8 @@ class MDFGF {
                 wp_deregister_style('gforms_formsmain_css');
                 wp_deregister_style('gforms_ready_class_css');
                 wp_deregister_style('gforms_browsers_css');
+
+                wp_enqueue_style( 'mdfgf_css', plugin_dir_url( __FILE__ ).'/gravityforms-modern-designs.min.css', array(), self::$version);
             }
         }, 10, 2);
     }
@@ -400,10 +407,6 @@ class MDFGF {
     }
     
 </script>
-<style>
-/* Modern Designs for Gravity Forms css */
-<?= file_get_contents(dirname(__FILE__).'/gravityforms-modern-designs.min.css');?>
-</style>
 <?php
     }
 
@@ -593,14 +596,24 @@ class MDFGF {
                     continue;
                 }
 
+                $inputClasses = array('mdfgf-input');
+
+                if (stripos($tag, "type='checkbox")) {
+                    $inputClasses[] = 'mdfgf-checkbox';
+                }
+
+                if (stripos($tag, "type='radio")) {
+                    $inputClasses[] = 'mdfgf-radio';
+                }
+
                 $newTag = $tag;
 
                 $addTextareaWrapper = (strpos($tag, '<textarea') !== false && $settings['label_animation'] === 'in');
 
                 if (preg_match("/class=\'([^\']*)\'/m", $tag, $classMatches)) {
-                    $newTag = str_replace($classMatches[0], "class='mdfgf-input".($classMatches[1] ? ' '.$classMatches[1] : '')."'", $newTag);
+                    $newTag = str_replace($classMatches[0], "class='".implode(' ', $inputClasses).($classMatches[1] ? ' '.$classMatches[1] : '')."'", $newTag);
                 } else {
-                    $newTag = preg_replace('/\<(select|input|textarea) /m', '<$1 class="mdfgf-input" ', $newTag);
+                    $newTag = preg_replace('/\<(select|input|textarea) /m', '<$1 class="'.implode(' ', $inputClasses).'" ', $newTag);
                 }
 
                 if ($settings['label_animation'] === 'line') {
@@ -617,7 +630,7 @@ class MDFGF {
 
         $hasTooltip = ($field['descriptionPlacement'] === 'tooltip' && !empty($field['description']));
 
-        if (preg_match_all('/\<(label)[^\>]+\>[^\>]*\<\/label\>/m', $content, $matches)) {
+        if (preg_match_all('/\<(label)[^\>]+\>.*\<\/label\>/m', $content, $matches)) {
             if (!empty($matches[0])) {
                 foreach ($matches[0] as $tag) {
                     $newTag = '';
@@ -805,10 +818,10 @@ class MDFGF {
     border-color: '.$mainColor.';
     color: #eee;
 }
-.mdfgf-use-custom-datepicker .ui-datepicker .ui-datepicker-calendar td a:hover {
+body.mdfgf-use-custom-datepicker .ui-datepicker .ui-datepicker-calendar td a:hover {
     background-color: rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.2);
 }
-.mdfgf-use-custom-datepicker .ui-datepicker .ui-datepicker-calendar td a.ui-state-active,
+body.mdfgf-use-custom-datepicker .ui-datepicker .ui-datepicker-calendar td a.ui-state-active,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-tooltip,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-tooltip {
     background-color: '.$mainColor.';
@@ -826,6 +839,36 @@ class MDFGF {
     background-color: '.$mainColor.' !important;
 }
 
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-radio:checked,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-checkbox:checked,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-radio:hover,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-checkbox:hover,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-radio:focus,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-checkbox:focus,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-radio:checked,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-checkbox:checked,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-radio:hover,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-checkbox:hover,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-radio:focus,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-checkbox:focus {
+    box-shadow: inset 0 0 0 1px '.$mainColor.';
+}
+
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' form.mdfgf-md .mdfgf-radio:checked,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' form.mdfgf-md .mdfgf-checkbox:checked,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' form.mdfgf-md .mdfgf-radio:hover,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' form.mdfgf-md .mdfgf-checkbox:hover,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' form.mdfgf-md .mdfgf-radio:focus,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' form.mdfgf-md .mdfgf-checkbox:focus,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' form.mdfgf-md .mdfgf-radio:checked,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' form.mdfgf-md .mdfgf-checkbox:checked,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' form.mdfgf-md .mdfgf-radio:hover,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' form.mdfgf-md .mdfgf-checkbox:hover,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' form.mdfgf-md .mdfgf-radio:focus,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' form.mdfgf-md .mdfgf-checkbox:focus {
+    box-shadow: inset 0 0 0 2px '.$mainColor.';
+}
+
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-textarea,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-textarea,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-input:focus,
@@ -835,9 +878,7 @@ class MDFGF {
 .mdfgf-container.mdfgf-md-outlined #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:before,
 .mdfgf-container.mdfgf-md-outlined .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:before,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock,
-.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock,
-.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' form.mdfgf-md .mdfgf-input[type="radio"]:checked,
-.mdfgf-container #gform_wrapper_'.$attributes['id'].' form.mdfgf-md .mdfgf-input[type="radio"]:checked {
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock {
     border-color: '.($settings['design'] === 'mdfgf-bootstrap' ? self::adjustBrightness($mainColor, .5) : $mainColor).';';
 
     if ($settings['design'] === 'mdfgf-bootstrap' && $labelAnimation !== 'line') {

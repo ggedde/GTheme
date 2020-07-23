@@ -3,7 +3,7 @@
 
 $themes: (
     'default': (
-        'border-color': rgba(0,0,0,0.3),
+        'border-color': rgba(0,0,0,0.38),
         'border-color-focus': rgba(0,0,0,0.8),
         'background-color': rgba(252,252,252,0.8),
         'checkbox-checked-background-color': rgba(10,10,10,.7),
@@ -258,9 +258,6 @@ $themes: (
         right: 0;
         border: 0;
         width: 100%;
-        &:focus {
-            box-shadow: none;
-        }
     }
     > label {
         display: none;
@@ -713,7 +710,6 @@ li.gfield.mdfgf-field-type-address {
             text-align: right;
             top: -20px;
             right: 0;
-            width: 100%;
         }
     }
     .ginput_preview {
@@ -963,21 +959,23 @@ li.gfield.mdfgf-field-type-address {
             &::before {
                 content: '';
                 position: absolute;
-                left: -9px;
-                top: -9px;
                 display: block;
                 background-color: transparent;
-                width: 34px;
-                height: 34px;
+                width: 100%;
+                height: 100%;
                 border-radius: 50%;
                 transition: background-color .1s ease-in-out, transform .1s ease-in-out;
-                transform: scale(0.5);
+                transform: scale(0.0);
                 margin: 0;
             }
             &:focus::before,
             &:hover::before {
                 background-color: rgba(150,150,150, 0.1);
-                transform: scale(1);
+                transform: scale(2);
+            }
+            &:active::before {
+                background-color: rgba(150,150,150, 0.2);
+                transform: scale(1.6) !important;
             }
             &::after {
                 content: '';
@@ -985,10 +983,13 @@ li.gfield.mdfgf-field-type-address {
                 margin: auto;
                 height: 100%;
                 width: 100%;
-                transform: scale(0.7);
+                transform: scale(0);
                 border-radius: 2px;
                 border-color: transparent;
-                transition: background-color .1s ease-in-out;
+                transition: all .1s ease-in-out;
+            }
+            &:checked::after {
+                transform: scale(0.6);
             }
             + label {
                 width: calc(100% - 30px);
@@ -1016,6 +1017,7 @@ li.gfield.mdfgf-field-type-address {
                 width: 36px;
                 min-height: 0;
                 position: relative;
+                box-shadow: none !important;
                 &::after {
                     content: '';
                     display: block;
@@ -1032,19 +1034,20 @@ li.gfield.mdfgf-field-type-address {
                     transition: all .1s ease-in-out;
                 }
                 &::before {
-                    top: -10px;
-                    left: -8px;
+                    width: 18px;
+                    height: 18px;
+                    top: -2px;
+                    left: 0;
                     transition: all .1s ease-in-out;
                 }
                 &:checked {
                     background: rgba(0,0,0,0.3);
                     &::after {
-                        left: 18px;
-
                         background: #777;
                     }
-                    &::before {
-                        left: 10px;
+                    &::before,
+                    &::after {
+                        left: 18px;
                     }
                 }
             }
@@ -1098,18 +1101,15 @@ li.gfield.mdfgf-field-type-address {
                 border-radius: 50%;
             }
             &:checked::after {
-                background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3E%3Ccircle r='3' fill='%23fff'/%3E%3C/svg%3E");
+                background: transparent !important;
+                width: 100%;
+                height: 100%;
+                border: 4px solid;
             }
         }
     }
 
     form.mdfgf-md {
-        .mdfgf-input {
-            border-color: rgba(0,0,0,0.4);
-            &:hover {
-                border-color: rgba(0,0,0,0.6);
-            }
-        }
         input[type="checkbox"]:checked {
             background-color: rgba(0,0,0,0.6);
         }
@@ -1117,19 +1117,15 @@ li.gfield.mdfgf-field-type-address {
         .mdfgf-field > .mdfgf-label {
             opacity: 1;
         }
-        
         .ginput_container .mdfgf-input[type="checkbox"],
         .ginput_container .mdfgf-input[type="radio"] {
-            border-width: 2px;
             margin-right: 14px;
-            &::before {
-                top: -13px;
-                left: -13px;
-                width: 40px;
-                height: 40px;
+            &:checked::after {
+                transform: scale(0.5);
             }
+            &:focus::before,
             &:hover::before {
-                transform: scale(1);
+                transform: scale(2.2);
             }
         }
         .mdfgf-checkbox-switch {
@@ -1141,13 +1137,6 @@ li.gfield.mdfgf-field-type-address {
                     height: 20px;
                     top: -3px;
                     border: 0;
-                }
-                &::before {
-                    top: -13px;
-                    left: -10px;
-                }
-                &:checked::before {
-                    left: 8px;
                 }
             }
         }
@@ -1164,14 +1153,17 @@ li.gfield.mdfgf-field-type-address {
                 border-right: 0;
                 border-color: white !important;
                 transition: all .1s ease-in-out;
-                top: 2px;
-                left: 0;
+                top: 4px;
+                left: 2px;
                 position: absolute;
             }
         }
         .mdfgf-checkbox-switch .ginput_container .mdfgf-input[type="checkbox"] {
             &:checked::after { 
                 background-color: #444 !important;
+            }
+            &::before {
+                left: 1px;
             }
         }
         .button,
@@ -1233,13 +1225,6 @@ textarea.mdfgf-input {
     transition: border .1s ease-in-out;
     display: inline-block;
     text-overflow: ellipsis;
-    &:focus,
-    &:checked {
-        box-shadow: inset 0 0 0 3px rgba(150,150,150, .2);
-    }
-}
-.mdfgf-field.has-focus .mdfgf-textarea {
-    box-shadow: inset 0 0 0 3px rgba(150,150,150, .2);
 }
 
 .mdfgf-container .gf_progressbar_title {
@@ -1377,14 +1362,31 @@ textarea.mdfgf-input {
             color: map.get(map.get($themes, 'default'), 'input-text-color');
         }
     }
-    &:focus {
-        border-color: map.get(map.get($themes, 'default'), 'border-color-focus');
+}
+.mdfgf-field-input:focus-within .mdfgf-input,
+.mdfgf-input:focus,
+.mdfgf-input:hover {
+    border-color: map.get(map.get($themes, 'default'), 'border-color-focus');
+}
+.mdfgf-input:checked {
+    background-color: transparent;
+    &::after {
+        background-color: map.get(map.get($themes, 'default'), 'checkbox-checked-background-color');
     }
-    &:checked {
-        background-color: transparent;
-        box-shadow: inset 0 0 0 2px map.get(map.get($themes, 'default'), 'background-color');
-        &::after {
-            background-color: map.get(map.get($themes, 'default'), 'checkbox-checked-background-color');
+}
+.mdfgf-checkbox,
+.mdfgf-radio {
+    border: 0;
+    box-shadow: inset 0 0 0 1px map.get(map.get($themes, 'default'), 'border-color');
+    .mdfgf-md & {
+        box-shadow: inset 0 0 0 2px map.get(map.get($themes, 'default'), 'border-color');
+    }
+    &:focus,
+    &:checked,
+    &:hover {
+        box-shadow: inset 0 0 0 1px map.get(map.get($themes, 'default'), 'border-color-focus');
+        .mdfgf-md & {
+            box-shadow: inset 0 0 0 2px map.get(map.get($themes, 'default'), 'border-color-focus');
         }
     }
 }
@@ -1483,6 +1485,8 @@ form.mdfgf-md .mdfgf-fieldset:hover .mdfgf-fieldblock {
             }
             border-color: map.get($theme, 'border-color');
             background-color: map.get($theme, 'background-color');
+        }
+        .mdfgf-theme-#{$theme-name} .mdfgf-input {
             &:focus {
                 border-color: map.get($theme, 'border-color-focus');
             }
@@ -1491,6 +1495,24 @@ form.mdfgf-md .mdfgf-fieldset:hover .mdfgf-fieldblock {
                 &::after {
                     background-color: map.get($theme, 'checkbox-checked-background-color');
                 }
+            }
+        }
+        .mdfgf-theme-#{$theme-name} .mdfgf-checkbox,
+        .mdfgf-theme-#{$theme-name} .mdfgf-radio {
+            box-shadow: inset 0 0 0 1px map.get($theme, 'border-color');
+            &:focus,
+            &:checked,
+            &:hover {
+                box-shadow: inset 0 0 0 1px map.get($theme, 'border-color-focus');
+            }
+        }
+        .mdfgf-theme-#{$theme-name} .mdfgf-md .mdfgf-checkbox,
+        .mdfgf-theme-#{$theme-name} .mdfgf-md .mdfgf-radio {
+            box-shadow: inset 0 0 0 2px map.get($theme, 'border-color');
+            &:focus,
+            &:checked,
+            &:hover {
+                box-shadow: inset 0 0 0 2px map.get($theme, 'border-color-focus');
             }
         }
         .mdfgf-theme-#{$theme-name} .mdfgf-select:after {
@@ -1758,7 +1780,6 @@ form.mdfgf-md .mdfgf-fieldset:hover .mdfgf-fieldblock {
             }
         }
         thead {
-            // background-color: rgba(150,150,150,0.1);
             padding: 1rem;
             th {
                 text-align: center;
@@ -1962,9 +1983,6 @@ form.mdfgf-bootstrap {
 .mdfgf-container.mdfgf-md-regular form.mdfgf-md .mdfgf-input:not([type="checkbox"]):not([type="radio"]) {
     padding-left: 1px;
 }
-.mdfgf-container form.mdfgf-md .mdfgf-input {
-    box-shadow: none;
-}
 .mdfgf-container.mdfgf-md-regular .mdfgf-md .mdfgf-field,
 .mdfgf-container.mdfgf-md-outlined .mdfgf-md .mdfgf-field,
 .mdfgf-container.mdfgf-md-filled .mdfgf-md .mdfgf-field {
@@ -2012,9 +2030,6 @@ form.mdfgf-bootstrap {
         border-right: 0;
         border-radius: 4px 4px 0 0;
     }
-    .mdfgf-input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="file"]) {
-        padding-left: 12px;
-    }
 }
 .mdfgf-container.mdfgf-md-regular .mdfgf-md {
     .mdfgf-field {
@@ -2038,7 +2053,6 @@ form.mdfgf-bootstrap {
         .mdfgf-input {
             height: 46px;
             line-height: 46px;
-            box-shadow: none;
             background-color: rgba(0,0,0,0.04);
             &:hover {
                 background-color: rgba(0,0,0,0.07);
@@ -2104,7 +2118,6 @@ form.mdfgf-bootstrap {
     textarea {
         border: none !important;
         background: none !important;
-        box-shadow: none !important;
         line-height: 1.4 !important;
         padding: 0 !important;
     }
