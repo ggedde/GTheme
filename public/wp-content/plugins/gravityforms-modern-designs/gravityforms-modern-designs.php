@@ -538,7 +538,7 @@ class MDFGF {
      * @return string
      */
     public static function fieldContent($content, $field, $value, $lead_id, $form_id){
-
+        
         $settings = self::getSettings($form_id);
 
         if (empty($settings['design']) || $settings['design'] === 'mdfgf-gf') {
@@ -617,7 +617,7 @@ class MDFGF {
 
         $hasTooltip = ($field['descriptionPlacement'] === 'tooltip' && !empty($field['description']));
 
-        if (preg_match_all('/\<(label)[^\>]+\>/m', $content, $matches)) {
+        if (preg_match_all('/\<(label)[^\>]+\>[^\>]*\<\/label\>/m', $content, $matches)) {
             if (!empty($matches[0])) {
                 foreach ($matches[0] as $tag) {
                     $newTag = '';
@@ -628,7 +628,13 @@ class MDFGF {
                         $newTag = preg_replace('/\<(label)/m', '<$1 class="mdfgf-label"', $tag);
                     }
 
-                    if ($newTag) {
+                    if ($field['labelPlacement'] === 'hidden_label' && !empty($classMatches[1]) && strpos($classMatches[1], 'gfield_label') !== false) {
+                        if ($hasTooltip) {
+                            $content = str_replace($tag, '<label class="gfield_label mdfgf-label mdfgf-has-tooltip"></label>', $content);
+                        } else {
+                            $content = str_replace($tag, '', $content);
+                        }
+                    } else if ($newTag) {
                         $content = str_replace($tag, $newTag, $content);
                     }
                 }
@@ -637,7 +643,7 @@ class MDFGF {
 
         if ($hasTooltip) {
             $tooltipContent = '<span class="mdfgf-tooltip">?<span class="mdfgf-tooltip-content-container"><span class="mdfgf-tooltip-content">'.$field['description'].'</span></span></span>';
-                $content = preg_replace('/\<label[^\>]+gfield\_label[^\>]*\>[^\<]*/m', '$0'.$tooltipContent, $content);
+            $content = preg_replace('/\<label[^\>]+gfield\_label[^\>]*\>[^\<]*/m', '$0'.$tooltipContent, $content);
         }
 
         $content = str_replace("'gformDeleteUploadedFile(", "'mdfgfUpdateUploadPreviews();gformDeleteUploadedFile(", $content);

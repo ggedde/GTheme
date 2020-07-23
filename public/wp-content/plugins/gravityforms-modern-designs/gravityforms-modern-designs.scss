@@ -379,13 +379,16 @@ $themes: (
     .mdfgf-input::-webkit-input-placeholder {
         transition: color .3s cubic-bezier(.7, 0.1, 0, 1);
     }
-    &:not(.active):not(.mdfgf-no-label):not(.hidden_label) .mdfgf-input::placeholder {
+    &:not(.active):not(.mdfgf-no-label):not(.hidden_label) .mdfgf-input::placeholder, 
+    &.mdfgf-no-label.mdfgf-has-tooltip:not(.active) .mdfgf-input::placeholder {
         color: transparent;
     }
-    &:not(.active):not(.mdfgf-no-label):not(.hidden_label) .mdfgf-input::-moz-placeholder {
+    &:not(.active):not(.mdfgf-no-label):not(.hidden_label) .mdfgf-input::-moz-placeholder,
+    &.mdfgf-no-label.mdfgf-has-tooltip:not(.active) .mdfgf-input::-moz-placeholder {
         color: transparent;
     }
-    &:not(.active):not(.mdfgf-no-label):not(.hidden_label) .mdfgf-input::-webkit-input-placeholder {
+    &:not(.active):not(.mdfgf-no-label):not(.hidden_label) .mdfgf-input::-webkit-input-placeholder,
+    &.mdfgf-no-label.mdfgf-has-tooltip:not(.active) .mdfgf-input::-webkit-input-placeholder {
         color: transparent;
     }
     &.active {
@@ -802,6 +805,10 @@ li.gfield.mdfgf-field-type-address {
                 cursor: auto;
             }
         }
+    }
+    .mdfgf-no-label.mdfgf-has-tooltip .mdfgf-tooltip {
+        margin-left: 3px;
+        vertical-align: 2px;
     }
 
     &.mdfgf-theme-dark,
