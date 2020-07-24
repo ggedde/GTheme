@@ -830,12 +830,12 @@ body.mdfgf-use-custom-datepicker .ui-datepicker .ui-datepicker-calendar td a.ui-
     color: '.$mainColor.';
 }
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-checkbox-switch input[type="checkbox"]:checked, 
-.mdfgf-container gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-checkbox-switch input[type="checkbox"]:checked {
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-checkbox-switch input[type="checkbox"]:checked {
     background-color: rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.4) !important;
 }
 
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-checkbox-switch input[type="checkbox"]:checked:after, 
-.mdfgf-container gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-checkbox-switch input[type="checkbox"]:checked:after {
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-checkbox-switch input[type="checkbox"]:checked:after {
     background-color: '.$mainColor.' !important;
 }
 
