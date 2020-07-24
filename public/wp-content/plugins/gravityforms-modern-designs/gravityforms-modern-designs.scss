@@ -1014,7 +1014,6 @@ li.gfield.mdfgf-field-type-address {
         .mdfgf-checkbox-switch ul.gfield_checkbox {
             input[type="checkbox"] {
                 border: 0;
-                background: rgba(0,0,0,0.2);
                 border-radius: 10px;
                 height: 14px !important;
                 width: 36px;
@@ -1031,7 +1030,6 @@ li.gfield.mdfgf-field-type-address {
                     height: 18px;
                     width: 18px;
                     border-radius: 50%;
-                    background-color: white;
                     box-shadow: 0px 1px 1px 1px rgba(0,0,0,.1);
                     transform: scale(1);
                     transition: all .1s ease-in-out;
@@ -1044,14 +1042,22 @@ li.gfield.mdfgf-field-type-address {
                     transition: all .1s ease-in-out;
                 }
                 &:checked {
-                    background: rgba(0,0,0,0.3);
-                    &::after {
-                        background: #777;
-                    }
                     &::before,
                     &::after {
                         left: 18px;
                     }
+                }
+            }
+        }
+        .mdfgf-checkbox-switch input[type="checkbox"] {
+            background: rgba(0,0,0,0.2);
+            &::after {
+                background-color: white;
+            }
+            &:checked {
+                background: rgba(0,0,0,0.3);
+                &::after {
+                    background: #777;
                 }
             }
         }
