@@ -1049,18 +1049,6 @@ li.gfield.mdfgf-field-type-address {
                 }
             }
         }
-        .mdfgf-checkbox-switch input[type="checkbox"] {
-            background: rgba(0,0,0,0.2);
-            &::after {
-                background-color: white;
-            }
-            &:checked {
-                background: rgba(0,0,0,0.3);
-                &::after {
-                    background: #777;
-                }
-            }
-        }
     }
 
     form.mdfgf-bootstrap {
@@ -1156,7 +1144,7 @@ li.gfield.mdfgf-field-type-address {
                 height: 7px;
                 width: 14px;
                 transform: scale(1) rotate(-49deg);
-                background-color: transparent !important;
+                background-color: transparent;
                 border: 2px solid;
                 border-top: 0;
                 border-right: 0;
@@ -1168,11 +1156,20 @@ li.gfield.mdfgf-field-type-address {
             }
         }
         .mdfgf-checkbox-switch .ginput_container .mdfgf-input[type="checkbox"] {
-            &:checked::after { 
-                background-color: #444 !important;
-            }
             &::before {
                 left: 1px;
+            }
+        }
+        .mdfgf-checkbox-switch .ginput_container .mdfgf-input[type="checkbox"] {
+            background: rgba(0,0,0,0.2);
+            &::after {
+                background-color: white;
+            }
+            &:checked {
+                background: rgba(0,0,0,0.3);
+                &::after {
+                    background: #444;
+                }
             }
         }
         .button,
