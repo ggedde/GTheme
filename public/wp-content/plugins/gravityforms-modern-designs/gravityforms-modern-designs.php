@@ -826,7 +826,8 @@ body.mdfgf-use-custom-datepicker .ui-datepicker .ui-datepicker-calendar td a.ui-
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-tooltip {
     background-color: '.$mainColor.';
 }
-.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-md .mdfgf-field.has-focus .mdfgf-label {
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-md .mdfgf-field.has-focus .mdfgf-label, 
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-md .mdfgf-field.has-focus .mdfgf-label {
     color: '.$mainColor.';
 }
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-checkbox-switch input[type="checkbox"]:checked, 
