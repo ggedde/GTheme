@@ -197,6 +197,7 @@ class MDFGF {
             function mdfgfCloseCustomSelects(focus){
                 $('.mdfgf-select-open').each(function(){
                     $(this).removeClass('mdfgf-select-open');
+                    $(this).closest('.mdfgf-field').removeClass('mdfgf-has-select-open');
                     $(this).find('.mdfgf-custom-select').hide().find('button').off();
                     if(!isMobile() && focus) {
                         $(this).find('select').focus();
@@ -210,6 +211,7 @@ class MDFGF {
                 mdfgfCloseCustomSelects(false);
                 var customSelect = select.siblings('.mdfgf-custom-select');
                 customSelect.show();
+                customSelect.closest('.mdfgf-field').addClass('mdfgf-has-select-open');
                 setTimeout(function(){
                     customSelect.parent().addClass('mdfgf-select-open');
                 },1);
@@ -662,7 +664,7 @@ class MDFGF {
 
         if ($hasTooltip) {
             $tooltipContent = '<span class="mdfgf-tooltip">?<span class="mdfgf-tooltip-content-container"><span class="mdfgf-tooltip-content">'.$field['description'].'</span></span></span>';
-            $content = preg_replace('/\<label[^\>]+gfield\_label[^\>]*\>[^\<]*/m', '$0'.$tooltipContent, $content);
+            $content = preg_replace('/(\<label[^\>]+gfield\_label[^\>]*\>.*)\<\/label\>/m', '$1'.$tooltipContent.'</label>', $content);
         }
 
         $content = str_replace("'gformDeleteUploadedFile(", "'mdfgfUpdateUploadPreviews();gformDeleteUploadedFile(", $content);
@@ -810,8 +812,8 @@ class MDFGF {
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' input[type="file"]:before,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' select[multiple="multiple"] option:checked,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' select[multiple="multiple"] option:checked,
-.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-custom-select.multiple button.active:after,
-.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-custom-select.multiple button.active:after,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-custom-select.multiple button.active:before,
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-custom-select.multiple button.active:before,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .gf_page_steps .gf_step_active .gf_step_number,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .gf_page_steps .gf_step_active .gf_step_number,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .gf_page_steps .gf_step_completed .gf_step_number,

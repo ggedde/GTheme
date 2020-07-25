@@ -221,14 +221,14 @@ $themes: (
 }
 
 .mdfgf-animate-in .mdfgf-field .mdfgf-input {
-    height: 50px;
+    height: 44px;
     line-height: 34px;
-    padding-top: 16px;
+    padding-top: 14px;
 }
 .mdfgf-animate-in .field_sublabel_below .mdfgf-field .mdfgf-input {
     padding-top: 0;
-    padding-bottom: 16px;
-    line-height: 34px;
+    padding-bottom: 14px;
+    line-height: 28px;
 }   
 .mdfgf-animate-in .gfield_date_dropdown_day.mdfgf-field .mdfgf-input,
 .mdfgf-animate-in .gfield_date_dropdown_month.mdfgf-field .mdfgf-input,
@@ -274,25 +274,6 @@ $themes: (
         .mdfgf-md-outlined .mdfgf-field.has-focus & {
             border-width: 2px;
         }
-        // &:before {
-        //     content: '';
-        //     display: block;
-        //     position: absolute;
-        //     top: 0;
-        //     bottom: 0;
-        //     left: 0;
-        //     right: 0;
-        //     border: 3px solid transparent;
-        //     border-right-width: 0;
-        //     transition: border-color .2s cubic-bezier(.7, 0.1, 0, 1);
-        //     .mdfgf-md-outlined & {
-        //         border-width: 1px;
-        //         border-right-width: 0;
-        //     }
-        //     .mdfgf-field.has-focus & {
-        //         border-color: rgba(150,150,150, .1);
-        //     }
-        // }
         &:nth-child(1),
         &:nth-child(2) {
             border-right-width: 0 !important;
@@ -304,9 +285,6 @@ $themes: (
             max-width: none;
             border-left-width: 0 !important;
             border-radius: 0;
-            // &:before { 
-            //     border-left-width: 0;
-            // }
             .field_sublabel_above .ginput_complex &,
             .ginput_container:not(.ginput_complex) & {
                 &.mdfgf-remove-border {
@@ -346,15 +324,12 @@ $themes: (
             border-radius: 0 .2rem .2rem 0;
             border-left-width: 0 !important;
             border-right-width: 1px;
-            // &:before { 
-            //     border-left-width: 0;
-            //     border-right-width: 3px;
-            //     .mdfgf-md-outlined & {
-            //         border-right-width: 1px;
-            //     }
-            // }
         }
     }
+}
+
+.mdfgf-animate-in .mdfgf-field.mdfgf-has-select-open > .mdfgf-label { 
+    z-index: 3 !important;
 }
 
 .mdfgf-animate-out .mdfgf-field,
@@ -366,7 +341,7 @@ $themes: (
         z-index: 1;
         transform-origin: left;
         opacity: .7;
-        transition: all .2s cubic-bezier(.7, 0.1, 0, 1);
+        transition: transform .2s cubic-bezier(.7, 0.1, 0, 1), opacity .2s cubic-bezier(.7, 0.1, 0, 1), color .2s cubic-bezier(.7, 0.1, 0, 1);
         pointer-events: none;
     }
     &.no-transition > .mdfgf-label,
@@ -404,51 +379,51 @@ $themes: (
 
 .mdfgf-animate-in {
     .mdfgf-field > .mdfgf-label {
-        transform: translate(10px, 14px);
+        transform: translate(10px, 11px);
         margin: 0;
         position: absolute;
     }
     .field_sublabel_above .mdfgf-field {
         > .mdfgf-label {
-            transform: translate(10px, 16px);
+            transform: translate(10px, 12px);
         }
         &.active > .mdfgf-label {
-            transform: scale(.8) translate(13px, 8px);
+            transform: scale(.8) translate(13px, 4px);
         }
     }
     .field_sublabel_below .mdfgf-field {
         > .mdfgf-label {
-            transform: translate(10px, -35px);
+            transform: translate(10px, -32px);
         }
         &.active > .mdfgf-label {
-            transform: scale(.8) translate(13px, -30px);
+            transform: scale(.8) translate(13px, -28px);
         }
     }
     .mdfgf-field.active {
         > .mdfgf-label {
-            transform: scale(.8) translate(13px, 4px);
+            transform: scale(.8) translate(13px, 2px);
         } 
     }
     form.mdfgf-bootstrap {
         .field_sublabel_above .mdfgf-field {
             > .mdfgf-label {
-                transform: translate(10px, 36px);
+                transform: translate(10px, 12px);
             }
             &.active > .mdfgf-label {
-                transform: scale(.8) translate(13px, 32px);
+                transform: scale(.8) translate(13px, 2px);
             }
         }
         .field_sublabel_below .mdfgf-field {
             > .mdfgf-label {
-                transform: translate(10px, -37px);
+                transform: translate(10px, -34px);
             }
             &.active > .mdfgf-label {
-                transform: scale(.8) translate(13px, -32px);
+                transform: scale(.8) translate(13px, -28px);
             }
         }
         .mdfgf-field.active {
             > .mdfgf-label {
-                transform: scale(.8) translate(13px, 32px);
+                transform: scale(.8) translate(13px, 2px);
             } 
         }
     }
@@ -461,7 +436,7 @@ $themes: (
                 transform: translate(12px, 14px);
             }
             &.active > .mdfgf-label {
-                transform: scale(.8) translate(15px, 2px);
+                transform: scale(.8) translate(13px, 2px);
             }
         }
         .field_sublabel_below .mdfgf-field {
@@ -474,7 +449,7 @@ $themes: (
         }
         .mdfgf-field.active {
             > .mdfgf-label {
-                transform: scale(.8) translate(15px, 2px);
+                transform: scale(.8) translate(13px, 2px);
             } 
         }
     }
@@ -992,7 +967,6 @@ li.gfield.mdfgf-field-type-address {
                 transform: scale(0);
                 border-radius: 2px;
                 border-color: transparent;
-                transition: all .1s ease-in-out;
             }
             &:checked::after {
                 transform: scale(0.6);
@@ -1152,6 +1126,7 @@ li.gfield.mdfgf-field-type-address {
     form.mdfgf-md {
         input[type="checkbox"]:checked {
             background-color: rgba(0,0,0,0.6);
+            box-shadow: none;
         }
         .mdfgf-field .mdfgf-fieldblock > .mdfgf-label,
         .mdfgf-field > .mdfgf-label {
@@ -1180,9 +1155,11 @@ li.gfield.mdfgf-field-type-address {
                 }
             }
         }
+        .mdfgf-custom-select.multiple button,
         .ginput_container .mdfgf-input[type="checkbox"] {
             border-radius: 2px;
             margin-right: 10px;
+            &.active::after,
             &:checked::after {
                 height: 7px;
                 width: 14px;
@@ -1198,21 +1175,6 @@ li.gfield.mdfgf-field-type-address {
                 position: absolute;
             }
         }
-        .mdfgf-checkbox-switch .ginput_container .mdfgf-input[type="checkbox"] {
-            background: rgba(0,0,0,0.2);
-            &::after {
-                background-color: white;
-            }
-            &::before {
-                left: 1px;
-            }
-            &:checked {
-                background: rgba(0,0,0,0.3);
-                &::after {
-                    background: #444;
-                }
-            }    
-        }
         .button,
         input[type="file"]::before {
             background-position: center;
@@ -1227,6 +1189,38 @@ li.gfield.mdfgf-field-type-address {
             background-color: map.get(map.get($themes, 'default'), 'accent-color');
             background-size: 100%;
             transition: background 0s;
+        }
+    }
+    form.mdfgf-mdfgf,
+    form.mdfgf-md {
+        .mdfgf-checkbox-switch .ginput_container .mdfgf-input[type="checkbox"] {
+            background: rgba(0,0,0,0.2);
+            &::after {
+                background-color: white;
+
+            }
+            &::before {
+                left: 1px;
+            }
+            &:checked {
+                background: rgba(0,0,0,0.3);
+                &::after {
+                    background: #444;
+                }
+            }    
+        }
+    }
+}
+
+.mdfgf-theme-dark,
+.mdfgf-theme-ash {
+    form.mdfgf-mdfgf,
+    form.mdfgf-md {
+        .mdfgf-checkbox-switch .ginput_container .mdfgf-input[type="checkbox"] {
+            background: rgba(255,255,255,0.2);
+            &::after {
+                background-color: #aaa;
+            }
         }
     }
 }
@@ -1693,7 +1687,6 @@ form.mdfgf-md .mdfgf-fieldset:hover .mdfgf-fieldblock {
         appearance: none;
         user-select: none;
         cursor: pointer;
-        padding: 0 30px 0 10px;
         min-height: 38px;
         line-height: 38px;
         color: #333;
@@ -1715,25 +1708,50 @@ form.mdfgf-md .mdfgf-fieldset:hover .mdfgf-fieldblock {
             color: #333;
         }
     }
-    &.multiple {
-        button {
-            padding-left: 40px;
-            position: relative;
-            &:after {
-                content: '';
-                display: block;
-                width: 16px;
-                height: 16px;
-                border-radius: .2rem;
-                background: transparent;
-                border: 1px solid #555;
-                box-shadow: inset 0 0 0 2px #eee;
-                position: absolute;
-                top: 12px;
-                left: 12px;
+}
+
+.mdfgf-custom-select.multiple {
+    button {
+        padding-left: 40px;
+        position: relative;
+        &::before {
+            content: '';
+            display: block;
+            width: 16px;
+            height: 16px;
+            border-radius: .2rem;
+            background: transparent;
+            border: 1px solid #555;
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            .mdfgf-md & {
+                width: 18px;
+                height: 18px;
+                border: 2px solid map.get(map.get($themes, 'default'), 'border-color');;
             }
-            &.active:after {
+        }
+        &.active {
+            &::before {
                 background: #555;
+                box-shadow: inset 0 0 0 2px #eee;
+                .mdfgf-theme-dark &,
+                .mdfgf-theme-ash & {
+                    box-shadow: inset 0 0 0 2px #555;
+                }
+                .mdfgf-md & {
+                    box-shadow: none;
+                    border-color: transparent;
+                }
+            }
+            .mdfgf-container form.mdfgf-md & {
+                &::after {
+                    content: '';
+                    top: 14px;
+                    left: 14px;
+                    box-shadow: none;
+                    background: transparent !important;
+                }
             }
         }
     }
@@ -2165,5 +2183,6 @@ form.mdfgf-bootstrap {
         background: none !important;
         line-height: 1.4 !important;
         padding: 0 !important;
+        box-shadow: none !important;
     }
 }
