@@ -576,6 +576,10 @@ class MDFGF {
             'gfield_date_year',
         );
 
+        if ($field['type'] === 'date') {
+            $content = preg_replace('/\<input /m', '<input autocomplete="mdfgfnone" ', $content);
+        }
+
         if (in_array($field['type'], array('address', 'name', 'time', 'post_image', 'date'))) {
             // $content = preg_replace('/\<(select|input) /m', '<$1 class="mdfgf-input" ', $content);
             $content = preg_replace('/(ginput_container_address|ginput_container_name|ginput_container_post_image|clear-multi)/m', 'mdfgf-row $1', $content);
@@ -598,12 +602,14 @@ class MDFGF {
 
                 $inputClasses = array('mdfgf-input');
 
-                if (stripos($tag, "type='checkbox")) {
-                    $inputClasses[] = 'mdfgf-checkbox';
-                }
+                if ($settings['design'] !== 'mdfgf-bootstrap') {
+                    if (stripos($tag, "type='checkbox")) {
+                        $inputClasses[] = 'mdfgf-checkbox';
+                    }
 
-                if (stripos($tag, "type='radio")) {
-                    $inputClasses[] = 'mdfgf-radio';
+                    if (stripos($tag, "type='radio")) {
+                        $inputClasses[] = 'mdfgf-radio';
+                    }
                 }
 
                 $newTag = $tag;
@@ -835,9 +841,14 @@ body.mdfgf-use-custom-datepicker .ui-datepicker .ui-datepicker-calendar td a.ui-
     background-color: rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.4) !important;
 }
 
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-bootstrap .mdfgf-checkbox-switch input[type="checkbox"]:checked, 
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-bootstrap .mdfgf-checkbox-switch input[type="checkbox"]:checked {
+    background-color: '.$mainColor.' !important;
+}
+
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-checkbox-switch input[type="checkbox"]:checked:after, 
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-checkbox-switch input[type="checkbox"]:checked:after {
-    background-color: '.$mainColor.' !important;
+    background-color: '.$mainColor.';
 }
 
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-radio:checked,
@@ -880,24 +891,18 @@ body.mdfgf-use-custom-datepicker .ui-datepicker .ui-datepicker-calendar td a.ui-
 .mdfgf-container.mdfgf-md-outlined .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock:before,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-field.has-focus .mdfgf-fieldset .mdfgf-fieldblock {
-    border-color: '.($settings['design'] === 'mdfgf-bootstrap' ? self::adjustBrightness($mainColor, .5) : $mainColor).';';
-
-    if ($settings['design'] === 'mdfgf-bootstrap' && $labelAnimation !== 'line') {
-        $colorString.= '
-    box-shadow: 0 0 0 0.2rem rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.2);
-    ';
-    }
-    
-    $colorString.= '
+    border-color: '.($settings['design'] === 'mdfgf-bootstrap' ? self::adjustBrightness($mainColor, .5) : $mainColor).';
 }';
 
 
 
 if ($settings['design'] === 'mdfgf-bootstrap') {
     $colorString.= '
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-bootstrap .mdfgf-input:focus,
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-bootstrap .mdfgf-field.has-focus .mdfgf-input,
 .mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-bootstrap .button:focus,
 .mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-bootstrap .button:focus {
-    box-shadow: 0 0 0 0.2rem rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.5);
+    box-shadow: 0 0 0 0.2rem rgba('.$rgb['r'].','.$rgb['g'].','.$rgb['b'].',.2);
 }
     ';
 }
