@@ -846,8 +846,8 @@ body.mdfgf-use-custom-datepicker .ui-datepicker .ui-datepicker-calendar td a.ui-
     background-color: '.$mainColor.' !important;
 }
 
-.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-checkbox-switch input[type="checkbox"]:checked:after, 
-.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-checkbox-switch input[type="checkbox"]:checked:after {
+.mdfgf-container #gform_wrapper_'.$attributes['id'].' .mdfgf-checkbox-switch .ginput_container input.mdfgf-input[type="checkbox"]:checked:after, 
+.mdfgf-container .gform_wrapper_original_id_'.$attributes['id'].' .mdfgf-checkbox-switch .ginput_container input.mdfgf-input[type="checkbox"]:checked:after {
     background-color: '.$mainColor.';
 }
 
