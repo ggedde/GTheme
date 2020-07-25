@@ -220,7 +220,7 @@ $themes: (
     display: none;
 }
 
-.mdfgf-animate-in .mdfgf-field .mdfgf-input {
+.mdfgf-animate-in .mdfgf-field:not(.hidden_label) .mdfgf-input {
     height: 44px;
     line-height: 34px;
     padding-top: 14px;
@@ -230,6 +230,7 @@ $themes: (
     padding-bottom: 14px;
     line-height: 28px;
 }   
+
 .mdfgf-animate-in .gfield_date_dropdown_day.mdfgf-field .mdfgf-input,
 .mdfgf-animate-in .gfield_date_dropdown_month.mdfgf-field .mdfgf-input,
 .mdfgf-animate-in .gfield_date_dropdown_year.mdfgf-field .mdfgf-input {
@@ -1465,11 +1466,6 @@ textarea.mdfgf-input {
 form.mdfgf-md .mdfgf-fieldset:hover .mdfgf-fieldblock {
     border-color: map.get(map.get($themes, 'default'), 'border-color-focus');
 }
-.mdfgf-field.invalid .mdfgf-input,
-.mdfgf-field.invalid .mdfgf-fieldset .mdfgf-fieldblock,
-.gfield_error .mdfgf-fieldset .mdfgf-fieldblock {
-    border-color: map.get(map.get($themes, 'default'), 'error-color');
-}
 
 .mdfgf-container {
     .button,
@@ -1507,6 +1503,13 @@ form.mdfgf-md .mdfgf-fieldset:hover .mdfgf-fieldblock {
         margin-top: 1rem;
         border-radius: .2rem;
         display: none;
+    }
+}
+body .mdfgf-container form {
+    .mdfgf-field.invalid .mdfgf-input,
+    .mdfgf-field.invalid .mdfgf-fieldset .mdfgf-fieldblock,
+    .gfield_error .mdfgf-fieldset .mdfgf-fieldblock {
+        border-color: map.get(map.get($themes, 'default'), 'error-color');
     }
 }
 
@@ -2178,6 +2181,7 @@ form.mdfgf-bootstrap {
     padding-top: 1.4rem;
     padding-bottom: .4rem;
     padding-right: .4rem;
+    padding-top: 1.4rem !important;
     textarea {
         border: none !important;
         background: none !important;
