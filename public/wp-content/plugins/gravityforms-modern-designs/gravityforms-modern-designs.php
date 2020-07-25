@@ -114,7 +114,11 @@ class MDFGF {
             add_action('gform_field_content', array(__CLASS__, 'fieldContent'), 10, 5);
         }
         add_filter('admin_footer', array(__CLASS__, 'adminFooter'));
-        add_action( 'gform_settings_mdfgf', array(__CLASS__, 'globalSettings'));
+        add_action('gform_settings_mdfgf', array(__CLASS__, 'globalSettings'));
+
+        add_filter('gform_next_button', array(__CLASS__, 'renderButton'), 10, 2 );
+        add_filter('gform_previous_button', array(__CLASS__, 'renderButton'), 10, 2 );
+        add_filter('gform_submit_button', array(__CLASS__, 'renderButton'), 10, 2 );
 
         add_action('gform_field_appearance_settings', function($position, $formId){
             if($position === 100) {
@@ -159,7 +163,9 @@ class MDFGF {
                 wp_deregister_style('gforms_ready_class_css');
                 wp_deregister_style('gforms_browsers_css');
 
-                wp_enqueue_style( 'mdfgf_css', plugin_dir_url( __FILE__ ).'/gravityforms-modern-designs.min.css', array(), self::$version);
+                if (!empty($settings['design'])) {
+                    wp_enqueue_style( 'mdfgf_css', plugin_dir_url( __FILE__ ).'/gravityforms-modern-designs.min.css', array(), self::$version);
+                }
             }
         }, 10, 2);
     }
@@ -409,6 +415,15 @@ class MDFGF {
     }
     
 </script>
+<style>
+    ul.gform_fields,
+    ul.gfield_checkbox,
+    ul.gfield_radio {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+</style>
 <?php
     }
 
@@ -464,9 +479,32 @@ class MDFGF {
      * @return array
      */
     public static function preRenderForm($form){
-        // echo '<pre>';print_r($form);echo '</pre>';
 
         $settings = self::getSettings($form['id']);
+        $design = $settings['design'];
+
+        if (empty($form['labelPlacement'])) {
+            $form['labelPlacement'] = 'top_label';
+        }
+
+        if (empty($design)) {
+            if ($framework = $settings['framework']) {
+                switch ($framework) {
+                    case 'bootstrap':
+                    case 'mdbpro':
+                        $form['labelPlacement'].= ' form-row'; 
+                        break;
+                    
+                    case 'mdbpro':
+                        # code...
+                        break;
+                        
+                    default:
+                        # code...
+                        break;
+                }
+            }
+        }
         
         if (!empty($settings['design']) && $settings['design'] !== 'mdfgf-gf') {
             $form['cssClass'].= (empty($form['cssClass']) ? '' : ' ').$settings['design'].' mdfgf-render';
@@ -488,7 +526,9 @@ class MDFGF {
     public static function fieldClasses($classes, $field, $form) {
 
         $settings = self::getSettings($form['id']);
-        if (!empty($settings['design']) && $settings['design'] !== 'mdfgf-gf') {
+        $design = $settings['design'];
+
+        if (!empty($design) && $design !== 'mdfgf-gf') {
             if ($field->type !== 'honeypot') {
                 $classes.= ' mdfgf-field-type-'.$field->type;
             }
@@ -530,6 +570,29 @@ class MDFGF {
             }
         }
 
+        if (empty($design)) {
+            if ($framework = $settings['framework']) {
+                switch ($framework) {
+                    case 'bootstrap':
+                    case 'mdbpro':
+                        if (in_array($field->type, self::$columnFields)) {
+                            $classes.= ' form-group '.($field->size === 'tiny' ? ' col-3' : ($field->size === 'small' ? ' col-4' : ($field->size === 'large' ? ' col-12' : ' col-6')));
+                        } else {
+                            $classes.= ' form-group col-12';
+                        }
+                        break;
+                    
+                    case 'mdbpro':
+                        # code...
+                        break;
+                        
+                    default:
+                        # code...
+                        break;
+                }
+            }
+        }
+
         return $classes;
     }
 
@@ -546,12 +609,11 @@ class MDFGF {
         
         $settings = self::getSettings($form_id);
 
-        if (empty($settings['design']) || $settings['design'] === 'mdfgf-gf') {
-            return $content;
-        }
+        $design = $settings['design'];
+        $framework = $settings['framework'];
 
-        if (strpos($content, 'ginput_complex') === false && ($field['type'] === 'time' || $field['type'] === 'date' && $field['dateType'] !== 'datepicker')) {
-            $content = preg_replace("/class=\'([^\']*ginput_container[^\']*)\'/m", "class='ginput_complex $1'", $content);
+        if (empty($design) && empty($framework)) {
+            return $content;
         }
 
         $complexFieldsClasses = array(
@@ -578,12 +640,110 @@ class MDFGF {
             'gfield_date_year',
         );
 
+        if (strpos($content, 'ginput_complex') === false && ($field['type'] === 'time' || $field['type'] === 'date' && $field['dateType'] !== 'datepicker')) {
+            $content = preg_replace("/class=\'([^\']*ginput_container[^\']*)\'/m", "class='ginput_complex $1'", $content);
+        }
+
         if ($field['type'] === 'date') {
             $content = preg_replace('/\<input /m', '<input autocomplete="mdfgfnone" ', $content);
         }
 
+        if (empty($design) && !empty($framework)) {
+            switch ($framework) {
+                case 'bootstrap':
+                case 'mdbpro':
+
+                    $inputsize = (!empty($field->inputsize) && $field->inputsize === 'tiny' ? '3' : (!empty($field->inputsize) && $field->inputsize === 'small' ? '4' : (!empty($field->inputsize) && $field->inputsize === 'large' ? '12' : '6')));
+
+                    if ($field['type'] === 'date') {
+                        $inputsize = '4';
+                    }
+
+                    if (in_array($field['type'], array('address', 'name', 'time', 'post_image', 'date'))) {
+                        $content = preg_replace('/(ginput_container_address|ginput_container_name|ginput_container_post_image|clear-multi)/m', 'form-row $1', $content);
+                        $content = preg_replace('/('.implode('|',$complexFieldsClasses).')/m', 'form-group col-12 col-sm-'.$inputsize.' $1', $content);
+                    }
+
+                    if (in_array($field->type, array('checkbox', 'radio'))) {
+                        $content = str_replace('<label for', "<label class='custom-control-label mb-2' for", $content);
+                    }
+
+                    if ($field->type === 'consent') {
+                        $content = str_replace('gfield_consent_label', 'custom-control-label gfield_consent_label', $content);
+                    }
+
+                    if (in_array($field->type, array('checkbox', 'radio', 'consent'))) {
+                        if ($field->type === 'checkbox' || $field->type === 'radio') {
+                            $content = str_replace("<li class='gchoice", "<li class='custom-control custom-".(!empty($field->checkboxstyle) && $field->checkboxstyle === 'switch' ? 'switch' : $field->type)." gchoice", $content);
+                        }
+                        if ($field->type === 'consent') {
+                            $content = str_replace('ginput_container_consent', 'custom-control custom-'.(!empty($field->checkboxstyle) && $field->checkboxstyle === 'switch' ? 'switch' : $field->type).' ginput_container_consent', $content);
+                        }
+                    }
+
+                    if ($field->type === 'fileupload') {
+                        $content = str_replace('ginput_container_fileupload', 'custom-file ginput_container_fileupload', $content);
+                    }
+
+                    $content = preg_replace("/class=\'([^\']*(gfield_description|screen-reader-text|instruction validation_message)[^\']*)\'/m", "class='$1 form-text text-muted small'", $content);
+
+                    if (preg_match_all('/\<input [^\>]+\>|\<select [^\>]+\>.*?\<\/select\>|\<textarea [^\>]+\>.*?\<\/textarea\>/ms', $content, $tags)) {
+                        foreach ($tags[0] as $tag) {
+
+                            $inputClasses = array();
+
+                            if (stripos($tag, "type='checkbox") || stripos($tag, "type='radio")) {
+                                if (in_array($field->type, array('checkbox', 'radio', 'consent'))) {
+                                    $inputClasses[] = 'custom-control-input';
+                                } else {
+                                    $inputClasses[] = 'form-check-input';
+                                }
+                            } else if ($field->type === 'fileupload') {
+                                $inputClasses[] = 'custom-file-input';
+                            } else if (stripos($tag, '<select') !== false) {
+                                $inputClasses[] = 'custom-select';
+                            } else {
+                                $inputClasses[] = 'form-control';
+                            }
+
+                            if (stripos($content, 'gfield_error')) {
+                                $inputClasses[] = 'is-invalid';
+                            }
+
+                            if (preg_match("/class=\'([^\']*)\'/m", $tag, $classMatches)) {
+                                if (!empty($classMatches[1])) {
+                                    $inputClasses[] = $classMatches[1];
+                                }
+                                $newTag = str_replace($classMatches[0], "class='".implode(' ', $inputClasses)."'", $tag);
+                            } else {
+                                $newTag = preg_replace('/\<(select|input|textarea) /m', '<$1 class="'.implode(' ', $inputClasses).'" ', $tag);
+                            }
+
+                            if ($field->type === 'fileupload') {
+                                $newTag.= '<label class="custom-file-label" for="customFile">Choose file</label>'; 
+                            }
+
+                            $content = str_replace($tag, $newTag, $content);
+                        }
+                    }
+
+                    break;
+                
+                case 'mdbpro':
+                    # code...
+                    break;
+                    
+                default:
+                    # code...
+                    break;
+            }
+        }
+
+        if (empty($design) || $design === 'mdfgf-gf') {
+            return $content;
+        }
+
         if (in_array($field['type'], array('address', 'name', 'time', 'post_image', 'date'))) {
-            // $content = preg_replace('/\<(select|input) /m', '<$1 class="mdfgf-input" ', $content);
             $content = preg_replace('/(ginput_container_address|ginput_container_name|ginput_container_post_image|clear-multi)/m', 'mdfgf-row $1', $content);
             $content = preg_replace('/('.implode('|',$complexFieldsClasses).')/m', 'mdfgf-field $1', $content);
         }
@@ -604,7 +764,7 @@ class MDFGF {
 
                 $inputClasses = array('mdfgf-input');
 
-                if ($settings['design'] !== 'mdfgf-bootstrap') {
+                if ($design !== 'mdfgf-bootstrap') {
                     if (stripos($tag, "type='checkbox")) {
                         $inputClasses[] = 'mdfgf-checkbox';
                     }
@@ -673,6 +833,41 @@ class MDFGF {
 
     }
 
+
+
+    /**
+     * Filter the Form Buttons
+     * 
+     * @param string $button
+     * @param array $form
+     * 
+     * @return string
+     */
+    public static function renderButton($button, $form) {
+        
+        $settings = self::getSettings($form['id']);
+
+        $design = $settings['design'];
+        $framework = $settings['framework'];
+
+        if (empty($design)) {
+            if ($framework) {
+                switch ($framework) {
+                    case 'bootstrap':
+                    case 'mdbpro':
+                    $button = preg_replace("/class=\'([^\']*)\'/m", "class='$1 btn btn-primary'", $button);
+
+                    if (stripos($button, 'gform_next_button') || stripos($button, 'gform_button')) {
+                        $button = preg_replace("/class=\'([^\']*)\'/m", "class='$1 ml-auto'", $button);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        return $button;
+    }
 
     /**
      * Filter the Shortcode settings and return content
@@ -963,7 +1158,7 @@ $colorString.= '
     public static function formTooltips($tooltips)
     {
         $tooltips["mdfgf_design_tooltip"] = "Select which Design Style you would like to use. When using somthing other than Gravity Forms Default, Gravity forms Styles will be de-registered for faster page loads. If you are already using a css framework like Bootstrap or MDB, then it is best to set this to None and 'Add Framework Classes' for your Framework.";
-        $tooltips["mdfgf_add_classes_tooltip"] = "Alternatively, if you are already including a css framework like bootstrap or mdb then you can add the classes to the form markup. Currently Supports Bootstrap 4 and MDB (mdbootstrap.com)";
+        $tooltips["mdfgf_framework_tooltip"] = "Alternatively, if you are already including a css framework like bootstrap or mdb then you can add the classes to the form markup. Currently Supports Bootstrap 4 and MDB (mdbootstrap.com)";
         $tooltips["mdfgf_shortcode_overrides_tooltip"] = "You can Override these values within the shortcode attributes. This is useful when needing to change colors or themes when embedding the form in different locations.<br>Examples:<br>mdfgf_theme=\"mdfgf-theme-default\"<br>mdfgf_theme=\"mdfgf-theme-greyish\"<br>mdfgf_theme=\"mdfgf-theme-ash\"<br>mdfgf_theme=\"mdfgf-theme-dark\"<br>mdfgf_text_class=\"mdfgf-text-light\"<br>mdfgf_color=\"#21759b\"";
         $tooltips["mdfgf_color_tooltip"] = "This will override the Highlight color used for Buttons, Radios and Checkboxes when filled and Focus events. Use Hexadecimal value.<br>Ex #8a8a8a";
         $tooltips["mdfgf_auto_grow_textareas_tooltip"] = "This will collapse all textarea fields in the form to 80px and will auto grow the height when the user types content into the box. The Max height is 300px and will show a scrollbar once they enter that much data.";
@@ -994,7 +1189,7 @@ $colorString.= '
             'color' => '',
             'label_animation' => '',
             'field_appearance' => '',
-            'add_classes' => '',
+            'framework' => '',
             'auto_grow_textareas' => 0,
             'use_custom_selects' => 0,
             'use_custom_datepicker' => 0,
@@ -1118,12 +1313,12 @@ $colorString.= '
                 </td>
             </tr>
             <tr class="mdfgf-override-options mdfgf-none-options">
-                <th><label for="mdfgf_add_classes">Add Framework Classes '.gform_tooltip("mdfgf_add_classes_tooltip", '', true).'</label></th>
+                <th><label for="mdfgf_framework">Add Framework Classes '.gform_tooltip("mdfgf_framework_tooltip", '', true).'</label></th>
                 <td>
-                    <select id="mdfgf_add_classes" name="mdfgf_add_classes" style="width: 300px;">
-                        <option value="" '.selected(rgar($form, 'mdfgf_add_classes'), '', false).'>None</option>
-                        <option value="bootstrap" '.selected(rgar($form, 'mdfgf_add_classes'), 'bootstrap', false).'>Add Bootstrap Classes</option>
-                        <option value="mdb" '.selected(rgar($form, 'mdfgf_add_classes'), 'mdb', false).'>Add MDB Pro Classes (mdbootstrap.com)</option>
+                    <select id="mdfgf_framework" name="mdfgf_framework" style="width: 300px;">
+                        <option value="" '.selected(rgar($form, 'mdfgf_framework'), '', false).'>None</option>
+                        <option value="bootstrap" '.selected(rgar($form, 'mdfgf_framework'), 'bootstrap', false).'>Add Bootstrap Classes</option>
+                        <option value="mdbpro" '.selected(rgar($form, 'mdfgf_framework'), 'mdbpro', false).'>Add MDB Pro Classes (mdbootstrap.com)</option>
                     </select>
                 </td>
             </tr>
@@ -1146,7 +1341,7 @@ $colorString.= '
                 </td>
             </tr>
             <tr>
-                <th><label for="mdfgf_add_classes">Shortcode Overrides '.gform_tooltip("mdfgf_shortcode_overrides_tooltip", '', true).'</label></th>
+                <th><label>Shortcode Overrides '.gform_tooltip("mdfgf_shortcode_overrides_tooltip", '', true).'</label></th>
                 <td></td>
             </tr>
             ';
@@ -1242,12 +1437,12 @@ $colorString.= '
                     </td>
                 </tr>
                 <tr>
-                    <th><label for="mdfgf_add_classes">Add Framework Classes <?php gform_tooltip("mdfgf_add_classes_tooltip", '');?></label></th>
+                    <th><label for="mdfgf_framework">Add Framework Classes <?php gform_tooltip("mdfgf_framework_tooltip", '');?></label></th>
                     <td>
-                        <select id="mdfgf_add_classes" name="mdfgf[add_classes]" style="width: 300px;">
-                            <option value="" <?php selected($settings['add_classes'], '');?>>None</option>
-                            <option value="bootstrap" <?php selected($settings['add_classes'], 'bootstrap');?>>Add Bootstrap Classes</option>
-                            <option value="mdb" <?php selected($settings['add_classes'], 'mdb');?>>Add MDB Classes (mdbootstrap.com)</option>
+                        <select id="mdfgf_framework" name="mdfgf[framework]" style="width: 300px;">
+                            <option value="" <?php selected($settings['framework'], '');?>>None</option>
+                            <option value="bootstrap" <?php selected($settings['framework'], 'bootstrap');?>>Add Bootstrap Classes</option>
+                            <option value="mdbpro" <?php selected($settings['framework'], 'mdbpro');?>>Add MDB Classes (mdbootstrap.com)</option>
                         </select>
                     </td>
                 </tr>
@@ -1280,7 +1475,7 @@ $colorString.= '
                     </td>
                 </tr>
                 <tr>
-                    <th><label for="mdfgf_add_classes">Shortcode Overrides <?php gform_tooltip("mdfgf_shortcode_overrides_tooltip", '');?></label></th>
+                    <th><label>Shortcode Overrides <?php gform_tooltip("mdfgf_shortcode_overrides_tooltip", '');?></label></th>
                     <td></td>
                 </tr>
             </table>
@@ -1306,7 +1501,7 @@ $colorString.= '
         $form['mdfgf_override_globals'] = rgpost('mdfgf_override_globals');
         $form['mdfgf_design'] = rgpost('mdfgf_design');
         $form['mdfgf_theme'] = rgpost('mdfgf_theme');
-        $form['mdfgf_add_classes'] = rgpost('mdfgf_add_classes') ? rgpost('mdfgf_add_classes') : '';
+        $form['mdfgf_framework'] = rgpost('mdfgf_framework') ? rgpost('mdfgf_framework') : '';
         $form['mdfgf_label_animation'] = rgpost('mdfgf_label_animation') ? rgpost('mdfgf_label_animation') : '';
         $form['mdfgf_text_class'] = rgpost('mdfgf_text_class') ? rgpost('mdfgf_text_class') : '';
         $form['mdfgf_color'] = rgpost('mdfgf_color') ? strtolower(rgpost('mdfgf_color')) : '';
