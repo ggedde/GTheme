@@ -120,6 +120,10 @@ class MDFGF {
         add_filter('gform_previous_button', array(__CLASS__, 'renderButton'), 10, 2 );
         add_filter('gform_submit_button', array(__CLASS__, 'renderButton'), 10, 2 );
 
+
+        add_filter('gform_progress_steps', array(__CLASS__, 'renderSteps'), 10, 3 );
+
+
         add_action('gform_field_appearance_settings', function($position, $formId){
             if($position === 100) {
                 ?>
@@ -397,11 +401,22 @@ class MDFGF {
 
                     $(this).removeClass('mdfgf-render');
                 });
+            } 
+
+            function mdbProRenderForms() {
+                if (typeof Waves !== 'undefined') {
+                    Waves.attach('.btn', ['waves-light']);
+                }
+                $(document).ready(function() {
+                    $('.mdb-select').materialSelect();
+                    $('.md-form').find('input, select, textarea').change();
+                });
             }
 
             $(document).on('gform_post_render', function(event, form_id, current_page){
                 mdfgfRenderForms();
                 mdfgfUpdateUploadPreviews();
+                mdbProRenderForms();
             });
 
             if (typeof gform !== 'undefined') {
@@ -422,6 +437,86 @@ class MDFGF {
         list-style: none;
         padding: 0;
         margin: 0;
+    }
+    .mdfgf-use-custom-selects select option,
+    .gf_step_clear,
+    .gf_step_last + .mdfgf-step-spacer,
+    .gform_validation_container,
+    .gf_clear_complex,
+    .gform_ajax_spinner {
+        display: none;
+    }
+    .gf_page_steps {
+        margin: 1rem 0 0;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        justify-content: space-between;
+        padding: 0;
+        align-items: flex-start;
+    }
+    .gf_step {
+        width: 34px;
+        position: relative;
+    }
+    .gf_step_number {
+        display: block;
+        line-height: 33px;
+        width: 100%;
+        height: 34px;
+        border-radius: 50%;
+        text-align: center;
+        padding: 0;
+    } 
+    .gf_step_label {
+        position: relative;
+        display: block;
+        width: 200px;
+        top: -20px;
+        left: 50%;
+        font-size: .8rem;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+    .mdfgf-step-spacer {
+        height: 1px;
+        width: 100px;
+        position: relative;
+        margin-top: 17px;
+    }
+    .gform_fileupload_multifile {
+        width: 100%;
+    }
+    .gform_fileupload_multifile .gform_drop_area {
+        padding: 1.5rem;
+        text-align: center;
+        width: 100%;
+        background-color: #f5f5f5;
+        border: 3px dashed #999;
+        border-radius: .2rem;
+    }
+    .gform_fileupload_multifile .gform_button_select_files {
+        margin: auto;
+        display: block;
+        max-width: 200px;
+        width: 100%;
+    }
+    .ginput_preview {
+        display: flex;
+    }
+    .ginput_preview .gform_delete {
+        margin-left: 6px;
+        cursor: pointer;
+        order: 1;
+    }
+
+    .gform_footer > * {
+        margin: auto;
+    }
+    .gform_page_footer > *:last-child {
+        margin-left: auto;
+        float: right;
     }
 </style>
 <?php
@@ -576,9 +671,9 @@ class MDFGF {
                     case 'bootstrap':
                     case 'mdbpro':
                         if (in_array($field->type, self::$columnFields)) {
-                            $classes.= ' form-group '.($field->size === 'tiny' ? ' col-3' : ($field->size === 'small' ? ' col-4' : ($field->size === 'large' ? ' col-12' : ' col-6')));
+                            $classes.= ($framework === 'mdbpro' && in_array($field->type, self::$singleTextFields) ? '' : ' form-group').($field->size === 'tiny' ? ' col-3' : ($field->size === 'small' ? ' col-4' : ($field->size === 'large' ? ' col-12' : ' col-6')));
                         } else {
-                            $classes.= ' form-group col-12';
+                            $classes.= ($framework === 'mdbpro' && in_array($field->type, self::$singleTextFields) ? '' : 'form-group').' col-12';
                         }
                         break;
                     
@@ -661,7 +756,32 @@ class MDFGF {
 
                     if (in_array($field['type'], array('address', 'name', 'time', 'post_image', 'date'))) {
                         $content = preg_replace('/(ginput_container_address|ginput_container_name|ginput_container_post_image|clear-multi)/m', 'form-row $1', $content);
-                        $content = preg_replace('/('.implode('|',$complexFieldsClasses).')/m', 'form-group col-12 col-sm-'.$inputsize.' $1', $content);
+                        foreach ($complexFieldsClasses as $complexFieldsClass) {
+                            $content = preg_replace('/<div[^\>]*('.str_replace('_', '\\_', $complexFieldsClass).')[^\>]+\>(.*)\<\/div\>/smU', '<div class="col-12 col-sm-'.$inputsize.'"><div class="form-group'.($framework === 'mdbpro' ? ' md-form mb-0' : '').' $1">$2</div></div>', $content);
+                            $content = preg_replace('/<span[^\>]*('.str_replace('_', '\\_', $complexFieldsClass).')[^\>]+\>(.*)\<\/span\>/smU', '<div class="col-12 col-sm-'.$inputsize.'"><div class="form-group'.($framework === 'mdbpro' ? ' md-form mb-0' : '').' $1">$2</div></div>', $content);
+                        }
+                    }
+
+                    if ($framework === 'mdbpro' && (in_array($field->type, self::$singleTextFields) || ($field->type === 'date' && $field->dateType === 'datepicker')))
+                    {   
+                        $content = '<div class="md-form mb-0">'.preg_replace('/<div[^\>]*ginput_container[^\>]+\>(.*?)\<\/div\>/smU', '$1', $content).'</div>';
+                    }
+
+                    if ($framework === 'mdbpro') {
+
+                        if (in_array($field->type, array('checkbox', 'consent')) && !empty($field->checkboxstyle) && $field->checkboxstyle === 'switch') {
+                            if (preg_match_all('/(\<input [^\>]+\>)[^\<]*(\<label[^\>]+for\=[^\>]+\>(.*?)\<\/label\>)/sm', $content, $matches)) {
+                                foreach ($matches[0] as $matchKey => $match) {
+                                    $content = str_replace($match, '<div class="switch"><label>'.$matches[1][$matchKey].'<span class="lever"></span>'.$matches[3][$matchKey].'</label></div>', $content); 
+                                }
+                            }
+                        }
+
+                        if (preg_match_all('/(\<label[^\>]+for\=[^\>]+\>.*?\<\/label\>?)[^\<]*(\<input [^\>]+\>|\<select [^\>]+\>.*?\<\/select\>|\<textarea [^\>]+\>.*?\<\/textarea\>)/sm', $content, $matches)) {
+                            foreach ($matches[0] as $matchKey => $match) {
+                                $content = str_replace($match, $matches[2][$matchKey].$matches[1][$matchKey], $content); 
+                            }
+                        }
                     }
 
                     if (in_array($field->type, array('checkbox', 'radio'))) {
@@ -672,20 +792,27 @@ class MDFGF {
                         $content = str_replace('gfield_consent_label', 'custom-control-label gfield_consent_label', $content);
                     }
 
-                    if (in_array($field->type, array('checkbox', 'radio', 'consent'))) {
+                    if ($framework === 'bootstrap' && in_array($field->type, array('checkbox', 'radio', 'consent'))) {
                         if ($field->type === 'checkbox' || $field->type === 'radio') {
-                            $content = str_replace("<li class='gchoice", "<li class='custom-control custom-".(!empty($field->checkboxstyle) && $field->checkboxstyle === 'switch' ? 'switch' : $field->type)." gchoice", $content);
+                            $content = str_replace("<li class='gchoice", "<li class='custom-control custom-".(!empty($field->checkboxstyle) && $field->checkboxstyle === 'switch' ? 'switch' : ($field->type === 'consent' ? 'checkbox' : $field->type))." gchoice", $content);
                         }
                         if ($field->type === 'consent') {
-                            $content = str_replace('ginput_container_consent', 'custom-control custom-'.(!empty($field->checkboxstyle) && $field->checkboxstyle === 'switch' ? 'switch' : $field->type).' ginput_container_consent', $content);
+                            $content = str_replace('ginput_container_consent', 'custom-control custom-'.(!empty($field->checkboxstyle) && $field->checkboxstyle === 'switch' ? 'switch' : ($field->type === 'consent' ? 'checkbox' : $field->type)).' ginput_container_consent', $content);
                         }
                     }
 
-                    if ($field->type === 'fileupload') {
-                        $content = str_replace('ginput_container_fileupload', 'custom-file ginput_container_fileupload', $content);
+                    if (in_array($field->type, array('fileupload', 'post_image'))) {
+                        if (empty($field->multipleFiles)) {
+                            $content = str_replace('ginput_container_fileupload', 'custom-file ginput_container_fileupload', $content);
+                        }
+                    }
+
+                    if ($field->type === 'time') {
+                        $content = preg_replace('/\<i[^\>]*\>:\<\/i\>/m', '', $content);
                     }
 
                     $content = preg_replace("/class=\'([^\']*(gfield_description|screen-reader-text|instruction validation_message)[^\']*)\'/m", "class='$1 form-text text-muted small'", $content);
+                    $content = preg_replace("/class=\'([^\']*(gfield_list_container)[^\']*)\'/m", "class='$1 w-100'", $content);
 
                     if (preg_match_all('/\<input [^\>]+\>|\<select [^\>]+\>.*?\<\/select\>|\<textarea [^\>]+\>.*?\<\/textarea\>/ms', $content, $tags)) {
                         foreach ($tags[0] as $tag) {
@@ -693,17 +820,29 @@ class MDFGF {
                             $inputClasses = array();
 
                             if (stripos($tag, "type='checkbox") || stripos($tag, "type='radio")) {
-                                if (in_array($field->type, array('checkbox', 'radio', 'consent'))) {
+                                if ($framework !== 'mdbpro' && in_array($field->type, array('checkbox', 'radio', 'consent'))) {
                                     $inputClasses[] = 'custom-control-input';
                                 } else {
                                     $inputClasses[] = 'form-check-input';
                                 }
-                            } else if ($field->type === 'fileupload') {
-                                $inputClasses[] = 'custom-file-input';
+                            } else if (in_array($field->type, array('fileupload', 'post_image'))) {
+                                if (empty($field->multipleFiles)) {
+                                    $inputClasses[] = 'custom-file-input';
+                                } else {
+                                    $inputClasses[] = 'btn btn-primary btn-sm';
+                                }
                             } else if (stripos($tag, '<select') !== false) {
-                                $inputClasses[] = 'custom-select';
+                                if ($framework === 'mdbpro') {
+                                    $inputClasses[] = 'mdb-select';
+                                } else {
+                                    $inputClasses[] = 'custom-select';
+                                }
                             } else {
                                 $inputClasses[] = 'form-control';
+                            }
+
+                            if (stripos($tag, '<textarea') !== false && $framework === 'mdbpro') {
+                                $inputClasses[] = 'md-textarea';
                             }
 
                             if (stripos($content, 'gfield_error')) {
@@ -719,7 +858,7 @@ class MDFGF {
                                 $newTag = preg_replace('/\<(select|input|textarea) /m', '<$1 class="'.implode(' ', $inputClasses).'" ', $tag);
                             }
 
-                            if ($field->type === 'fileupload') {
+                            if (in_array($field->type, array('fileupload', 'post_image')) && empty($field->multipleFiles)) {
                                 $newTag.= '<label class="custom-file-label" for="customFile">Choose file</label>'; 
                             }
 
@@ -838,13 +977,14 @@ class MDFGF {
     /**
      * Filter the Form Buttons
      * 
-     * @param string $button
+     * @param string $progress_steps
      * @param array $form
+     * @param int $page
      * 
      * @return string
      */
-    public static function renderButton($button, $form) {
-        
+    public static function renderSteps($progress_steps, $form, $page) 
+    {
         $settings = self::getSettings($form['id']);
 
         $design = $settings['design'];
@@ -855,11 +995,39 @@ class MDFGF {
                 switch ($framework) {
                     case 'bootstrap':
                     case 'mdbpro':
-                    $button = preg_replace("/class=\'([^\']*)\'/m", "class='$1 btn btn-primary'", $button);
+                    $progress_steps = preg_replace("/class\=\'(gf_step_number)\'/m", "class='$1 form-control'", $progress_steps);
+                    $progress_steps = preg_replace("/\<span class\=[^\>]*gf_step_number[^\>]*\>".$page."\<\/span\>/m", "<span class='gf_step_number form-control bg-primary text-light'>".$page."</span>", $progress_steps);
 
-                    if (stripos($button, 'gform_next_button') || stripos($button, 'gform_button')) {
-                        $button = preg_replace("/class=\'([^\']*)\'/m", "class='$1 ml-auto'", $button);
-                    }
+                    break;
+                }
+            }
+        }
+
+        return $progress_steps;
+    }
+
+
+    /**
+     * Filter the Form Buttons
+     * 
+     * @param string $button
+     * @param array $form
+     * 
+     * @return string
+     */
+    public static function renderButton($button, $form) 
+    {
+        $settings = self::getSettings($form['id']);
+
+        $design = $settings['design'];
+        $framework = $settings['framework'];
+
+        if (empty($design)) {
+            if ($framework) {
+                switch ($framework) {
+                    case 'bootstrap':
+                    case 'mdbpro':
+                        $button = preg_replace("/class=\'([^\']*)\'/m", "class='$1 btn btn-primary'", $button);
 
                     break;
                 }
@@ -878,8 +1046,8 @@ class MDFGF {
      * 
      * @return string
      */
-    public static function shortcodeForm($string, $attributes, $content) {
-
+    public static function shortcodeForm($string, $attributes, $content) 
+    {
         $settings = self::getSettings($attributes['id']);
 
         if(empty($settings['design']) || $settings['design'] === 'mdfgf-gf') {
@@ -1181,7 +1349,8 @@ $colorString.= '
     }
     
 
-    private static function getDefaultSettings() {
+    private static function getDefaultSettings() 
+    {
         return [
             'design' => 'mdfgf-mdfgf',
             'theme' => 'mdfgf-theme-default',
@@ -1197,8 +1366,8 @@ $colorString.= '
     }
 
 
-    private static function getSettings($formId=null) {
-
+    private static function getSettings($formId=null) 
+    {
         $settings = [];
         $globalSettings = get_option('mdfgf_settings');
         if (empty($globalSettings)) {
