@@ -120,7 +120,6 @@ class MDFGF {
         add_filter('gform_previous_button', array(__CLASS__, 'renderButton'), 10, 2 );
         add_filter('gform_submit_button', array(__CLASS__, 'renderButton'), 10, 2 );
 
-
         add_filter('gform_progress_steps', array(__CLASS__, 'renderSteps'), 10, 3 );
 
 
@@ -166,6 +165,8 @@ class MDFGF {
                 wp_deregister_style('gforms_formsmain_css');
                 wp_deregister_style('gforms_ready_class_css');
                 wp_deregister_style('gforms_browsers_css');
+                wp_deregister_script('jquery-ui-datepicker');
+                wp_deregister_script('gform_placeholder');
 
                 if (!empty($settings['design'])) {
                     wp_enqueue_style( 'mdfgf_css', plugin_dir_url( __FILE__ ).'/gravityforms-modern-designs.min.css', array(), self::$version);
@@ -409,6 +410,7 @@ class MDFGF {
                 }
                 $(document).ready(function() {
                     $('.mdb-select').materialSelect();
+                    $('.datepicker').datepicker();
                     $('.md-form').find('input, select, textarea').change();
                 });
             }
@@ -754,20 +756,21 @@ class MDFGF {
                         $inputsize = '4';
                     }
 
+                    $mdbProClass = 'md-form';
+
                     if (in_array($field['type'], array('address', 'name', 'time', 'post_image', 'date'))) {
                         $content = preg_replace('/(ginput_container_address|ginput_container_name|ginput_container_post_image|clear-multi)/m', 'form-row $1', $content);
                         foreach ($complexFieldsClasses as $complexFieldsClass) {
-                            $content = preg_replace('/<div[^\>]*('.str_replace('_', '\\_', $complexFieldsClass).')[^\>]+\>(.*)\<\/div\>/smU', '<div class="col-12 col-sm-'.$inputsize.'"><div class="form-group'.($framework === 'mdbpro' ? ' md-form mb-0' : '').' $1">$2</div></div>', $content);
-                            $content = preg_replace('/<span[^\>]*('.str_replace('_', '\\_', $complexFieldsClass).')[^\>]+\>(.*)\<\/span\>/smU', '<div class="col-12 col-sm-'.$inputsize.'"><div class="form-group'.($framework === 'mdbpro' ? ' md-form mb-0' : '').' $1">$2</div></div>', $content);
+                            $content = preg_replace('/<div[^\>]*('.str_replace('_', '\\_', $complexFieldsClass).')[^\>]+\>(.*)\<\/div\>/smU', '<div class="col-12 col-sm-'.$inputsize.'"><div class="form-group'.($framework === 'mdbpro' ? ' '.$mdbProClass.' mb-0' : '').' $1">$2</div></div>', $content);
+                            $content = preg_replace('/<span[^\>]*('.str_replace('_', '\\_', $complexFieldsClass).')[^\>]+\>(.*)\<\/span\>/smU', '<div class="col-12 col-sm-'.$inputsize.'"><div class="form-group'.($framework === 'mdbpro' ? ' '.$mdbProClass.' mb-0' : '').' $1">$2</div></div>', $content);
                         }
                     }
 
-                    if ($framework === 'mdbpro' && (in_array($field->type, self::$singleTextFields) || ($field->type === 'date' && $field->dateType === 'datepicker')))
-                    {   
-                        $content = '<div class="md-form mb-0">'.preg_replace('/<div[^\>]*ginput_container[^\>]+\>(.*?)\<\/div\>/smU', '$1', $content).'</div>';
-                    }
-
                     if ($framework === 'mdbpro') {
+
+                        if (in_array($field->type, self::$singleTextFields) || ($field->type === 'date' && $field->dateType === 'datepicker')) {   
+                            $content = '<div class="'.$mdbProClass.' mb-0">'.preg_replace('/<div[^\>]*ginput_container[^\>]+\>(.*?)\<\/div\>/smU', '$1', $content).'</div>';
+                        }
 
                         if (in_array($field->type, array('checkbox', 'consent')) && !empty($field->checkboxstyle) && $field->checkboxstyle === 'switch') {
                             if (preg_match_all('/(\<input [^\>]+\>)[^\<]*(\<label[^\>]+for\=[^\>]+\>(.*?)\<\/label\>)/sm', $content, $matches)) {
@@ -782,6 +785,13 @@ class MDFGF {
                                 $content = str_replace($match, $matches[2][$matchKey].$matches[1][$matchKey], $content); 
                             }
                         }
+
+                        if ($field->type === 'date' && $field->dateType === 'datepicker')
+                        {   
+                            $content = preg_replace('/\<input [^\>]+\>\<label[^\>]+for\=[^\>]+\>.*?\<\/label\>/s', '<div class="'.$mdbProClass.' input-with-post-icon datepicker">$0<i class="fas fa-calendar input-prefix active" tabindex="0"></i></div>', $content);
+                        }
+
+                        $content = preg_replace("/class=\'([^\']*(gfield_list_cell)[^\']*)\'/m", "class='$1 ".$mdbProClass."'", $content);
                     }
 
                     if (in_array($field->type, array('checkbox', 'radio'))) {
@@ -813,6 +823,7 @@ class MDFGF {
 
                     $content = preg_replace("/class=\'([^\']*(gfield_description|screen-reader-text|instruction validation_message)[^\']*)\'/m", "class='$1 form-text text-muted small'", $content);
                     $content = preg_replace("/class=\'([^\']*(gfield_list_container)[^\']*)\'/m", "class='$1 w-100'", $content);
+                    $content = preg_replace("/class=\'([^\']*(validation_message|validation_error)[^\']*)\'/m", "class='$1 text-danger'", $content);
 
                     if (preg_match_all('/\<input [^\>]+\>|\<select [^\>]+\>.*?\<\/select\>|\<textarea [^\>]+\>.*?\<\/textarea\>/ms', $content, $tags)) {
                         foreach ($tags[0] as $tag) {
@@ -845,7 +856,7 @@ class MDFGF {
                                 $inputClasses[] = 'md-textarea';
                             }
 
-                            if (stripos($content, 'gfield_error')) {
+                            if (preg_match("/class='[^\']+validation_message[^\']+\'/m", $content)) {
                                 $inputClasses[] = 'is-invalid';
                             }
 
